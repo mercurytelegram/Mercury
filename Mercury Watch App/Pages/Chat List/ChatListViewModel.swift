@@ -79,6 +79,7 @@ class ChatListViewModel: TDLibViewModel {
     }
     
     func insertNewChat(_ chat: Chat) {
+        if chat.isArchived { return }
         self.chats.append(.from(chat))
         self.chats = self.chats.sorted()
     }
@@ -96,7 +97,7 @@ class ChatListViewModel: TDLibViewModel {
         Task {
             var action = message
             
-            if chats[index].td.type.isGroup,
+            if chats[index].td.isGroup,
                let username = await sender.username(),
                let name = username.split(separator: " ").first {
                 let attributedName = AttributedString(name)
@@ -127,7 +128,7 @@ class ChatListViewModel: TDLibViewModel {
         // Update message sender if group chat
         Task {
             var desc = message.description
-            if chats[index].td.type.isGroup,
+            if chats[index].td.isGroup,
                let username = await message.senderId.username() {
                 var attributedUsername = AttributedString(username + ": ")
                 attributedUsername.foregroundColor = .white
