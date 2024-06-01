@@ -15,7 +15,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                Button("Logout") {
+                Button("Logout", role: .destructive) {
                     loginVM.logout()
                     isPresented = false
                 }
