@@ -8,12 +8,12 @@
 import Foundation
 import WatchKit
 
-class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
+class AppDelegate: NSObject, WKApplicationDelegate {
     
-    let logger = LoggerService(MyWatchAppDelegate.self)
+    let logger = LoggerService(AppDelegate.self)
     
     func applicationDidBecomeActive() {
-//        setOnlineStatus()
+        setOnlineStatus()
     }
     
     func applicationDidEnterBackground() {

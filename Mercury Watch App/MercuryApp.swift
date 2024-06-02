@@ -11,7 +11,7 @@ import SwiftUI
 struct Mercury_Watch_AppApp: App {
     
     @StateObject var vm = LoginViewModel()
-    @WKApplicationDelegateAdaptor var appDelegate: MyWatchAppDelegate
+    @WKApplicationDelegateAdaptor var appDelegate: AppDelegate
     
     var body: some Scene {
         WindowGroup {
