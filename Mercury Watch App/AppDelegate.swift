@@ -10,8 +10,10 @@ import WatchKit
 
 class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
     
+    let logger = LoggerService(MyWatchAppDelegate.self)
+    
     func applicationDidBecomeActive() {
-        setOnlineStatus()
+//        setOnlineStatus()
     }
     
     func applicationDidEnterBackground() {
@@ -25,7 +27,7 @@ class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
                 value: .optionValueBoolean(.init(value: true))
             )
             
-            print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+            self.logger.log(result)
         }
     }
     
@@ -36,7 +38,7 @@ class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
                 value: .optionValueBoolean(.init(value: false))
             )
             
-            print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+            self.logger.log(result)
         }
     }
 

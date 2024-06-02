@@ -8,17 +8,21 @@
 import SwiftUI
 import TDLibKit
 import Combine
+import os
 
 class TDLibViewModel: ObservableObject, TDLibManagerProtocol {
     
+    let logger: LoggerService
+    
     init() {
-        print("[CLIENT] [\(type(of: self))] initialized")
+        self.logger = LoggerService("\(type(of: self))")
         TDLibManager.shared.subscribe(self)
+        self.logger.log("initialised")
     }
     
     deinit {
-        print("[CLIENT] [\(type(of: self))] deinitialized")
         TDLibManager.shared.unsubscribe(self)
+        self.logger.log("uninitialised")
     }
     
     // TDLibManagerProtocol

@@ -76,14 +76,14 @@ class ChatDetailViewModel: TDLibViewModel {
                 }
                 
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+                self.logger.log(error, level: .error)
             }
         }
         
     }
     
     func requestMoreMessages(limit: Int = 30) async {
-        print("[CLIENT] [\(type(of: self))] [\(#function)]")
+        self.logger.log("loading \(limit) messages")
         
         let result2 = try? await TDLibManager.shared.client?.getChatHistory(
             chatId: chat.td.id,

@@ -12,6 +12,7 @@ import TDLibKit
 class FileService {
     
     static func getImage(for photo: File) async -> Image? {
+        let logger = LoggerService(FileService.self)
         var imagePath = photo.local.path
         
         if imagePath == "" {
@@ -23,18 +24,23 @@ class FileService {
                     offset: 0,
                     priority: 4,
                     synchronous: true
-                ) else { return nil }
+                ) else {
+                    logger.log("Unable to retrive file")
+                    return nil
+                }
                 
                 imagePath = file.local.path
                 
             } catch {
-                print("[CLIENT] [\(type(of: self))] error in \(#function): \(error)")
+                logger.log(error, level: .error)
             }
         }
         
         if let uiImage = UIImage(contentsOfFile: imagePath){
             return Image(uiImage: uiImage)
         }
+        
+        logger.log("Unable to convert file to image")
         return nil
     }
 }

@@ -24,7 +24,7 @@ class SendMessageViewModel: TDLibViewModel {
         
         Task {
             do {
-                _ = try await TDLibManager.shared.client?.sendMessage(
+                let result = try await TDLibManager.shared.client?.sendMessage(
                     chatId: self.chat.td.id,
                     inputMessageContent: messageContent,
                     messageThreadId: nil,
@@ -32,9 +32,9 @@ class SendMessageViewModel: TDLibViewModel {
                     replyMarkup: nil,
                     replyTo: nil
                 )
-                print("[CLIENT] [\(type(of: self))] [\(#function)] done")
+                self.logger.log(result)
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
+                self.logger.log(error, level: .error)
             }
         }
     }

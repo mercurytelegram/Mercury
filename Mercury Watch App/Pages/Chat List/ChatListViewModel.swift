@@ -66,10 +66,10 @@ class ChatListViewModel: TDLibViewModel {
         Task {
             do {
                 let result = try await TDLibManager.shared.client?.loadChats(chatList: .chatListMain, limit: 10)
-                print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+                self.logger.log(result)
                 
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+                self.logger.log(error, level: .error)
             }
             
             DispatchQueue.main.async {
