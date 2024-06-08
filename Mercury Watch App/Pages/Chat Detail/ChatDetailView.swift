@@ -42,11 +42,15 @@ struct ChatDetailView: View {
                                 proxy.scrollTo(lastMessage?.id, anchor: .bottom)
                             }
                         }
-                    }.padding()
+                    }
+                    .padding()
                  
                     ForEach(vm.messages) { message in
                         MessageView(vm.getMessageVM(for: message))
                             .id(message.id)
+                            .scrollTransition { content, phase in content
+                                    .scaleEffect(phase.isIdentity ? 1 : 0.7)
+                            }
                     }
                     .padding(.bottom)
                 }
@@ -73,7 +77,6 @@ struct ChatDetailView: View {
                 }
             }
             .background {
-                
                 Rectangle()
                     .foregroundStyle(
                         Gradient(colors: [
