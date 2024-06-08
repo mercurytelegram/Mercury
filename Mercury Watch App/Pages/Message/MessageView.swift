@@ -35,7 +35,7 @@ struct MessageView: View {
         .background {
             if vm.showBubble {
                 BubbleShape(myMessage: vm.message.isOutgoing)
-                    .foregroundStyle(vm.message.isOutgoing ? .blue.opacity(0.3) : .white.opacity(0.2))
+                    .foregroundStyle(vm.message.isOutgoing ? .blue.opacity(0.7) : .white.opacity(0.2))
             }
         }
         .frame(maxWidth: .infinity, alignment: vm.message.isOutgoing ? .trailing : .leading)

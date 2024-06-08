@@ -48,6 +48,7 @@ struct ChatDetailView: View {
                         MessageView(vm.getMessageVM(for: message))
                             .id(message.id)
                     }
+                    .padding(.bottom)
                 }
                 
             }
@@ -55,6 +56,7 @@ struct ChatDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     AvatarView(model: vm.chat.avatar)
+                        .onTapGesture {}
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
                     
@@ -63,24 +65,24 @@ struct ChatDetailView: View {
                     } onSubmit: { value in
                         sendMsgVM.sendTextMessage(value)
                     }
-                    .background {
-                        Circle().foregroundStyle(.ultraThinMaterial)
-                    }
                     
                     Button("Record", systemImage: "mic.fill") {}
                         .controlSize(.large)
-                        .background {
-                            Circle().foregroundStyle(.ultraThinMaterial)
-                        }
                     
                     Button("Stickers", systemImage: "face.smiling.inverse") {}
-                        .background {
-                            Circle().foregroundStyle(.ultraThinMaterial)
-                        }
                 }
             }
+            .background {
+                
+                Rectangle()
+                    .foregroundStyle(
+                        Gradient(colors: [
+                            .blue.opacity(0.7),
+                            .blue.opacity(0.2)]
+                        ))
+                    .ignoresSafeArea()
+            }
             .navigationTitle(vm.chat.td.title)
-            .containerBackground(.blue.gradient, for: .navigation)
         }
         
     }
@@ -101,5 +103,14 @@ struct ChatDetailView: View {
 }
 
 #Preview {
-    ChatDetailView(chat: .preview(), useMock: true)
+    NavigationStack {
+        ChatDetailView(
+            chat: .preview(
+                title: "iOS Devs",
+                sender: "Alessandro",
+                color: .orange
+            ),
+            useMock: true)
+    }
+    
 }
