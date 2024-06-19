@@ -16,6 +16,7 @@ class ChatListViewModel: TDLibViewModel {
     @Published var isLoading = true
     @Published var showSettings = false
     var isMock = false
+    var folder = ""
     
     override func updateHandler(update: Update) {
         super.updateHandler(update: update)

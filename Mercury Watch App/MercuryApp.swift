@@ -18,7 +18,7 @@ struct Mercury_Watch_AppApp: App {
             
             if let auth = vm.authenticated {
                 if auth || vm.useMock{
-                    ChatListView(useMock: vm.useMock)
+                    SettingsView()
                         .environmentObject(vm)
                 } else {
                     LoginView()

@@ -82,7 +82,10 @@ struct ChatDetailView: View {
                         ))
                     .ignoresSafeArea()
             }
-            .navigationTitle(vm.chat.td.title)
+            .navigationTitle {
+                Text(vm.chat.td.title)
+                    .foregroundStyle(.white)
+            }
         }
         
     }
