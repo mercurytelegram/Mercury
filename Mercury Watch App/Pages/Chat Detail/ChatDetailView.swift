@@ -48,8 +48,10 @@ struct ChatDetailView: View {
                     ForEach(vm.messages) { message in
                         MessageView(vm.getMessageVM(for: message))
                             .id(message.id)
-                            .scrollTransition { content, phase in content
+                            .scrollTransition { content, phase in 
+                                content
                                     .scaleEffect(phase.isIdentity ? 1 : 0.7)
+                                    .opacity(phase.isIdentity ? 1 : 0)
                             }
                     }
                     .padding(.bottom)
@@ -57,6 +59,7 @@ struct ChatDetailView: View {
                 
             }
             .defaultScrollAnchor(.bottom)
+            .navigationTitle(vm.chat.td.title)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     AvatarView(model: vm.chat.avatar)
@@ -76,16 +79,15 @@ struct ChatDetailView: View {
                     Button("Stickers", systemImage: "face.smiling.inverse") {}
                 }
             }
-            .background {
+            .containerBackground(for: .navigation){
                 Rectangle()
                     .foregroundStyle(
                         Gradient(colors: [
                             .blue.opacity(0.7),
-                            .blue.opacity(0.2)]
-                        ))
-                    .ignoresSafeArea()
+                            .blue.opacity(0.2)
+                        ])
+                    )
             }
-            .navigationTitle(vm.chat.td.title)
         }
         
     }
