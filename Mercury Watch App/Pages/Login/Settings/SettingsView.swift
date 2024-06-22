@@ -17,18 +17,29 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack(path: $navStack) {
             List {
-                ForEach(folders, id: \.self) { folder in
-                    NavigationLink(value: folder) {
-                        Label {
-                            Text(folder)
-                        } icon: {
-                            Image(systemName: "folder")
-                                .foregroundStyle(.blue)
-                        }
+                NavigationLink("Account") {
+                    Button("Logout", role: .destructive) {
+                        loginVM.logout()
                     }
                 }
+                
+                Section {
+                    // Folders
+                    ForEach(folders, id: \.self) { folder in
+                        NavigationLink(value: folder) {
+                            Label {
+                                Text(folder)
+                            } icon: {
+                                Image(systemName: "folder")
+                                    .font(.caption)
+                                    .foregroundStyle(.blue)
+                            }
+                        }
+                        .listItemTint(.blue)
+                    }
+                }
+                
             }
-            .listStyle(.carousel)
             .navigationTitle("Mercury")
             .navigationDestination(for: String.self) { folder in
                 chatListVM.folder = folder
