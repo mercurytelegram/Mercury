@@ -13,8 +13,9 @@ struct ChatDetailView: View {
     
     @StateObject var vm: ChatDetailViewModel
     @StateObject var sendMsgVM: SendMessageViewModel
-    @State var image: Image?
     
+    @State var image: Image?
+    @State var showRecordingView: Bool = false
     
     init(chat: ChatCellModel, useMock: Bool = false) {
         if useMock {
@@ -67,11 +68,13 @@ struct ChatDetailView: View {
                         Circle().foregroundStyle(.ultraThinMaterial)
                     }
                     
-                    Button("Record", systemImage: "mic.fill") {}
-                        .controlSize(.large)
-                        .background {
-                            Circle().foregroundStyle(.ultraThinMaterial)
-                        }
+                    Button("Record", systemImage: "mic.fill") {
+                        showRecordingView = true
+                    }
+                    .controlSize(.large)
+                    .background {
+                        Circle().foregroundStyle(.ultraThinMaterial)
+                    }
                     
                     Button("Stickers", systemImage: "face.smiling.inverse") {}
                         .background {
@@ -81,6 +84,9 @@ struct ChatDetailView: View {
             }
             .navigationTitle(vm.chat.td.title)
             .containerBackground(.blue.gradient, for: .navigation)
+        }
+        .sheet(isPresented: $showRecordingView) {
+            RecordingView(isPresented: $showRecordingView)
         }
         
     }
