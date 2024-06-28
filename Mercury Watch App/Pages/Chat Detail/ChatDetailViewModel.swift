@@ -110,7 +110,9 @@ class ChatDetailViewModel: TDLibViewModel {
         self.messages.removeAll(where: { $0.id == message.id })
         
         // if a message has been sent, use the local file path to update it
-        self.messages.removeAll(where: { $0.contentLocalFilePath == message.contentLocalFilePath })
+        if let msgFilePath = message.contentLocalFilePath {
+            self.messages.removeAll(where: { $0.contentLocalFilePath == msgFilePath })
+        }
         
         switch at {
         case .first:

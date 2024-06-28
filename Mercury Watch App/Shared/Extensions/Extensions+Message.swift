@@ -65,14 +65,14 @@ extension Message {
         
     }
     
-    var contentLocalFilePath: String {
+    var contentLocalFilePath: String? {
         
         // TODO: add the local path to all the possible contents
         switch self.content {
         case .messageVoiceNote(let message):
             return message.voiceNote.voice.local.path
         default:
-            return ""
+            return nil
         }
         
     }
