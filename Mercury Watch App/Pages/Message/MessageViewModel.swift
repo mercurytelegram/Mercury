@@ -71,6 +71,10 @@ class MessageViewModel: ObservableObject {
         return Color(fromUserId: senderID)
     }
     
+    var isSending: Bool {
+        return self.message.sendingState != nil
+    }
+    
     init(message: Message, chat: Chat) {
         self.message = message
         self.chat = chat

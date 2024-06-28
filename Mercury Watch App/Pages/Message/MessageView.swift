@@ -26,9 +26,20 @@ struct MessageView: View {
                 }
                 content
             }
-            Text(vm.date)
-                .font(.system(size: 15))
-                .foregroundStyle(.secondary)
+            
+            HStack(spacing: 10) {
+                Text(vm.date)
+                    .font(.system(size: 15))
+                    .foregroundStyle(.secondary)
+                
+                if vm.isSending {
+                    ProgressView()
+                        .font(.system(size: 15))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 15, height: 15)
+                }
+            }
+            
         }
         .padding()
         .padding(vm.message.isOutgoing ? .trailing : .leading, 5)

@@ -10,8 +10,8 @@ import TDLibKit
 
 class ChatDetailViewModel: TDLibViewModel {
     
-    @Published var messages: [Message] = []
     @Published var isLoadingInitialMessages = true
+    @Published var messages: [Message] = []
     
     let chat: ChatCellModel
     init(chat: ChatCellModel) {
@@ -37,13 +37,9 @@ class ChatDetailViewModel: TDLibViewModel {
     func updateLastMessage(chatId: Int64, message: Message?) {
         guard chatId == self.chat.td.id else { return }
         
-        // If sendingState is nil, the message has been sent correctly
-        guard message?.sendingState == nil else { return }
-        
         DispatchQueue.main.async {
             if let message {
-                self.messages.removeAll { m in m.id == message.id }
-                self.messages.append(message)
+                self.insertMessage(at: .last, message: message)
             }
         }
     }
@@ -62,7 +58,11 @@ class ChatDetailViewModel: TDLibViewModel {
                 
                 if let resultMessages = result?.messages {
                     DispatchQueue.main.async {
-                        self.messages = resultMessages.reversed()
+                        
+                        for elem in resultMessages.reversed() {
+                            self.insertMessage(at: .last, message: elem)
+                        }
+                        
                         Task {
                             if resultMessages.count == 1 {
                                 await self.requestMoreMessages()
@@ -95,9 +95,30 @@ class ChatDetailViewModel: TDLibViewModel {
         
         DispatchQueue.main.async {
             for elem in result2?.messages ?? [] {
-                self.messages.insert(elem, at: 0)
+                self.insertMessage(at: .first, message: elem)
             }
         }
+    }
+    
+    
+    enum InsertAt { case first, last}
+    func insertMessage(at: InsertAt, message: Message) {
+        
+        if message.errorSending { return }
+        
+        // if message has been already shown, update it bu removing the old one
+        self.messages.removeAll(where: { $0.id == message.id })
+        
+        // if a message has been sent, use the local file path to update it
+        self.messages.removeAll(where: { $0.contentLocalFilePath == message.contentLocalFilePath })
+        
+        switch at {
+        case .first:
+            self.messages.insert(message, at: 0)
+        case .last:
+            self.messages.append(message)
+        }
+        
     }
     
 }

@@ -15,7 +15,7 @@ struct ChatDetailView: View {
     @StateObject var sendMsgVM: SendMessageViewModel
     
     @State var image: Image?
-    @State var showRecordingView: Bool = false
+    @State var showAudioMessageView: Bool = false
     
     init(chat: ChatCellModel, useMock: Bool = false) {
         if useMock {
@@ -69,7 +69,7 @@ struct ChatDetailView: View {
                     }
                     
                     Button("Record", systemImage: "mic.fill") {
-                        showRecordingView = true
+                        showAudioMessageView = true
                     }
                     .controlSize(.large)
                     .background {
@@ -85,8 +85,8 @@ struct ChatDetailView: View {
             .navigationTitle(vm.chat.td.title)
             .containerBackground(.blue.gradient, for: .navigation)
         }
-        .sheet(isPresented: $showRecordingView) {
-            RecordingView(isPresented: $showRecordingView)
+        .sheet(isPresented: $showAudioMessageView) {
+            AudioMessageView(isPresented: $showAudioMessageView, chat: vm.chat)
         }
         
     }

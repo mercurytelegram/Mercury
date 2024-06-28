@@ -9,10 +9,15 @@ import SwiftUI
 import Charts
 import AVFAudio
 
-struct RecordingView: View {
+struct AudioMessageView: View {
     
-    @StateObject var vm = RecordingViewModel()
+    @StateObject var vm: AudioMessageViewModel
     @Binding var isPresented: Bool
+    
+    init(isPresented: Binding<Bool>, chat: ChatCellModel) {
+        self._vm = StateObject(wrappedValue: AudioMessageViewModel(chat: chat))
+        self._isPresented = isPresented
+    }
     
     var elapsedTime: String {
         let time = vm.elapsedTime
@@ -25,7 +30,7 @@ struct RecordingView: View {
         switch vm.state {
         case .recStarted:
             return "square.fill"
-        case .recStopped, .playStopped:
+        case .recStopped, .playPaused:
             return "play.fill"
         case .playStarted:
             return "pause.fill"
@@ -38,7 +43,7 @@ struct RecordingView: View {
         switch vm.state {
         case .recStarted:
             return "Stop"
-        case .recStopped, .playStopped:
+        case .recStopped, .playPaused:
             return "Play"
         case .playStarted:
             return "Pause"
@@ -55,28 +60,26 @@ struct RecordingView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Send", systemImage: "arrow.up") {
-                    if vm.state == .sending { return }
-                    vm.didPressSendButton()
+                    Task {
+                        await vm.didPressSendButton()
+                        await MainActor.run {
+                            isPresented = false
+                        }
+                    }
                 }
                 .foregroundStyle(.white, .blue)
             }
             
             ToolbarItemGroup(placement: .bottomBar) {
                 
-                if vm.state != .sending {
-                    Button(
-                        mainActionTitle,
-                        systemImage: mainActionIcon
-                    ) {
-                        vm.didPressMainAction()
-                    }
-                    .controlSize(.large)
-                    .foregroundStyle(.white, .blue)
-                    
-                } else {
-                    ProgressView()
-                        .controlSize(.large)
+                Button(
+                    mainActionTitle,
+                    systemImage: mainActionIcon
+                ) {
+                    vm.didPressMainAction()
                 }
+                .controlSize(.large)
+                .foregroundStyle(.white, .blue)
                 
             }
         }
@@ -90,11 +93,8 @@ struct RecordingView: View {
                 .ignoresSafeArea()
         }
         .task {
-            let hasPermission = await AVAudioApplication.requestRecordPermission()
-            await MainActor.run {
-                isPresented = hasPermission
-                if hasPermission { vm.startRecordingAudio() }
-            }
+            // Dismiss audio message if no recording permission
+            isPresented = await vm.onAppear()
         }
         
     }
@@ -124,6 +124,6 @@ struct RecordingView: View {
 #Preview {
     Text("background")
         .sheet(isPresented: .constant(true), content: {
-            RecordingView(isPresented: .constant(true))
+            AudioMessageView(isPresented: .constant(true), chat: .preview())
         })
 }

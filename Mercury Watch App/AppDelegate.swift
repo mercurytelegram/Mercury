@@ -7,11 +7,13 @@
 
 import Foundation
 import WatchKit
+import AVFAudio
 
 class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
     
     func applicationDidBecomeActive() {
         setOnlineStatus()
+        initAudioSession()
     }
     
     func applicationDidEnterBackground() {
@@ -37,6 +39,16 @@ class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
             )
             
             print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+        }
+    }
+    
+    func initAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playAndRecord, mode: .default)
+            try audioSession.setActive(true)
+        } catch {
+            print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
         }
     }
 

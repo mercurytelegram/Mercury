@@ -53,4 +53,27 @@ extension Message {
         
         return AttributedString(stringMessage)
     }
+    
+    var errorSending: Bool {
+        
+        switch self.sendingState {
+        case .messageSendingStateFailed(_):
+            return true
+        default:
+            return false
+        }
+        
+    }
+    
+    var contentLocalFilePath: String {
+        
+        // TODO: add the local path to all the possible contents
+        switch self.content {
+        case .messageVoiceNote(let message):
+            return message.voiceNote.voice.local.path
+        default:
+            return ""
+        }
+        
+    }
 }
