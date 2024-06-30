@@ -55,6 +55,8 @@ class AudioMessageViewModel: ObservableObject {
         self.chat = chat
         self.state = .recStarted
         
+        initAudioSession()
+        
         recorderDataCancellable = self.recorderVM.$waveformData.sink { [weak self] _ in
             guard let self, self.state == .recStarted else { return }
             self.manageRecorderData()
@@ -72,6 +74,16 @@ class AudioMessageViewModel: ObservableObject {
         playerDataCancellable?.cancel()
         recorderVM.dispose()
         playerVM.dispose()
+    }
+    
+    private func initAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playAndRecord, mode: .default)
+            try audioSession.setActive(true)
+        } catch {
+            print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+        }
     }
     
     private func manageRecorderData() {

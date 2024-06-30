@@ -12,29 +12,41 @@ import TDLibKit
 class FileService {
     
     static func getImage(for photo: File) async -> Image? {
-        var imagePath = photo.local.path
         
-        if imagePath == "" {
+        guard let imagePath = await FileService.getFile(for: photo) else {
+            print("[CLIENT] [\(type(of: self))] \(#function) imagePath is nil")
+            return nil
+        }
+        
+        guard let uiImage = UIImage(contentsOfFile: imagePath.absoluteString) else {
+            print("[CLIENT] [\(type(of: self))] \(#function) uiImage is nil")
+            return nil
+        }
+        
+        return Image(uiImage: uiImage)
+    }
+    
+    static func getFile(for file: File) async -> URL? {
+        var filePath = file.local.path
+        
+        if filePath.isEmpty {
             do {
-                let photoID = photo.id
+                let fileID = file.id
                 guard let file = try await TDLibManager.shared.client?.downloadFile(
-                    fileId: photoID,
+                    fileId: fileID,
                     limit: 0,
                     offset: 0,
                     priority: 4,
                     synchronous: true
                 ) else { return nil }
                 
-                imagePath = file.local.path
+                filePath = file.local.path
                 
             } catch {
                 print("[CLIENT] [\(type(of: self))] error in \(#function): \(error)")
             }
         }
         
-        if let uiImage = UIImage(contentsOfFile: imagePath){
-            return Image(uiImage: uiImage)
-        }
-        return nil
+        return URL(string: filePath)
     }
 }

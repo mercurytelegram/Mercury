@@ -7,12 +7,16 @@
 
 import SwiftUI
 import TDLibKit
+import AVFAudio
 
-
-class MessageViewModel: ObservableObject {
+class MessageViewModel: NSObject, ObservableObject {
+    
     var message: Message
     var chat: Chat
+    
     @Published var user: User?
+    @Published var isPlaying: Bool = false
+    @Published var isLoading: Bool = false
     
     var textAlignment: HorizontalAlignment {
         message.isOutgoing ? .trailing : .leading
@@ -78,9 +82,15 @@ class MessageViewModel: ObservableObject {
     init(message: Message, chat: Chat) {
         self.message = message
         self.chat = chat
+        super.init()
         
-        Task {
-            let user = try? await TDLibManager.shared.client?.getUser(userId: senderID)
+        initUser()
+    }
+    
+    private func initUser() {
+        Task { [weak self] in
+            guard let self else { return }
+            let user = try? await TDLibManager.shared.client?.getUser(userId: self.senderID)
             DispatchQueue.main.async {
                 withAnimation {
                     self.user = user
@@ -89,4 +99,57 @@ class MessageViewModel: ObservableObject {
         }
     }
     
+    func play() {
+        
+        switch message.content {
+        case .messageVoiceNote(let message):
+            playVoiceNote(voiceNote: message.voiceNote)
+            
+        default:
+            return
+        }
+    
+    }
+    
+    private func playVoiceNote(voiceNote: VoiceNote) {
+        
+        Task {
+            
+            await MainActor.run { isLoading = true }
+            let filePath = await FileService.getFile(for: voiceNote.voice)
+            await MainActor.run { isLoading = false }
+            
+            guard let filePath else {
+                print("[CLIENT] [\(type(of: self))] [\(#function)] filePath is nil")
+                return
+            }
+            
+            do {
+                
+                let audioSession = AVAudioSession.sharedInstance()
+                try audioSession.setCategory(.playback, mode: .default)
+                try audioSession.setActive(true)
+                
+                let audioPlayer = try AVAudioPlayer(contentsOf: filePath)
+                audioPlayer.isMeteringEnabled = true
+                audioPlayer.volume = 1.0
+                audioPlayer.prepareToPlay()
+                audioPlayer.play()
+                
+            } catch {
+                print("[CLIENT] [\(type(of: self))] [\(#function)] audioPlayer error: \(error)")
+            }
+            
+            await MainActor.run {
+                isPlaying = true
+            }
+        }
+    }
+    
+}
+
+extension MessageViewModel: AVAudioPlayerDelegate {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if flag { isPlaying = false }
+    }
 }
