@@ -54,7 +54,13 @@ struct AudioMessageView: View {
     
     var body: some View {
         
-        chart
+        Waveform(
+            data: vm.waveformData,
+            normalizationRanges: (
+                input: Waveform.dBInputRange,
+                output: Waveform.suggestedOutputRange
+            )
+        )
         .navigationTitle(elapsedTime)
         .defaultScrollAnchor(.bottom)
         .toolbar {
@@ -97,26 +103,6 @@ struct AudioMessageView: View {
             isPresented = await vm.onAppear()
         }
         
-    }
-    
-    @ViewBuilder
-    var chart: some View {
-        
-        Chart(Array(vm.waveformData.enumerated()), id: \.0) { index, magnitude in
-            BarMark(
-                x: .value("Frequency", String(index)),
-                y: .value("Magnitude", magnitude),
-                stacking: .center
-            )
-            .clipShape(
-                RoundedRectangle(cornerRadius: 25)
-            )
-            
-           
-        }
-        .chartXAxis(.hidden)
-        .chartYAxis(.hidden)
-        .chartYScale(domain: -RecordingViewModel.maxValue...RecordingViewModel.maxValue)
     }
     
 }

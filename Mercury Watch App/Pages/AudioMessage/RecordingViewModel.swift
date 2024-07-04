@@ -15,12 +15,9 @@ class RecordingViewModel: NSObject, ObservableObject {
         case recStarted, recStopped
     }
     
-    static let zeroValue: Float = 0.01
-    static let maxValue: Float = 1
-    static let chunks: Int = 41
     static let updateInterval: Double = 0.10
     
-    @Published var waveformData: [Float] = Array(repeating: zeroValue, count: chunks)
+    @Published var waveformData: [Float] = Array(repeating: 0, count: Waveform.suggestedSamples)
     @Published var elapsedTime: TimeInterval = .zero
     
     private var audioRecorder: AVAudioRecorder?
@@ -82,23 +79,13 @@ class RecordingViewModel: NSObject, ObservableObject {
     
     func updateWaveform(_ timer: Timer) {
         
-        func normalizedB(value: Float) -> Float {
-            let input = Float(-60)...Float(0)
-            if value < input.lowerBound { return RecordingViewModel.zeroValue }
-            let output = RecordingViewModel.zeroValue...RecordingViewModel.maxValue
-            let x = (output.upperBound - output.lowerBound) * (value - input.lowerBound)
-            let y = (input.upperBound - input.lowerBound)
-            return x / y + output.lowerBound
-        }
-        
         if audioRecorder?.isRecording ?? false {
             audioRecorder?.updateMeters()
             
             guard let decibel = audioRecorder?.averagePower(forChannel: 0) // Gives -160...0 values
             else { return }
             
-            let normdB = normalizedB(value: decibel)
-            self.waveformData.append(normdB)
+            self.waveformData.append(decibel)
             self.waveformData.remove(at: 0)
             self.elapsedTime += RecordingViewModel.updateInterval
         }
@@ -116,6 +103,6 @@ class RecordingViewModel: NSObject, ObservableObject {
     }
     
     func clearWaveform() {
-        waveformData = Array(repeating: RecordingViewModel.zeroValue, count: RecordingViewModel.chunks)
+        waveformData = Array(repeating: 0, count: Waveform.suggestedSamples)
     }
 }

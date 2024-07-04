@@ -10,9 +10,15 @@ import Charts
 
 struct Waveform: View {
     
+    static let suggestedSamples = 21
+    static let suggestedOutputRange: ClosedRange<Float> = 0.01...1
+    static let dBInputRange: ClosedRange<Float> = -60...0
+    static let dataInputRange: ClosedRange<Float> = 0...255
+    
     let data: [Float]
     let highlightIndex: Int
     let highlightOpacity: Double
+    let normalizationRanges: (input: ClosedRange<Float>, output: ClosedRange<Float>)
     
     /// Convert the provided data into an array of `numSamples` float sample by normalizing each value between `minValue` and `maxValue`
     ///
@@ -27,41 +33,47 @@ struct Waveform: View {
     ///     - minValue: the minimum value to which the bar will start
     ///     - maxValue: the maximum value to which the bar will end
     init(
-        data: Data,
+        data: [Float],
         highlightIndex: Int? = nil,
         highlightOpacity: Double = 0.5,
-        numSamples: Int = 20,
-        minValue: Float = 0.1,
-        maxValue: Float = 1.0
+        numSamples: Int = suggestedSamples,
+        normalizationRanges: (input: ClosedRange<Float>, output: ClosedRange<Float>)
     ) {
         
         self.highlightIndex = highlightIndex ?? numSamples
         self.highlightOpacity = highlightOpacity
+        self.normalizationRanges = normalizationRanges
         
         // Convert the Data object to an array of UInt8 (bytes)
-        let byteArray = [UInt8](data)
-        let byteCount = byteArray.count
+        let byteCount = data.count
 
         // Calculate the size of each section
         let sectionSize = byteCount / numSamples
 
         // Array to hold the float values
         var floatArray: [Float] = []
-
+        
+        let minInput = normalizationRanges.input.lowerBound
+        let maxInput = normalizationRanges.input.upperBound
+        let minOutput = normalizationRanges.output.lowerBound
+        let maxOutput = normalizationRanges.output.upperBound
+       
         // Process each section
         for i in 0..<numSamples {
             let start = i * sectionSize
             let end = min(start + sectionSize, byteCount)
-            let section = byteArray[start..<end]
+            let section = data[start..<end]
 
             // Calculate the average of the section
-            let sum = section.reduce(UInt64(0), { $0 + UInt64($1) })
+            let sum = section.reduce(0) { $0 + $1 }
             let average = Float(sum) / Float(section.count)
 
-            // Normalize the average to the range [0.025, 1.0]
-            let normalizedValue = (average / 255.0) * (maxValue - minValue) + minValue
+            // Normalize the average to the range
+            let x = (maxOutput - minOutput) * (average - minInput)
+            let y = (maxInput - minInput)
+            let normalizedValue = x / y + minOutput
 
-            // Append the normalized value to the float array
+            // Append the rescaled value to the float array
             floatArray.append(normalizedValue)
         }
         
@@ -90,5 +102,5 @@ struct Waveform: View {
 }
 
 #Preview {
-    Waveform(data: Data(repeating: 25, count: 50), highlightIndex: 10)
+    Waveform(data: Array(repeating: 3.0, count: 50), highlightIndex: 10, normalizationRanges: (input: 0...0, output: 0...0))
 }

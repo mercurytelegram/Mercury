@@ -74,15 +74,6 @@ class PlayingViewModel: NSObject, ObservableObject {
     
     func updateWaveform(_ timer: Timer) {
         
-        func normalizedB(value: Float) -> Float {
-            let input = Float(-60)...Float(0)
-            if value < input.lowerBound { return RecordingViewModel.zeroValue }
-            let output = RecordingViewModel.zeroValue...RecordingViewModel.maxValue
-            let x = (output.upperBound - output.lowerBound) * (value - input.lowerBound)
-            let y = (input.upperBound - input.lowerBound)
-            return x / y + output.lowerBound
-        }
-        
         func gaussiana(x: Int, mu: Int, sigma: Double) -> Double {
             return (1.0 / (sigma * sqrt(2.0 * Double.pi))) * exp(-pow(Double(x) - Double(mu), 2) / (2.0 * pow(sigma, 2)))
         }
@@ -93,14 +84,13 @@ class PlayingViewModel: NSObject, ObservableObject {
             guard let decibel = audioPlayer?.averagePower(forChannel: 0) // Gives -160...0 values
             else { return }
             
-            let normdB = normalizedB(value: decibel)
-            let center = Int(RecordingViewModel.chunks/2)
+            let center = Int(Waveform.suggestedSamples/2)
             let sigma = Double(center) / 2.0
             let maxGaussian = gaussiana(x: center, mu: center, sigma: sigma)
             
             for i in 0..<self.waveformData.count {
                 let gaussianValue = gaussiana(x: i, mu: center, sigma: sigma)
-                self.waveformData[i] = normdB * Float((gaussianValue / maxGaussian))
+                self.waveformData[i] = decibel * Float((gaussianValue / maxGaussian))
             }
         }
     }

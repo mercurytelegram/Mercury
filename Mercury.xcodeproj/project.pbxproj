@@ -196,6 +196,7 @@
 		4AE620242C09C99100722512 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A046516D2C301B3A00F3A78B /* Waveform.swift */,
 				4A5D784C2BEBA7C200D9D805 /* AvatarView.swift */,
 				4A01E2042BF765D800EBC96D /* TdPhotoView.swift */,
 			);
@@ -208,7 +209,6 @@
 				9B2E1BDE2C08739800B9B63D /* MessageView.swift */,
 				9B2E1BDC2C08739800B9B63D /* MessageViewModel.swift */,
 				9B2E1BDD2C08739800B9B63D /* BubbleShape.swift */,
-				A046516D2C301B3A00F3A78B /* Waveform.swift */,
 			);
 			path = Message;
 			sourceTree = "<group>";
