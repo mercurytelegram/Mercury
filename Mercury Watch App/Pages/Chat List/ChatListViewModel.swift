@@ -34,8 +34,7 @@ class ChatListViewModel: TDLibViewModel {
             case .updateUserStatus(let update):
                 self.updateUserStatus(userId: update.userId, status: update.status)
             case .updateChatLastMessage(let update):
-                self.updateLastMessage(chatId: update.chatId, message: update.lastMessage)
-                self.updateChatPosition(chatId: update.chatId, positions: update.positions)
+                self.updateLastMessage(update: update)
             case .updateChatPosition(let update):
                 self.updateChatPosition(chatId: update.chatId, positions: [update.position])
                 
@@ -112,8 +111,12 @@ class ChatListViewModel: TDLibViewModel {
         
     }
     
-    func updateLastMessage(chatId: Int64, message: Message?) {
-        let chatId = chatId
+    func updateLastMessage(update: UpdateChatLastMessage) {
+
+        let chatId = update.chatId
+        let message = update.lastMessage
+        let newPositions = update.positions
+        
         let index = self.chats.firstIndex { c in c.td.id == chatId }
         guard let message, let index, index != -1 else { return }
         
@@ -136,6 +139,7 @@ class ChatListViewModel: TDLibViewModel {
             
             await MainActor.run { [desc] in
                 self.chats[index].message = desc
+                self.updateChatPosition(chatId: chatId, positions: newPositions)
             }
         }
         

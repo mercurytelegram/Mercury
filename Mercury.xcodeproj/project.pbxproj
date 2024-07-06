@@ -754,7 +754,7 @@
 			repositoryURL = "https://github.com/Swiftgram/TDLibKit";
 			requirement = {
 				kind = revision;
-				revision = 9aa7ba777c6c21fd4bf0710c47c2f6f3beb9c8c9;
+				revision = 77f24511314c53e04c97ce443abb8f1785d43f8b;
 			};
 		};
 		A0F63BDC2BD6728800F7135E /* XCRemoteSwiftPackageReference "EFQRCode" */ = {

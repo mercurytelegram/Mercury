@@ -30,12 +30,11 @@ struct Waveform: View {
     ///     - highlightIndex: The index of the last bar to highlight, if nil all the bars will be highlighted
     ///     - highlightOpacity: The opacity value applied to not highlighted bars
     ///     - numSamples: The numer of bars to show in the waveform
-    ///     - minValue: the minimum value to which the bar will start
-    ///     - maxValue: the maximum value to which the bar will end
+    ///     - normalizationRanges: set as `input` the range of `data` values and provide as `output` the values you want to display in waveform
     init(
         data: [Float],
         highlightIndex: Int? = nil,
-        highlightOpacity: Double = 0.5,
+        highlightOpacity: Double = 0.2,
         numSamples: Int = suggestedSamples,
         normalizationRanges: (input: ClosedRange<Float>, output: ClosedRange<Float>)
     ) {
@@ -102,5 +101,7 @@ struct Waveform: View {
 }
 
 #Preview {
-    Waveform(data: Array(repeating: 3.0, count: 50), highlightIndex: 10, normalizationRanges: (input: 0...0, output: 0...0))
+    Waveform(data: Array(repeating: 3.0, count: 50), 
+             highlightIndex: 10,
+             normalizationRanges: (input: 0...0, output: 0...0))
 }
