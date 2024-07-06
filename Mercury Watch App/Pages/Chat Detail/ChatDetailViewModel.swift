@@ -12,6 +12,7 @@ class ChatDetailViewModel: TDLibViewModel {
     
     @Published var messages: [Message] = []
     @Published var isLoadingInitialMessages = true
+    @Published var showStickersView = false
     
     let chat: ChatCellModel
     init(chat: ChatCellModel) {

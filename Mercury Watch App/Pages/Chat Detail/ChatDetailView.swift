@@ -13,7 +13,6 @@ struct ChatDetailView: View {
     
     @StateObject var vm: ChatDetailViewModel
     @StateObject var sendMsgVM: SendMessageViewModel
-    @State var image: Image?
     
     
     init(chat: ChatCellModel, useMock: Bool = false) {
@@ -76,7 +75,9 @@ struct ChatDetailView: View {
                     Button("Record", systemImage: "mic.fill") {}
                         .controlSize(.large)
                     
-                    Button("Stickers", systemImage: "face.smiling.inverse") {}
+                    Button("Stickers", systemImage: "face.smiling.inverse") {
+                        vm.showStickersView = true
+                    }
                 }
             }
             .containerBackground(for: .navigation){
@@ -89,7 +90,9 @@ struct ChatDetailView: View {
                     )
             }
         }
-        
+        .sheet(isPresented: $vm.showStickersView, content: {
+            AlertView.inDevelopment("stickers are")
+        })
     }
     
     func getImage(_ message: Message) async -> Image? {
