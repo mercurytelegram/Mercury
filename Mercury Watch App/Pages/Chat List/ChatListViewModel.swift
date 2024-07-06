@@ -15,6 +15,7 @@ class ChatListViewModel: TDLibViewModel {
     @Published var chats: [ChatCellModel] = []
     @Published var isLoading = true
     @Published var showSettings = false
+    @Published var showNewMessage = false
     var isMock = false
     var folders: [ChatFolder] = [.main, .archive]
     private(set) var currentFolder: ChatFolder = .main

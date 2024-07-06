@@ -29,8 +29,13 @@ struct ChatListView: View {
             .navigationTitle(vm.currentFolder.title)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("New Chat", systemImage: "square.and.pencil") {}
+                    Button("New Chat", systemImage: "square.and.pencil") {
+                        vm.showNewMessage = true
+                    }
                 }
+            }
+            .sheet(isPresented: $vm.showNewMessage) {
+                AlertView.inDevelopment("new message is")
             }
         }
     }

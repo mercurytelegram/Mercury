@@ -42,7 +42,7 @@ struct AlertView: View {
             symbolSystemName: "hammer",
             symbolColor: .blue,
             title: "In Development",
-            description: "Sorry, \(feature) currentrly under development"
+            description: "Sorry, \(feature) currently under development"
         )
     }
 }
