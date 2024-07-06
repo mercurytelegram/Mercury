@@ -13,7 +13,6 @@ struct ChatDetailView: View {
     
     @StateObject var vm: ChatDetailViewModel
     @StateObject var sendMsgVM: SendMessageViewModel
-    @State var image: Image?
     
     
     init(chat: ChatCellModel, useMock: Bool = false) {
@@ -42,11 +41,17 @@ struct ChatDetailView: View {
                                 proxy.scrollTo(lastMessage?.id, anchor: .bottom)
                             }
                         }
-                    }.padding()
+                    }
+                    .padding()
                  
                     ForEach(vm.messages) { message in
                         MessageView(vm.getMessageVM(for: message))
                             .id(message.id)
+                            .scrollTransition { content, phase in 
+                                content
+                                    .scaleEffect(phase.isIdentity ? 1 : 0.7)
+                                    .opacity(phase.isIdentity ? 1 : 0)
+                            }
                     }
                     .padding(.bottom)
                 }
@@ -69,25 +74,28 @@ struct ChatDetailView: View {
                     Button("Record", systemImage: "mic.fill") {}
                         .controlSize(.large)
                     
-                    Button("Stickers", systemImage: "face.smiling.inverse") {}
+                    Button("Stickers", systemImage: "face.smiling.inverse") {
+                        vm.showStickersView = true
+                    }
                 }
             }
-            .background {
-                
+            .containerBackground(for: .navigation){
                 Rectangle()
                     .foregroundStyle(
                         Gradient(colors: [
                             .blue.opacity(0.7),
-                            .blue.opacity(0.2)]
-                        ))
-                    .ignoresSafeArea()
+                            .blue.opacity(0.2)
+                        ])
+                    )
             }
             .navigationTitle {
                 Text(vm.chat.td.title)
                     .foregroundStyle(.white)
             }
         }
-        
+        .sheet(isPresented: $vm.showStickersView, content: {
+            AlertView.inDevelopment("stickers are")
+        })
     }
     
     func getImage(_ message: Message) async -> Image? {

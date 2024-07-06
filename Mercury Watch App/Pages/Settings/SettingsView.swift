@@ -6,13 +6,12 @@
 //
 
 import SwiftUI
-import UIKit
+import TDLibKit
 
 struct SettingsView: View {
-    @State private var navStack: [String] = ["All Chats"]
-    @State private var folders = ["All Chats", "Archived"]
+    @State private var navStack: [ChatFolder] = [.main]
     @EnvironmentObject var loginVM: LoginViewModel
-    @State var chatListVM = ChatListViewModel()
+    @StateObject var chatListVM = ChatListViewModel()
     
     var body: some View {
         NavigationStack(path: $navStack) {
@@ -25,30 +24,26 @@ struct SettingsView: View {
                 
                 Section {
                     // Folders
-                    ForEach(folders, id: \.self) { folder in
+                    ForEach(chatListVM.folders, id: \.self) { folder in
                         NavigationLink(value: folder) {
                             Label {
-                                Text(folder)
+                                Text(folder.title)
                             } icon: {
-                                Image(systemName: "folder")
+                                Image(systemName: folder.iconName)
                                     .font(.caption)
-                                    .foregroundStyle(.blue)
+                                    .foregroundStyle(folder.color)
                             }
                         }
-                        .listItemTint(.blue)
+                        .listItemTint(folder.color)
                     }
                 }
                 
             }
             .navigationTitle("Mercury")
-            .navigationDestination(for: String.self) { folder in
-                chatListVM.folder = folder
-                return ChatListView(vm: chatListVM)
-            }
-        }
-        .onAppear {
-            if loginVM.useMock {
-                chatListVM = MockChatListViewModel()
+            .navigationDestination(for: ChatFolder.self) { folder in
+                return ChatListView(vm: chatListVM).task {
+                    chatListVM.selectChat(folder)
+                }
             }
         }
     }

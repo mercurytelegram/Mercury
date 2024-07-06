@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TDLibKit
 
 struct ChatListView: View {
     
@@ -25,7 +26,7 @@ struct ChatListView: View {
                 }
             }
             .listStyle(.carousel)
-            .navigationTitle(vm.folder)
+            .navigationTitle(vm.currentFolder.title)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("New Chat", systemImage: "square.and.pencil") {}

@@ -47,6 +47,8 @@ extension Message {
             stringMessage = isVideo ? "📹" : "📞" + " Call"
         case .messageSticker(let sticker):
             stringMessage = sticker.sticker.emoji
+        case .messagePinMessage(let message):
+            stringMessage = "📌 Pinned a message"
         default:
             stringMessage = "\(self.content)"
         }
