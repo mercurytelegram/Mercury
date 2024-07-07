@@ -57,7 +57,7 @@ struct AudioMessageView: View {
         Waveform(
             data: vm.waveformData,
             normalizationRanges: (
-                input: Waveform.dBInputRange,
+                input: vm.state == .recStarted ? Waveform.dBInputRange : Waveform.dataInputRange,
                 output: Waveform.suggestedOutputRange
             )
         )

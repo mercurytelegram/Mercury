@@ -11,7 +11,7 @@ import AVFoundation
 import Combine
 import TDLibKit
 
-class AudioMessageViewModel: ObservableObject {
+class AudioMessageViewModel: NSObject, ObservableObject {
     
     /*
      
@@ -31,14 +31,13 @@ class AudioMessageViewModel: ObservableObject {
     }
     
     @Published var state: RecordingState = .recStarted
-    @Published private var recorderVM: RecordingViewModel
-    @Published private var playerVM: PlayingViewModel
+    @Published private var recorder: RecorderService
+    @Published private var player: PlayerService?
     
     @Published var waveformData: [Float] = []
     @Published var elapsedTime: TimeInterval = .zero
     
     private var recorderDataCancellable: AnyCancellable?
-    private var playerDataCancellable: AnyCancellable?
     
     private let filePath: URL
     private let chat: ChatCellModel
@@ -50,56 +49,30 @@ class AudioMessageViewModel: ObservableObject {
         let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         
         self.filePath = (urls[0] as URL).appendingPathComponent(recName)
-        self.recorderVM = RecordingViewModel(recFilePath: filePath)
-        self.playerVM = PlayingViewModel(audioFilePath: filePath)
+        self.recorder = RecorderService(recFilePath: filePath)
         self.chat = chat
         self.state = .recStarted
         
-        initAudioSession()
+        super.init()
         
-        recorderDataCancellable = self.recorderVM.$waveformData.sink { [weak self] _ in
+        recorderDataCancellable = self.recorder.$waveformData.sink { [weak self] _ in
             guard let self, self.state == .recStarted else { return }
             self.manageRecorderData()
         }
-        
-        playerDataCancellable = self.playerVM.$waveformData.sink(receiveValue: { [weak self] _ in
-            guard let self, self.state == .playStarted else { return }
-            self.managePlayerData()
-        })
         
     }
     
     deinit {
         recorderDataCancellable?.cancel()
-        playerDataCancellable?.cancel()
-        recorderVM.dispose()
-        playerVM.dispose()
-    }
-    
-    private func initAudioSession() {
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playAndRecord, mode: .default)
-            try audioSession.setActive(true)
-        } catch {
-            print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
-        }
+        recorder.dispose()
+        player?.dispose()
     }
     
     private func manageRecorderData() {
         DispatchQueue.main.async {
             withAnimation {
-                self.elapsedTime = self.recorderVM.elapsedTime
-                self.waveformData = self.recorderVM.waveformData
-            }
-        }
-    }
-    
-    private func managePlayerData() {
-        DispatchQueue.main.async {
-            withAnimation {
-                self.elapsedTime = self.playerVM.elapsedTime
-                self.waveformData = self.playerVM.waveformData
+                self.elapsedTime = self.recorder.elapsedTime
+                self.waveformData = self.recorder.waveformData
             }
         }
     }
@@ -108,8 +81,8 @@ class AudioMessageViewModel: ObservableObject {
     func onAppear() async -> Bool {
         let hasPermission = await AVAudioApplication.requestRecordPermission()
         if hasPermission { 
-            self.recorderVM.initAudioRecorder()
-            self.recorderVM.startRecordingAudio()
+            self.recorder.initAudioRecorder()
+            self.recorder.startRecordingAudio()
         }
         
         return hasPermission
@@ -118,16 +91,24 @@ class AudioMessageViewModel: ObservableObject {
     func didPressMainAction() {
         switch state {
         case .recStarted:
-            recorderVM.stopRecordingAudio()
-            playerVM.initAudioPlayer()
+            recorder.stopRecordingAudio()
+            
+            do {
+                self.player = try PlayerService(audioFilePath: filePath, delegate: self)
+            } catch {
+                print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
+            }
+            
             state = .recStopped
             
+            self.waveformData = player?.getWaveform() ?? []
+            
         case .recStopped, .playPaused:
-            playerVM.startPlayingAudio()
+            player?.startPlayingAudio()
             state = .playStarted
                     
         case .playStarted:
-            playerVM.stopPlayingAudio()
+            player?.stopPlayingAudio()
             state = .playPaused
             
         default:
@@ -140,7 +121,7 @@ class AudioMessageViewModel: ObservableObject {
         if state == .sending { return }
         
         if state == .recStarted {
-            recorderVM.stopRecordingAudio()
+            recorder.stopRecordingAudio()
         }
         
         await MainActor.run {
@@ -148,7 +129,7 @@ class AudioMessageViewModel: ObservableObject {
         }
         
         let audioFile: InputFile = .inputFileLocal(.init(path: filePath.relativePath))
-        let audioDuration = Int(recorderVM.elapsedTime)
+        let audioDuration = Int(recorder.elapsedTime)
         let audioWaveform = (try? Data(contentsOf: filePath)) ?? Data()
         
         let audio: InputMessageVoiceNote = .init(
@@ -177,5 +158,14 @@ class AudioMessageViewModel: ObservableObject {
             print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
         }
         
+    }
+}
+
+extension AudioMessageViewModel: AVAudioPlayerDelegate {
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if flag {
+            self.player?.stopPlayingAudio()
+            self.state = .playPaused
+        }
     }
 }

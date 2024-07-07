@@ -113,35 +113,26 @@ class MessageViewModel: NSObject, ObservableObject {
     
     private func playVoiceNote(voiceNote: VoiceNote) {
         
+        isLoading = true
         Task {
             
-            await MainActor.run { isLoading = true }
-            let filePath = await FileService.getFile(for: voiceNote.voice)
-            await MainActor.run { isLoading = false }
-            
-            guard let filePath else {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] filePath is nil")
-                return
-            }
-            
-            do {
-                
-                let audioSession = AVAudioSession.sharedInstance()
-                try audioSession.setCategory(.playback, mode: .default)
-                try audioSession.setActive(true)
-                
-                let audioPlayer = try AVAudioPlayer(contentsOf: filePath)
-                audioPlayer.isMeteringEnabled = true
-                audioPlayer.volume = 1.0
-                audioPlayer.prepareToPlay()
-                audioPlayer.play()
-                
-            } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] audioPlayer error: \(error)")
-            }
-            
+            let filePath = await FileService.getFilePath(for: voiceNote.voice)
             await MainActor.run {
-                isPlaying = true
+                
+                isLoading = false
+                guard let filePath else {
+                    print("[CLIENT] [\(type(of: self))] [\(#function)] filePath is nil")
+                    return
+                }
+                
+                do {
+                    let audioPlayer = try PlayerService(audioFilePath: filePath, delegate: self)
+                    audioPlayer.startPlayingAudio()
+                    isPlaying = true
+                } catch {
+                    print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
+                }
+                
             }
         }
     }

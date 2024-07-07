@@ -9,11 +9,7 @@ import Foundation
 import SwiftUI
 import AVFoundation
 
-class RecordingViewModel: NSObject, ObservableObject {
-    
-    enum RecordingState {
-        case recStarted, recStopped
-    }
+class RecorderService: NSObject, ObservableObject {
     
     static let updateInterval: Double = 0.10
     
@@ -34,7 +30,7 @@ class RecordingViewModel: NSObject, ObservableObject {
         let queue = DispatchQueue.global(qos: .userInteractive)
         
         waveformTimer = Timer.scheduledTimer(
-            withTimeInterval: RecordingViewModel.updateInterval,
+            withTimeInterval: RecorderService.updateInterval,
             repeats: true,
             block: updateWaveform
         )
@@ -58,6 +54,10 @@ class RecordingViewModel: NSObject, ObservableObject {
     
     func initAudioRecorder() {
         do {
+            
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playAndRecord, mode: .default)
+            try audioSession.setActive(true)
             
             let recSettings = [
                 AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
@@ -87,7 +87,7 @@ class RecordingViewModel: NSObject, ObservableObject {
             
             self.waveformData.append(decibel)
             self.waveformData.remove(at: 0)
-            self.elapsedTime += RecordingViewModel.updateInterval
+            self.elapsedTime += RecorderService.updateInterval
         }
         
     }

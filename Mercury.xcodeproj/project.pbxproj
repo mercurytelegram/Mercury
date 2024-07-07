@@ -47,8 +47,8 @@
 		A081AAD92C0752AA002A265C /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD82C0752AA002A265C /* Secrets.swift */; };
 		A083F9132C29FA9000AB29F4 /* AudioMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A083F9102C29FA9000AB29F4 /* AudioMessageView.swift */; };
 		A083F9142C29FA9000AB29F4 /* AudioMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A083F9112C29FA9000AB29F4 /* AudioMessageViewModel.swift */; };
-		A0C115742C2D5BB400A6E8BB /* PlayingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C115732C2D5BB400A6E8BB /* PlayingViewModel.swift */; };
-		A0C115762C2D5D0800A6E8BB /* RecordingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C115752C2D5D0800A6E8BB /* RecordingViewModel.swift */; };
+		A0C115742C2D5BB400A6E8BB /* PlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C115732C2D5BB400A6E8BB /* PlayerService.swift */; };
+		A0C115762C2D5D0800A6E8BB /* RecorderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C115752C2D5D0800A6E8BB /* RecorderService.swift */; };
 		A0C2964A2C00A26F00CB8C38 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C296492C00A26F00CB8C38 /* SettingsView.swift */; };
 		A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA7BA52BF90FC200E66219 /* AppDelegate.swift */; };
 		A0CF531A2BDFA57A00BA394B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53192BDFA57A00BA394B /* LoginViewModel.swift */; };
@@ -123,8 +123,8 @@
 		A081AAD82C0752AA002A265C /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		A083F9102C29FA9000AB29F4 /* AudioMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMessageView.swift; sourceTree = "<group>"; };
 		A083F9112C29FA9000AB29F4 /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
-		A0C115732C2D5BB400A6E8BB /* PlayingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayingViewModel.swift; sourceTree = "<group>"; };
-		A0C115752C2D5D0800A6E8BB /* RecordingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingViewModel.swift; sourceTree = "<group>"; };
+		A0C115732C2D5BB400A6E8BB /* PlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerService.swift; sourceTree = "<group>"; };
+		A0C115752C2D5D0800A6E8BB /* RecorderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderService.swift; sourceTree = "<group>"; };
 		A0C296492C00A26F00CB8C38 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A0CA7BA52BF90FC200E66219 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0CF53192BDFA57A00BA394B /* LoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -188,6 +188,8 @@
 		4AE620232C09C72600722512 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A0C115752C2D5D0800A6E8BB /* RecorderService.swift */,
+				A0C115732C2D5BB400A6E8BB /* PlayerService.swift */,
 				9BB4FEAE2BF3E3BB000785BA /* FileService.swift */,
 			);
 			path = Services;
@@ -314,8 +316,6 @@
 			children = (
 				A083F9102C29FA9000AB29F4 /* AudioMessageView.swift */,
 				A083F9112C29FA9000AB29F4 /* AudioMessageViewModel.swift */,
-				A0C115752C2D5D0800A6E8BB /* RecordingViewModel.swift */,
-				A0C115732C2D5BB400A6E8BB /* PlayingViewModel.swift */,
 			);
 			path = AudioMessage;
 			sourceTree = "<group>";
@@ -451,7 +451,7 @@
 				4AE620192C09C36800722512 /* MockChatDetailViewModel.swift in Sources */,
 				9B3FC90D2BF3DF8400CDE217 /* ChatDetailView.swift in Sources */,
 				A083F9132C29FA9000AB29F4 /* AudioMessageView.swift in Sources */,
-				A0C115742C2D5BB400A6E8BB /* PlayingViewModel.swift in Sources */,
+				A0C115742C2D5BB400A6E8BB /* PlayerService.swift in Sources */,
 				9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */,
 				A05C1A012BEB74B700724B6E /* ChatListView.swift in Sources */,
 				A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */,
@@ -471,7 +471,7 @@
 				4AA1C7CD2BD7CF1600EB01BC /* InfoView.swift in Sources */,
 				4A01E2052BF765D800EBC96D /* TdPhotoView.swift in Sources */,
 				9B2E1BE02C08739800B9B63D /* BubbleShape.swift in Sources */,
-				A0C115762C2D5D0800A6E8BB /* RecordingViewModel.swift in Sources */,
+				A0C115762C2D5D0800A6E8BB /* RecorderService.swift in Sources */,
 				9B0F6AB92C01F0AE00568319 /* MockChatListViewModel.swift in Sources */,
 				A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */,
 				A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */,
@@ -633,6 +633,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mercury-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Audio messages";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -664,6 +665,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mercury-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Audio messages";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

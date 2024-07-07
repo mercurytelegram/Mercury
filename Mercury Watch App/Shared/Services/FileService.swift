@@ -13,12 +13,12 @@ class FileService {
     
     static func getImage(for photo: File) async -> Image? {
         
-        guard let imagePath = await FileService.getFile(for: photo) else {
+        guard let imagePath = await FileService.getPath(for: photo) else {
             print("[CLIENT] [\(type(of: self))] \(#function) imagePath is nil")
             return nil
         }
         
-        guard let uiImage = UIImage(contentsOfFile: imagePath.absoluteString) else {
+        guard let uiImage = UIImage(contentsOfFile: imagePath) else {
             print("[CLIENT] [\(type(of: self))] \(#function) uiImage is nil")
             return nil
         }
@@ -26,7 +26,17 @@ class FileService {
         return Image(uiImage: uiImage)
     }
     
-    static func getFile(for file: File) async -> URL? {
+    static func getFilePath(for file: File) async -> URL? {
+        
+        guard let path = await FileService.getPath(for: file) else {
+            print("[CLIENT] [\(type(of: self))] \(#function) path is nil")
+            return nil
+        }
+        
+        return URL(fileURLWithPath: path)
+    }
+    
+    static func getPath(for file: File) async -> String? {
         var filePath = file.local.path
         
         if filePath.isEmpty {
@@ -47,6 +57,6 @@ class FileService {
             }
         }
         
-        return URL(string: filePath)
+        return filePath
     }
 }
