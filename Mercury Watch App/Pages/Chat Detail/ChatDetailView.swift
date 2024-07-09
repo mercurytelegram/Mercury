@@ -47,7 +47,7 @@ struct ChatDetailView: View {
                     ForEach(vm.messages) { message in
                         MessageView(vm.getMessageVM(for: message))
                             .id(message.id)
-                            .scrollTransition { content, phase in 
+                            .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
                                 content
                                     .scaleEffect(phase.isIdentity ? 1 : 0.7)
                                     .opacity(phase.isIdentity ? 1 : 0)
@@ -83,8 +83,8 @@ struct ChatDetailView: View {
                 Rectangle()
                     .foregroundStyle(
                         Gradient(colors: [
-                            .blue.opacity(0.7),
-                            .blue.opacity(0.2)
+                            .blue.opacity(0.5),
+                            .blue.opacity(0.1)
                         ])
                     )
             }

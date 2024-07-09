@@ -35,7 +35,7 @@ struct ChatListView: View {
                 }
             }
             .sheet(isPresented: $vm.showNewMessage) {
-                AlertView.inDevelopment("new message is")
+                AlertView.inDevelopment("new messages are")
             }
         }
     }

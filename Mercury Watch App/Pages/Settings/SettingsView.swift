@@ -9,18 +9,18 @@ import SwiftUI
 import TDLibKit
 
 struct SettingsView: View {
-    @State private var navStack: [ChatFolder] = [.main]
-    @EnvironmentObject var loginVM: LoginViewModel
+    @StateObject var settingsVM = SettingsViewModel()
     @StateObject var chatListVM = ChatListViewModel()
     
     var body: some View {
-        NavigationStack(path: $navStack) {
+        NavigationStack(path: $settingsVM.navStack) {
             List {
-                NavigationLink("Account") {
-                    Button("Logout", role: .destructive) {
-                        loginVM.logout()
-                    }
+                NavigationLink {
+                    AccountDetailView()
+                } label: {
+                    UserCellView(user: settingsVM.user)
                 }
+                
                 
                 Section {
                     // Folders
@@ -47,17 +47,10 @@ struct SettingsView: View {
             }
         }
     }
-    
-    enum destinations {
-       case account, all, folder
-    }
 }
 
 #Preview {
-    let vm = LoginViewModel()
-    vm.useMock = true
-    
     return SettingsView()
-        .environmentObject(vm)
+        .environmentObject(LoginViewModel())
 }
 
