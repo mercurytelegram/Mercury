@@ -50,6 +50,8 @@
 		A0C115742C2D5BB400A6E8BB /* PlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C115732C2D5BB400A6E8BB /* PlayerService.swift */; };
 		A0C115762C2D5D0800A6E8BB /* RecorderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C115752C2D5D0800A6E8BB /* RecorderService.swift */; };
 		A0C2964A2C00A26F00CB8C38 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C296492C00A26F00CB8C38 /* SettingsView.swift */; };
+		A0C59EF32C3DB3EF00C6212F /* VoiceNoteContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C59EF22C3DB3EF00C6212F /* VoiceNoteContentView.swift */; };
+		A0C59EF62C3DB50E00C6212F /* VoiceNoteContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C59EF52C3DB50E00C6212F /* VoiceNoteContentViewModel.swift */; };
 		A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA7BA52BF90FC200E66219 /* AppDelegate.swift */; };
 		A0CF531A2BDFA57A00BA394B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53192BDFA57A00BA394B /* LoginViewModel.swift */; };
 		A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53262BDFD78900BA394B /* TDLibManager.swift */; };
@@ -126,6 +128,8 @@
 		A0C115732C2D5BB400A6E8BB /* PlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerService.swift; sourceTree = "<group>"; };
 		A0C115752C2D5D0800A6E8BB /* RecorderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderService.swift; sourceTree = "<group>"; };
 		A0C296492C00A26F00CB8C38 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A0C59EF22C3DB3EF00C6212F /* VoiceNoteContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceNoteContentView.swift; sourceTree = "<group>"; };
+		A0C59EF52C3DB50E00C6212F /* VoiceNoteContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceNoteContentViewModel.swift; sourceTree = "<group>"; };
 		A0CA7BA52BF90FC200E66219 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A0CF53192BDFA57A00BA394B /* LoginViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A0CF53262BDFD78900BA394B /* TDLibManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManager.swift; sourceTree = "<group>"; };
@@ -208,6 +212,7 @@
 		9B2E1BDB2C08739800B9B63D /* Message */ = {
 			isa = PBXGroup;
 			children = (
+				A0C59EF12C3DB3E000C6212F /* Contents */,
 				9B2E1BDE2C08739800B9B63D /* MessageView.swift */,
 				9B2E1BDC2C08739800B9B63D /* MessageViewModel.swift */,
 				9B2E1BDD2C08739800B9B63D /* BubbleShape.swift */,
@@ -326,6 +331,23 @@
 				A0C296492C00A26F00CB8C38 /* SettingsView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		A0C59EF12C3DB3E000C6212F /* Contents */ = {
+			isa = PBXGroup;
+			children = (
+				A0C59EF42C3DB4E200C6212F /* VoiceNote */,
+			);
+			path = Contents;
+			sourceTree = "<group>";
+		};
+		A0C59EF42C3DB4E200C6212F /* VoiceNote */ = {
+			isa = PBXGroup;
+			children = (
+				A0C59EF22C3DB3EF00C6212F /* VoiceNoteContentView.swift */,
+				A0C59EF52C3DB50E00C6212F /* VoiceNoteContentViewModel.swift */,
+			);
+			path = VoiceNote;
 			sourceTree = "<group>";
 		};
 		A0CF53252BDFD77D00BA394B /* TDLib */ = {
@@ -463,7 +485,9 @@
 				9BAC54B82C00CCD90055F1EE /* Chat+Mock.swift in Sources */,
 				A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */,
 				9B2E1BE12C08739800B9B63D /* MessageView.swift in Sources */,
+				A0C59EF32C3DB3EF00C6212F /* VoiceNoteContentView.swift in Sources */,
 				4AE6201D2C09C4AA00722512 /* MockSendMessageViewModel.swift in Sources */,
+				A0C59EF62C3DB50E00C6212F /* VoiceNoteContentViewModel.swift in Sources */,
 				4A919FCF2BD7C3C800F78F03 /* LoginView.swift in Sources */,
 				A081AAD92C0752AA002A265C /* Secrets.swift in Sources */,
 				A081AAD32C071C82002A265C /* Extensions+ChatAction.swift in Sources */,

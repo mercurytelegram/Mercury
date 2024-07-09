@@ -99,48 +99,4 @@ class MessageViewModel: NSObject, ObservableObject {
         }
     }
     
-    func play() {
-        
-        switch message.content {
-        case .messageVoiceNote(let message):
-            playVoiceNote(voiceNote: message.voiceNote)
-            
-        default:
-            return
-        }
-    
-    }
-    
-    private func playVoiceNote(voiceNote: VoiceNote) {
-        
-        isLoading = true
-        Task {
-            
-            let filePath = await FileService.getFilePath(for: voiceNote.voice)
-            await MainActor.run {
-                
-                isLoading = false
-                guard let filePath else {
-                    print("[CLIENT] [\(type(of: self))] [\(#function)] filePath is nil")
-                    return
-                }
-                
-                do {
-                    let audioPlayer = try PlayerService(audioFilePath: filePath, delegate: self)
-                    audioPlayer.startPlayingAudio()
-                    isPlaying = true
-                } catch {
-                    print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
-                }
-                
-            }
-        }
-    }
-    
-}
-
-extension MessageViewModel: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if flag { isPlaying = false }
-    }
 }
