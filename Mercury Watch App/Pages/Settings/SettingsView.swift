@@ -2,30 +2,55 @@
 //  SettingsView.swift
 //  Mercury Watch App
 //
-//  Created by Marco Tammaro on 24/05/24.
+//  Created by Alessandro Alberti on 19/06/24.
 //
 
 import SwiftUI
+import TDLibKit
 
 struct SettingsView: View {
-    
-    @EnvironmentObject var loginVM: LoginViewModel
-    @Binding var isPresented: Bool
+    @StateObject var settingsVM = SettingsViewModel()
+    @StateObject var chatListVM = ChatListViewModel()
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                Button("Logout") {
-                    loginVM.logout()
-                    isPresented = false
+        NavigationStack(path: $settingsVM.navStack) {
+            List {
+                NavigationLink {
+                    AccountDetailView()
+                } label: {
+                    UserCellView(user: settingsVM.user)
+                }
+                
+                
+                Section {
+                    // Folders
+                    ForEach(chatListVM.folders, id: \.self) { folder in
+                        NavigationLink(value: folder) {
+                            Label {
+                                Text(folder.title)
+                            } icon: {
+                                Image(systemName: folder.iconName)
+                                    .font(.caption)
+                                    .foregroundStyle(folder.color)
+                            }
+                        }
+                        .listItemTint(folder.color)
+                    }
+                }
+                
+            }
+            .navigationTitle("Mercury")
+            .navigationDestination(for: ChatFolder.self) { folder in
+                return ChatListView(vm: chatListVM).task {
+                    chatListVM.selectChat(folder)
                 }
             }
-            .scenePadding(.horizontal)
-            .navigationTitle("Settings")
         }
     }
 }
 
 #Preview {
-    SettingsView(isPresented: .constant(true))
+    return SettingsView()
+        .environmentObject(LoginViewModel())
 }
+

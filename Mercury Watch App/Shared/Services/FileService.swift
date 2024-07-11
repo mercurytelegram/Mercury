@@ -11,15 +11,17 @@ import TDLibKit
 
 class FileService {
     
+    static let logger = LoggerService(FileService.self)
+    
     static func getImage(for photo: File) async -> Image? {
         
         guard let imagePath = await FileService.getPath(for: photo) else {
-            print("[CLIENT] [\(type(of: self))] \(#function) imagePath is nil")
+            logger.log("imagePath is nil")
             return nil
         }
         
         guard let uiImage = UIImage(contentsOfFile: imagePath) else {
-            print("[CLIENT] [\(type(of: self))] \(#function) uiImage is nil")
+            logger.log("Unable to convert file to image")
             return nil
         }
         
@@ -29,7 +31,7 @@ class FileService {
     static func getFilePath(for file: File) async -> URL? {
         
         guard let path = await FileService.getPath(for: file) else {
-            print("[CLIENT] [\(type(of: self))] \(#function) path is nil")
+            logger.log("path is nil")
             return nil
         }
         
@@ -37,6 +39,7 @@ class FileService {
     }
     
     static func getPath(for file: File) async -> String? {
+        
         var filePath = file.local.path
         
         if filePath.isEmpty {
@@ -48,12 +51,15 @@ class FileService {
                     offset: 0,
                     priority: 4,
                     synchronous: true
-                ) else { return nil }
+                ) else {
+                    logger.log("Unable to retrive file", level: .error)
+                    return nil
+                }
                 
                 filePath = file.local.path
                 
             } catch {
-                print("[CLIENT] [\(type(of: self))] error in \(#function): \(error)")
+                logger.log(error, level: .error)
             }
         }
         

@@ -41,12 +41,10 @@ final class TDLibManager {
     }
     
     public func close() {
-        print("[CLIENT] [\(type(of: self))] [\(#function)] called")
         self.manager.closeClients()
     }
     
     public func createClient() {
-        print("[CLIENT] [\(type(of: self))] [\(#function)] called")
         self.client = self.manager.createClient(updateHandler: updateHandler)
     }
     

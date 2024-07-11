@@ -15,26 +15,23 @@ class ChatListViewModel: TDLibViewModel {
     @Published var chats: [ChatCellModel] = []
     @Published var isLoading = true
     @Published var showSettings = false
+    @Published var showNewMessage = false
     var isMock = false
+    var folders: [ChatFolder] = [.main, .archive]
+    private(set) var currentFolder: ChatFolder = .main
     
     override func updateHandler(update: Update) {
         super.updateHandler(update: update)
         DispatchQueue.main.async {
             switch update {
             
-            // Chat list update
-            case .updateNewChat(let update):
-                self.insertNewChat(update.chat)
-                self.updateCounters(chatId: update.chat.id,
-                                    reactionCount: update.chat.unreadReactionCount,
-                                    mentionCount: update.chat.unreadMentionCount,
-                                    unreadCount: update.chat.unreadCount)
-            
             // Chat metadata update
             case .updateUserStatus(let update):
                 self.updateUserStatus(userId: update.userId, status: update.status)
             case .updateChatLastMessage(let update):
-                self.updateLastMessage(update: update)
+                self.updateLastMessage(chatId: update.chatId,
+                                       message: update.lastMessage,
+                                       newPositions: update.positions)
             case .updateChatPosition(let update):
                 self.updateChatPosition(chatId: update.chatId, positions: [update.position])
                 
@@ -50,6 +47,9 @@ class ChatListViewModel: TDLibViewModel {
             case .updateChatAction(let update):
                 self.setChatAction(chatId: update.chatId, sender: update.senderId, action: update.action)
                 
+            // Chat Folders update
+            case .updateChatFolders(let update):
+                self.updateChatFolders(update: update)
             default:
                 break
             }
@@ -64,22 +64,35 @@ class ChatListViewModel: TDLibViewModel {
     func requestChats() {
         Task {
             do {
-                let result = try await TDLibManager.shared.client?.loadChats(chatList: .chatListMain, limit: 10)
-                print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+                let result = try await TDLibManager.shared.client?.getChats(chatList: currentFolder.chatList, limit: 10)
+                
+                for id in result?.chatIds ?? [] {
+                    guard let chat = try await TDLibManager.shared.client?.getChat(chatId: id) else { continue }
+                    await MainActor.run {
+                        
+                        if !chats.contains(where: { $0.td.id == id}) {
+                            chats.append(.from(chat))
+                        }
+                        
+                        self.updateLastMessage(chatId: chat.id, message: chat.lastMessage, newPositions: chat.positions)
+                        self.updateCounters(
+                            chatId: chat.id,
+                            reactionCount: chat.unreadReactionCount,
+                            mentionCount: chat.unreadMentionCount,
+                            unreadCount: chat.unreadCount
+                        )
+                    }
+                }
+                self.logger.log(result)
                 
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+                self.logger.log(error, level: .error)
             }
             
             DispatchQueue.main.async {
                 self.isLoading = false
             }
         }
-    }
-    
-    func insertNewChat(_ chat: Chat) {
-        self.chats.append(.from(chat))
-        self.chats = self.chats.sorted()
     }
     
     func setChatAction(chatId: Int64, sender: MessageSender, action: ChatAction) {
@@ -95,7 +108,7 @@ class ChatListViewModel: TDLibViewModel {
         Task {
             var action = message
             
-            if chats[index].td.type.isGroup,
+            if chats[index].td.isGroup,
                let username = await sender.username(),
                let name = username.split(separator: " ").first {
                 let attributedName = AttributedString(name)
@@ -111,17 +124,10 @@ class ChatListViewModel: TDLibViewModel {
         
     }
     
-    func updateLastMessage(update: UpdateChatLastMessage) {
-
-        let chatId = update.chatId
-        let message = update.lastMessage
-        let newPositions = update.positions
+    func updateLastMessage(chatId: Int64, message: Message?, newPositions: [ChatPosition]) {
         
         let index = self.chats.firstIndex { c in c.td.id == chatId }
         guard let message, let index, index != -1 else { return }
-        
-        // Update message content
-        self.chats[index].message = message.description
         
         // Update message time
         let date = Date(timeIntervalSince1970: TimeInterval(message.date))
@@ -130,7 +136,7 @@ class ChatListViewModel: TDLibViewModel {
         // Update message sender if group chat
         Task {
             var desc = message.description
-            if chats[index].td.type.isGroup,
+            if chats[index].td.isGroup,
                let username = await message.senderId.username() {
                 var attributedUsername = AttributedString(username + ": ")
                 attributedUsername.foregroundColor = .white
@@ -138,8 +144,10 @@ class ChatListViewModel: TDLibViewModel {
             }
             
             await MainActor.run { [desc] in
-                self.chats[index].message = desc
-                self.updateChatPosition(chatId: chatId, positions: newPositions)
+                withAnimation {
+                    self.chats[index].message = desc
+                    self.updateChatPosition(chatId: chatId, positions: newPositions)
+                }
             }
         }
         
@@ -220,12 +228,30 @@ class ChatListViewModel: TDLibViewModel {
         }
     }
     
+    func updateChatFolders(update: UpdateChatFolders) {
+        for chatFolderInfo in update.chatFolders {
+            let chatList = ChatList.chatListFolder(ChatListFolder(chatFolderId: chatFolderInfo.id))
+            let folder = ChatFolder(title: chatFolderInfo.title, chatList: chatList)
+            // To leave Archive in the last position
+            self.folders.insert(folder, at: folders.count - 1)
+        }
+    }
+    
     func getChatVM(for chat: ChatCellModel) -> ChatDetailViewModel {
         ChatDetailViewModel(chat: chat)
     }
     
     func getSendMsgVM(for chat: ChatCellModel) -> SendMessageViewModel {
         SendMessageViewModel(chat: chat)
+    }
+    
+    func selectChat(_ chat: ChatFolder) {
+        guard chat != currentFolder else { return }
+        
+        self.currentFolder = chat
+        self.chats = []
+        self.isLoading = true
+        self.requestChats()
     }
     
 }

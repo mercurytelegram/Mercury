@@ -14,25 +14,60 @@ class MockChatListViewModel: ChatListViewModel {
         
         self.isMock = true
         self.isLoading = false
-        self.chats = [
-            .preview(
-                title: "iOS Devs",
-                sender: "Alessandro",
-                message: "Who's excited for WWDC? 😁",
-                color: .orange
-            ),
-            .preview(
-                title: "Craig",
-                message: "Let's rock! 🎸",
-                unreadCount: 3,
-                color: .blue
-            ),
-            .preview(
-                title: "Lisa",
-                message: "I'm on the roof! ☀️",
-                color: .green
-            )
-        ]
+        self.chats = previewChats
+    }
+    
+    let previewChats: [ChatCellModel] = [
+        .preview(
+            title: "iOS Devs",
+            sender: "Alessandro",
+            message: "Who's excited for WWDC? 😁",
+            color: .orange
+        ),
+        .preview(
+            title: "Craig",
+            message: "Let's rock! 🎸",
+            unreadCount: 3,
+            color: .blue
+        ),
+        .preview(
+            title: "Lisa",
+            message: "I'm on the roof! ☀️",
+            color: .green
+        )
+    ]
+    
+    let previewArchivedChats: [ChatCellModel] = [
+        .preview(
+            title: "iOS Devs",
+            sender: "Alessandro",
+            message: "Who's excited for WWDC? 😁",
+            color: .orange
+        ),
+        .preview(
+            title: "Craig",
+            message: "Let's rock! 🎸",
+            unreadCount: 3,
+            color: .blue
+        ),
+        .preview(
+            title: "Lisa",
+            message: "I'm on the roof! ☀️",
+            color: .green
+        )
+    ]
+    
+    override func selectChat(_ chat: ChatFolder) {
+        self.chats = []
+        
+        switch chat {
+        case .main:
+            self.chats = previewChats
+        case .archive:
+            self.chats = previewArchivedChats
+        default:
+            break
+        }
     }
     
     override func updateHandler(update: Update) {}

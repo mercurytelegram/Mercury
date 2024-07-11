@@ -8,16 +8,20 @@
 import Foundation
 import TDLibKit
 
-extension ChatType {
+extension Chat {
     
     var isGroup: Bool {
-        switch self {
+        switch self.type {
         case .chatTypeBasicGroup(_), .chatTypeSupergroup(_):
             return true
         
         default:
             return false
         }
+    }
+    
+    var isArchived: Bool {
+        return self.chatLists.contains(.chatListArchive)
     }
     
 }

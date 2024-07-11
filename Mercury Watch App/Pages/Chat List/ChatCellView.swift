@@ -55,13 +55,13 @@ struct ChatCellView: View {
         .padding(.vertical)
         .swipeActions(allowsFullSwipe: false) {
             Button(role: .destructive) {
-                print("Deleting conversation")
+                //TODO: Deleting conversation
             } label: {
                 Label("Delete", systemImage: "trash.fill")
             }
             
             Button {
-                print("Muting conversation")
+                // TODO: Muting conversation
             } label: {
                 Label("Mute", systemImage: "speaker.slash.fill")
             }

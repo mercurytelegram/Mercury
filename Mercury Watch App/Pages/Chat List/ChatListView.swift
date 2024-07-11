@@ -6,46 +6,36 @@
 //
 
 import SwiftUI
+import TDLibKit
 
 struct ChatListView: View {
     
     @StateObject var vm: ChatListViewModel
-
-    init(useMock: Bool = false) {
-        self._vm = StateObject(wrappedValue: useMock ? MockChatListViewModel() : ChatListViewModel())
-    }
     
     var body: some View {
         
-        NavigationStack {
+        if vm.isLoading {
+            ProgressView()
+        } else {
             
-            if vm.isLoading {
-                ProgressView()
-            } else {
-                
-                List(vm.chats, id: \.td.id) { chat in
-                    NavigationLink {
-                        ChatDetailView(chat: chat, useMock: vm.isMock)
-                    } label: {
-                        ChatCellView(model: chat)
+            List(vm.chats, id: \.td.id) { chat in
+                NavigationLink {
+                    ChatDetailView(chat: chat, useMock: vm.isMock)
+                } label: {
+                    ChatCellView(model: chat)
+                }
+            }
+            .listStyle(.carousel)
+            .navigationTitle(vm.currentFolder.title)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("New Chat", systemImage: "square.and.pencil") {
+                        vm.showNewMessage = true
                     }
                 }
-                .listStyle(.carousel)
-                .navigationTitle {
-                    Text("Mercury")
-                        .foregroundStyle(.blue)
-                }
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Settings", systemImage: "ellipsis") {
-                            vm.showSettings = true
-                        }
-                        .foregroundStyle(.blue)
-                    }
-                }
-                .sheet(isPresented: $vm.showSettings) {
-                    SettingsView(isPresented: $vm.showSettings)
-                }
+            }
+            .sheet(isPresented: $vm.showNewMessage) {
+                AlertView.inDevelopment("new messages are")
             }
         }
     }
@@ -53,6 +43,8 @@ struct ChatListView: View {
 
 #Preview {
     NavigationStack {
-        ChatListView(useMock: true)
+        ChatListView(vm: MockChatListViewModel())
     }
 }
+
+
