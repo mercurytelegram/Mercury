@@ -89,15 +89,6 @@ struct AudioMessageView: View {
                 
             }
         }
-        .background {
-            Rectangle()
-                .foregroundStyle(
-                    Gradient(colors: [
-                        .blue.opacity(0.7),
-                        .blue.opacity(0.2)]
-                    ))
-                .ignoresSafeArea()
-        }
         .task {
             // Dismiss audio message if no recording permission
             isPresented = await vm.onAppear()
