@@ -7,12 +7,16 @@
 
 import SwiftUI
 import TDLibKit
+import AVFAudio
 
-
-class MessageViewModel: ObservableObject {
+class MessageViewModel: NSObject, ObservableObject {
+    
     var message: Message
     var chat: Chat
+    
     @Published var user: User?
+    @Published var isPlaying: Bool = false
+    @Published var isLoading: Bool = false
     
     var textAlignment: HorizontalAlignment {
         message.isOutgoing ? .trailing : .leading
@@ -71,12 +75,22 @@ class MessageViewModel: ObservableObject {
         return Color(fromUserId: senderID)
     }
     
+    var isSending: Bool {
+        return self.message.sendingState != nil
+    }
+    
     init(message: Message, chat: Chat) {
         self.message = message
         self.chat = chat
+        super.init()
         
-        Task {
-            let user = try? await TDLibManager.shared.client?.getUser(userId: senderID)
+        initUser()
+    }
+    
+    private func initUser() {
+        Task { [weak self] in
+            guard let self else { return }
+            let user = try? await TDLibManager.shared.client?.getUser(userId: self.senderID)
             DispatchQueue.main.async {
                 withAnimation {
                     self.user = user

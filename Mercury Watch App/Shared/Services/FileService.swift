@@ -11,30 +11,58 @@ import TDLibKit
 
 class FileService {
     
+    static let logger = LoggerService(FileService.self)
+    
     static func getImage(for photo: File) async -> Image? {
-        var imagePath = photo.local.path
         
-        if imagePath == "" {
+        guard let imagePath = await FileService.getPath(for: photo) else {
+            logger.log("imagePath is nil")
+            return nil
+        }
+        
+        guard let uiImage = UIImage(contentsOfFile: imagePath) else {
+            logger.log("Unable to convert file to image")
+            return nil
+        }
+        
+        return Image(uiImage: uiImage)
+    }
+    
+    static func getFilePath(for file: File) async -> URL? {
+        
+        guard let path = await FileService.getPath(for: file) else {
+            logger.log("path is nil")
+            return nil
+        }
+        
+        return URL(fileURLWithPath: path)
+    }
+    
+    static func getPath(for file: File) async -> String? {
+        
+        var filePath = file.local.path
+        
+        if filePath.isEmpty {
             do {
-                let photoID = photo.id
+                let fileID = file.id
                 guard let file = try await TDLibManager.shared.client?.downloadFile(
-                    fileId: photoID,
+                    fileId: fileID,
                     limit: 0,
                     offset: 0,
                     priority: 4,
                     synchronous: true
-                ) else { return nil }
+                ) else {
+                    logger.log("Unable to retrive file", level: .error)
+                    return nil
+                }
                 
-                imagePath = file.local.path
+                filePath = file.local.path
                 
             } catch {
-                print("[CLIENT] [\(type(of: self))] error in \(#function): \(error)")
+                logger.log(error, level: .error)
             }
         }
         
-        if let uiImage = UIImage(contentsOfFile: imagePath){
-            return Image(uiImage: uiImage)
-        }
-        return nil
+        return filePath
     }
 }

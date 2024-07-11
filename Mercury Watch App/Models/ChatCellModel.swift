@@ -14,7 +14,8 @@ extension [ChatCellModel] {
     }
     
     private func chatSorting(elem1: ChatCellModel, elem2: ChatCellModel) -> Bool {
-        return elem1.position > elem2.position && elem1.td.id > elem2.td.id
+        // Soting also by id does not update correctly the group chat's position
+        return elem1.position > elem2.position // && elem1.td.id > elem2.td.id
     }
 }
 

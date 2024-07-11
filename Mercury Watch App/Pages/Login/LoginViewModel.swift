@@ -93,7 +93,7 @@ class LoginViewModel: TDLibViewModel {
             }
             break
         default:
-            print("[CLIENT] [\(type(of: self))] \(state)")
+            self.logger.log("Unmanaged state \(state)")
             break
         }
     }
@@ -102,10 +102,10 @@ class LoginViewModel: TDLibViewModel {
         Task {
             do {
                 let result = try await TDLibManager.shared.client?.requestQrCodeAuthentication(otherUserIds: [])
-                print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+                self.logger.log(result)
                 
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+                self.logger.log(error, level: .error)
             }
         }
     }
@@ -117,9 +117,9 @@ class LoginViewModel: TDLibViewModel {
         Task {
             do {
                 let result = try await TDLibManager.shared.client?.checkAuthenticationPassword(password: password)
-                print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+                self.logger.log(result)
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+                self.logger.log(error, level: .error)
             }
             
             await MainActor.run {
@@ -142,11 +142,11 @@ class LoginViewModel: TDLibViewModel {
         Task {
             do {
                 let result = try await client.logOut()
-                print("[CLIENT] [\(type(of: self))] [\(#function)] result: \(result)")
+                self.logger.log(result)
                 
                 TDLibManager.shared.close()
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+                self.logger.log(error, level: .error)
             }
         }
     }
@@ -182,10 +182,10 @@ class LoginViewModel: TDLibViewModel {
                 try await TDLibManager.shared.client?.setLogVerbosityLevel(newVerbosityLevel: 0)
                 #endif
                 
-                print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+                self.logger.log(result)
         
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] error: \(error)")
+                self.logger.log(error, level: .error)
             }
         }
     }

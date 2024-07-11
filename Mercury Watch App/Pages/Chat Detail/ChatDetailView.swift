@@ -13,8 +13,9 @@ struct ChatDetailView: View {
     
     @StateObject var vm: ChatDetailViewModel
     @StateObject var sendMsgVM: SendMessageViewModel
-    @State var image: Image?
     
+    @State var image: Image?
+    @State var showAudioMessageView: Bool = false
     
     init(chat: ChatCellModel, useMock: Bool = false) {
         if useMock {
@@ -42,12 +43,19 @@ struct ChatDetailView: View {
                                 proxy.scrollTo(lastMessage?.id, anchor: .bottom)
                             }
                         }
-                    }.padding()
+                    }
+                    .padding()
                  
                     ForEach(vm.messages) { message in
                         MessageView(vm.getMessageVM(for: message))
                             .id(message.id)
+                            .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
+                                content
+                                    .scaleEffect(phase.isIdentity ? 1 : 0.7)
+                                    .opacity(phase.isIdentity ? 1 : 0)
+                            }
                     }
+                    .padding(.bottom)
                 }
                 
             }
@@ -55,6 +63,7 @@ struct ChatDetailView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     AvatarView(model: vm.chat.avatar)
+                        .onTapGesture {}
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
                     
@@ -63,26 +72,40 @@ struct ChatDetailView: View {
                     } onSubmit: { value in
                         sendMsgVM.sendTextMessage(value)
                     }
+                    
+                    Button("Record", systemImage: "mic.fill") {
+                        showAudioMessageView = true
+                    }
+                    .controlSize(.large)
                     .background {
                         Circle().foregroundStyle(.ultraThinMaterial)
                     }
                     
-                    Button("Record", systemImage: "mic.fill") {}
-                        .controlSize(.large)
-                        .background {
-                            Circle().foregroundStyle(.ultraThinMaterial)
-                        }
-                    
-                    Button("Stickers", systemImage: "face.smiling.inverse") {}
-                        .background {
-                            Circle().foregroundStyle(.ultraThinMaterial)
-                        }
+                    Button("Stickers", systemImage: "face.smiling.inverse") {
+                        vm.showStickersView = true
+                    }
                 }
             }
-            .navigationTitle(vm.chat.td.title)
-            .containerBackground(.blue.gradient, for: .navigation)
+            .containerBackground(for: .navigation){
+                Rectangle()
+                    .foregroundStyle(
+                        Gradient(colors: [
+                            .blue.opacity(0.5),
+                            .blue.opacity(0.1)
+                        ])
+                    )
+            }
+            .navigationTitle {
+                Text(vm.chat.td.title)
+                    .foregroundStyle(.white)
+            }
         }
-        
+        .sheet(isPresented: $showAudioMessageView) {
+            AudioMessageView(isPresented: $showAudioMessageView, chat: vm.chat)
+        }
+        .sheet(isPresented: $vm.showStickersView) {
+            AlertView.inDevelopment("stickers are")
+        }
     }
     
     func getImage(_ message: Message) async -> Image? {
@@ -101,5 +124,14 @@ struct ChatDetailView: View {
 }
 
 #Preview {
-    ChatDetailView(chat: .preview(), useMock: true)
+    NavigationStack {
+        ChatDetailView(
+            chat: .preview(
+                title: "iOS Devs",
+                sender: "Alessandro",
+                color: .orange
+            ),
+            useMock: true)
+    }
+    
 }

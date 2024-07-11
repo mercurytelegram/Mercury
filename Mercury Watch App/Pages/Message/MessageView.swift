@@ -26,16 +26,27 @@ struct MessageView: View {
                 }
                 content
             }
-            Text(vm.date)
-                .font(.system(size: 15))
-                .foregroundStyle(.secondary)
+            
+            HStack(spacing: 10) {
+                Text(vm.date)
+                    .font(.system(size: 15))
+                    .foregroundStyle(.secondary)
+                
+                if vm.isSending {
+                    ProgressView()
+                        .font(.system(size: 15))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 15, height: 15)
+                }
+            }
+            
         }
         .padding()
         .padding(vm.message.isOutgoing ? .trailing : .leading, 5)
         .background {
             if vm.showBubble {
                 BubbleShape(myMessage: vm.message.isOutgoing)
-                    .foregroundStyle(vm.message.isOutgoing ? .blue.opacity(0.3) : .white.opacity(0.2))
+                    .foregroundStyle(vm.message.isOutgoing ? .blue.opacity(0.7) : .white.opacity(0.2))
             }
         }
         .frame(maxWidth: .infinity, alignment: vm.message.isOutgoing ? .trailing : .leading)
@@ -46,14 +57,20 @@ struct MessageView: View {
         switch vm.message.content {
         case .messageText(let messageText):
             Text(messageText.text.attributedString)
+            
         case .messagePhoto(let messagePhoto):
             TdPhotoView(tdPhoto: messagePhoto.photo)
                 .clipShape(BubbleShape(myMessage: vm.message.isOutgoing))
                 .padding(vm.message.isOutgoing ? .trailing : .leading, -10)
+
+        case .messageVoiceNote(let message):
+            VoiceNoteContentView(message: message)
+            
         default:
             Text(vm.message.description)
         }
     }
+    
 }
 
 

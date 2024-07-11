@@ -7,8 +7,11 @@
 
 import Foundation
 import WatchKit
+import AVFAudio
 
-class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
+class AppDelegate: NSObject, WKApplicationDelegate {
+    
+    let logger = LoggerService(AppDelegate.self)
     
     func applicationDidBecomeActive() {
         setOnlineStatus()
@@ -25,7 +28,7 @@ class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
                 value: .optionValueBoolean(.init(value: true))
             )
             
-            print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+            self.logger.log(result)
         }
     }
     
@@ -36,7 +39,7 @@ class MyWatchAppDelegate: NSObject, WKApplicationDelegate {
                 value: .optionValueBoolean(.init(value: false))
             )
             
-            print("[CLIENT] [\(type(of: self))] [\(#function)] \(String(describing: result))")
+            self.logger.log(result)
         }
     }
 
