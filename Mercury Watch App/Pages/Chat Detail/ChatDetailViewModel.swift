@@ -7,6 +7,7 @@
 
 import Foundation
 import TDLibKit
+import SwiftUI
 
 class ChatDetailViewModel: TDLibViewModel {
     
@@ -115,13 +116,14 @@ class ChatDetailViewModel: TDLibViewModel {
             self.messages.removeAll(where: { $0.contentLocalFilePath == msgFilePath })
         }
         
-        switch at {
-        case .first:
-            self.messages.insert(message, at: 0)
-        case .last:
-            self.messages.append(message)
+        withAnimation {
+            switch at {
+            case .first:
+                self.messages.insert(message, at: 0)
+            case .last:
+                self.messages.append(message)
+            }
         }
-        
     }
     
 }
