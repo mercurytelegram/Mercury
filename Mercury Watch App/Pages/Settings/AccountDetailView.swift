@@ -12,14 +12,14 @@ struct AccountDetailView: View {
     
     var body: some View {
         VStack {
+            Button("Logout", role: .destructive) {
+                loginVM.logout()
+            }
             Text("This section is currently under development")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.bottom)
-            Button("Logout", role: .destructive) {
-                loginVM.logout()
-            }
         }
     }
 }
