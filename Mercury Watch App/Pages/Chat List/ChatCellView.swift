@@ -10,6 +10,7 @@ import TDLibKit
 
 
 struct ChatCellView: View {
+    @State private var showMuteAlert = false
     var model: ChatCellModel
     
     var body: some View {
@@ -54,20 +55,15 @@ struct ChatCellView: View {
         }
         .padding(.vertical)
         .swipeActions(allowsFullSwipe: false) {
-            Button(role: .destructive) {
-                //TODO: Deleting conversation
-            } label: {
-                Label("Delete", systemImage: "trash.fill")
-            }
-            
             Button {
-                // TODO: Muting conversation
+                showMuteAlert = true
             } label: {
                 Label("Mute", systemImage: "speaker.slash.fill")
             }
             .tint(.orange)
-            
-            
+        }
+        .sheet(isPresented: $showMuteAlert) {
+            AlertView.inDevelopment("mute is")
         }
     }
 }
