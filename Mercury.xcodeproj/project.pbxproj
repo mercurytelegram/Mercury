@@ -28,6 +28,9 @@
 		9B3FC9082BF3DEC300CDE217 /* ChatCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3FC9072BF3DEC300CDE217 /* ChatCellModel.swift */; };
 		9B3FC90A2BF3DF2A00CDE217 /* AvatarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3FC9092BF3DF2A00CDE217 /* AvatarModel.swift */; };
 		9B3FC90D2BF3DF8400CDE217 /* ChatDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3FC90C2BF3DF8400CDE217 /* ChatDetailView.swift */; };
+		9B4451F62C459A1300A6EBC2 /* SettingsCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4451F52C459A1300A6EBC2 /* SettingsCellView.swift */; };
+		9B4451F82C45C5F900A6EBC2 /* MockSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4451F72C45C5F900A6EBC2 /* MockSettingsViewModel.swift */; };
+		9B4451FA2C45C63D00A6EBC2 /* Extensions+User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4451F92C45C63D00A6EBC2 /* Extensions+User.swift */; };
 		9B6D22372C398C78008A1054 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D22352C398C78008A1054 /* SettingsView.swift */; };
 		9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */; };
 		9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */; };
@@ -113,6 +116,9 @@
 		9B3FC9072BF3DEC300CDE217 /* ChatCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellModel.swift; sourceTree = "<group>"; };
 		9B3FC9092BF3DF2A00CDE217 /* AvatarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarModel.swift; sourceTree = "<group>"; };
 		9B3FC90C2BF3DF8400CDE217 /* ChatDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailView.swift; sourceTree = "<group>"; };
+		9B4451F52C459A1300A6EBC2 /* SettingsCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCellView.swift; sourceTree = "<group>"; };
+		9B4451F72C45C5F900A6EBC2 /* MockSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSettingsViewModel.swift; sourceTree = "<group>"; };
+		9B4451F92C45C63D00A6EBC2 /* Extensions+User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+User.swift"; sourceTree = "<group>"; };
 		9B6D22352C398C78008A1054 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFolder.swift; sourceTree = "<group>"; };
 		9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+Mock.swift"; sourceTree = "<group>"; };
@@ -199,6 +205,7 @@
 				A081AAD22C071C82002A265C /* Extensions+ChatAction.swift */,
 				4AF90D682BEE65BA00435355 /* Extensions+Date.swift */,
 				4A4743F12BF796DF00264855 /* Extension+Color.swift */,
+				9B4451F92C45C63D00A6EBC2 /* Extensions+User.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -263,6 +270,7 @@
 				9BB920E22C3D9B8B0023C616 /* SettingsViewModel.swift */,
 				9B6D22352C398C78008A1054 /* SettingsView.swift */,
 				9BB920E82C3DA7360023C616 /* AccountDetailView.swift */,
+				9B4451F52C459A1300A6EBC2 /* SettingsCellView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -278,6 +286,7 @@
 				4AE620182C09C36800722512 /* MockChatDetailViewModel.swift */,
 				4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */,
 				4AE6201C2C09C4AA00722512 /* MockSendMessageViewModel.swift */,
+				9B4451F72C45C5F900A6EBC2 /* MockSettingsViewModel.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -492,6 +501,7 @@
 				A081AAD12C0638C4002A265C /* SendMessageViewModel.swift in Sources */,
 				A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */,
 				4AE620192C09C36800722512 /* MockChatDetailViewModel.swift in Sources */,
+				9B4451F62C459A1300A6EBC2 /* SettingsCellView.swift in Sources */,
 				9B6D22372C398C78008A1054 /* SettingsView.swift in Sources */,
 				9B3AD3522C397F7700CD4EF8 /* AlertView.swift in Sources */,
 				9B3FC90D2BF3DF8400CDE217 /* ChatDetailView.swift in Sources */,
@@ -531,10 +541,12 @@
 				A04388FA2C3FE384007B83C0 /* RecorderService.swift in Sources */,
 				4AE6201F2C09C4E900722512 /* ChatCellModel+Mock.swift in Sources */,
 				4AE6201B2C09C43500722512 /* MockMessageViewModel.swift in Sources */,
+				9B4451F82C45C5F900A6EBC2 /* MockSettingsViewModel.swift in Sources */,
 				9B3FC90A2BF3DF2A00CDE217 /* AvatarModel.swift in Sources */,
 				A05C1AC52BECCF4B00724B6E /* Extensions+Message.swift in Sources */,
 				A04389002C3FE395007B83C0 /* VoiceNoteContentView.swift in Sources */,
 				4A4743F22BF796DF00264855 /* Extension+Color.swift in Sources */,
+				9B4451FA2C45C63D00A6EBC2 /* Extensions+User.swift in Sources */,
 				9BB4FEAF2BF3E3BB000785BA /* FileService.swift in Sources */,
 				A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */,
 				9B3FC9082BF3DEC300CDE217 /* ChatCellModel.swift in Sources */,
@@ -678,13 +690,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Mercury Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mercury-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Audio messages";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -709,13 +722,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_ASSET_PATHS = "\"Mercury Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mercury-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Audio messages";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -740,7 +754,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
 				MARKETING_VERSION = 0.1.0;
@@ -756,7 +770,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
 				MARKETING_VERSION = 0.1.0;

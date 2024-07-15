@@ -13,6 +13,10 @@ class SettingsViewModel: ObservableObject {
     @Published var user: User?
     
     init() {
+        getUser()
+    }
+    
+    func getUser() {
         Task {
             let user = try? await TDLibManager.shared.client?.getMe()
             
@@ -22,5 +26,10 @@ class SettingsViewModel: ObservableObject {
                 }
             }
         }
+    }
+    
+    func profileThimbnail() -> UIImage {
+        guard let data = user?.profilePhoto?.minithumbnail?.data else { return UIImage() }
+        return UIImage(data: data) ?? UIImage()
     }
 }

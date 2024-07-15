@@ -16,7 +16,7 @@ struct SettingsView: View {
         NavigationStack(path: $settingsVM.navStack) {
             List {
                 NavigationLink {
-                    AccountDetailView()
+                    AccountDetailView(vm: settingsVM)
                 } label: {
                     UserCellView(user: settingsVM.user)
                 }
