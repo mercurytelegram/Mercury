@@ -15,7 +15,7 @@ struct SettingsCellView: View {
     var body: some View {
         HStack {
             ZStack {
-                RoundedRectangle(cornerRadius: 5)
+                Circle()
                     .frame(width: 30, height: 30)
                     .foregroundStyle(color)
                 Image(systemName: iconName)

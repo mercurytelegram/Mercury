@@ -15,11 +15,17 @@ struct AccountDetailView: View {
         List {
             topView()
             
-            SettingsCellView(
-                text: "Account",
-                iconName: "person",
-                color: .green
-            )
+            NavigationLink {
+                Button("Logout", role: .destructive) {
+                    loginVM.logout()
+                }
+            } label: {
+                SettingsCellView(
+                    text: "Account",
+                    iconName: "person",
+                    color: .green
+                )
+            }
             SettingsCellView(
                 text: "Appearance",
                 iconName: "sun.max",
