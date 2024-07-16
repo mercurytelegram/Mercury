@@ -43,6 +43,8 @@ class ChatDetailViewModel: TDLibViewModel {
         switch update {
         case .updateChatLastMessage(let update):
             self.updateLastMessage(chatId: update.chatId, message: update.lastMessage)
+        case .updateDeleteMessages(let update):
+            self.updateDeleteMessages(chatId: update.chatId, messageIds: update.messageIds)
         default:
             break
         }
@@ -55,6 +57,20 @@ class ChatDetailViewModel: TDLibViewModel {
             if let message {
                 self.insertMessage(at: .last, message: message)
             }
+        }
+    }
+    
+    func updateDeleteMessages(chatId: Int64, messageIds: [Int64]) {
+        guard chatId == self.chat.td.id else { return }
+        
+        DispatchQueue.main.async {
+            
+            for id in messageIds {
+                withAnimation {
+                    self.messages.removeAll(where: { $0.id == id })
+                }
+            }
+
         }
     }
     
