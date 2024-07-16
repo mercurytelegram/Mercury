@@ -47,6 +47,8 @@ class ChatDetailViewModel: TDLibViewModel {
             self.updateDeleteMessages(chatId: update.chatId, messageIds: update.messageIds)
         case .updateMessageContent(let update):
             self.updateMessageContent(chatId: update.chatId, messageId: update.messageId)
+        case .updateMessageSendSucceeded(let update):
+            self.updateMessageSendSucceeded(oldId: update.oldMessageId, message: update.message)
         default:
             break
         }
@@ -87,9 +89,20 @@ class ChatDetailViewModel: TDLibViewModel {
             else { return }
             
             await MainActor.run {
-                self.insertMessage(at: .index(value: index), message: message)
+                self.insertMessage(at: .index(index), message: message)
             }
             
+        }
+    }
+    
+    func updateMessageSendSucceeded(oldId: Int64, message: Message) {
+        
+        guard let index = self.messages.firstIndex(where: { $0.id == oldId })
+        else { return }
+        
+        DispatchQueue.main.async {
+            self.messages.remove(at: index)
+            self.insertMessage(at: .index(index), message: message)
         }
     }
     
@@ -150,18 +163,13 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     
-    enum InsertAt { case first, last, index(value: Int)}
+    enum InsertAt { case first, last, index(_ value: Int)}
     func insertMessage(at: InsertAt, message: Message) {
         
         if message.errorSending { return }
         
-        // if message has been already shown, update it bu removing the old one
+        // if message has been already shown, update it by removing the old one
         self.messages.removeAll(where: { $0.id == message.id })
-        
-        // if a message has been sent, use the local file path to update it
-        if let msgFilePath = message.contentLocalFilePath {
-            self.messages.removeAll(where: { $0.contentLocalFilePath == msgFilePath })
-        }
         
         withAnimation {
             switch at {
