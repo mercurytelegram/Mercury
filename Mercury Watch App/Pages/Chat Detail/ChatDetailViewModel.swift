@@ -45,6 +45,8 @@ class ChatDetailViewModel: TDLibViewModel {
             self.updateLastMessage(chatId: update.chatId, message: update.lastMessage)
         case .updateDeleteMessages(let update):
             self.updateDeleteMessages(chatId: update.chatId, messageIds: update.messageIds)
+        case .updateMessageContent(let update):
+            self.updateMessageContent(chatId: update.chatId, messageId: update.messageId)
         default:
             break
         }
@@ -71,6 +73,23 @@ class ChatDetailViewModel: TDLibViewModel {
                 }
             }
 
+        }
+    }
+    
+    func updateMessageContent(chatId: Int64, messageId: Int64) {
+        guard chatId == self.chat.td.id else { return }
+        
+        guard let index = self.messages.firstIndex(where: { $0.id == messageId })
+        else { return }
+        
+        Task {
+            guard let message = try? await TDLibManager.shared.client?.getMessage(chatId: chatId, messageId: messageId)
+            else { return }
+            
+            await MainActor.run {
+                self.insertMessage(at: .index(value: index), message: message)
+            }
+            
         }
     }
     
@@ -131,7 +150,7 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     
-    enum InsertAt { case first, last}
+    enum InsertAt { case first, last, index(value: Int)}
     func insertMessage(at: InsertAt, message: Message) {
         
         if message.errorSending { return }
@@ -150,6 +169,8 @@ class ChatDetailViewModel: TDLibViewModel {
                 self.messages.insert(message, at: 0)
             case .last:
                 self.messages.append(message)
+            case .index(let value):
+                self.messages.insert(message, at: value)
             }
         }
     }

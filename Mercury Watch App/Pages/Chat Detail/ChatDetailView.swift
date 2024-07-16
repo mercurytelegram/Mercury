@@ -48,7 +48,7 @@ struct ChatDetailView: View {
                  
                     ForEach(vm.messages) { message in
                         MessageView(vm.getMessageVM(for: message))
-                            .id(message.id)
+                            .id(message.hashValue)
                             .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
                                 content
                                     .scaleEffect(phase.isIdentity ? 1 : 0.7)
