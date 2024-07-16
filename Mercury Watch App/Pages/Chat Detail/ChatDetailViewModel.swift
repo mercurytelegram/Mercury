@@ -138,4 +138,40 @@ class ChatDetailViewModel: TDLibViewModel {
         }
     }
     
+    func onOpenChat() {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.openChat(chatId: self.chat.td.id)
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func onCloseChat() {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.closeChat(chatId: self.chat.td.id)
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func didVisualize(_ id: Int64) {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.viewMessages(
+                    chatId: self.chat.td.id,
+                    forceRead: true,
+                    messageIds: [id],
+                    source: nil
+                )
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+
+    
 }

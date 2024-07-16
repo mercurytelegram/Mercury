@@ -54,6 +54,10 @@ struct ChatDetailView: View {
                                     .scaleEffect(phase.isIdentity ? 1 : 0.7)
                                     .opacity(phase.isIdentity ? 1 : 0)
                             }
+                            .onAppear {
+                                vm.didVisualize(message.id)
+                            }
+
                     }
                     .padding(.bottom)
                 }
@@ -106,6 +110,9 @@ struct ChatDetailView: View {
                 Text(vm.chat.td.title)
                     .foregroundStyle(.white)
             }
+            .onAppear(perform: vm.onOpenChat)
+            .onDisappear(perform: vm.onCloseChat)
+
         }
         .sheet(isPresented: $showAudioMessageView) {
             AudioMessageView(isPresented: $showAudioMessageView, chat: vm.chat)
