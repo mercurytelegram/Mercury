@@ -67,23 +67,30 @@ struct ChatDetailView: View {
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
                     
-                    TextFieldLink {
-                        Image(systemName: "keyboard.fill")
-                    } onSubmit: { value in
-                        sendMsgVM.sendTextMessage(value)
+                    if vm.canSendText {
+                        TextFieldLink {
+                            Image(systemName: "keyboard.fill")
+                        } onSubmit: { value in
+                            sendMsgVM.sendTextMessage(value)
+                        }
                     }
                     
-                    Button("Record", systemImage: "mic.fill") {
-                        showAudioMessageView = true
-                    }
-                    .controlSize(.large)
-                    .background {
-                        Circle().foregroundStyle(.ultraThinMaterial)
+                    if vm.canSendVoiceNotes {
+                        Button("Record", systemImage: "mic.fill") {
+                            showAudioMessageView = true
+                        }
+                        .controlSize(.large)
+                        .background {
+                            Circle().foregroundStyle(.ultraThinMaterial)
+                        }
                     }
                     
-                    Button("Stickers", systemImage: "face.smiling.inverse") {
-                        vm.showStickersView = true
+                    if vm.canSendStickers {
+                        Button("Stickers", systemImage: "face.smiling.inverse") {
+                            vm.showStickersView = true
+                        }
                     }
+                    
                 }
             }
             .containerBackground(for: .navigation){

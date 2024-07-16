@@ -15,6 +15,18 @@ class ChatDetailViewModel: TDLibViewModel {
     @Published var messages: [Message] = []
     @Published var showStickersView = false
     
+    var canSendVoiceNotes: Bool {
+        return self.chat.td.permissions.canSendVoiceNotes
+    }
+    
+    var canSendText: Bool {
+        return self.chat.td.permissions.canSendBasicMessages
+    }
+    
+    var canSendStickers: Bool {
+        return self.chat.td.permissions.canSendOtherMessages
+    }
+    
     let chat: ChatCellModel
     init(chat: ChatCellModel) {
         self.chat = chat
