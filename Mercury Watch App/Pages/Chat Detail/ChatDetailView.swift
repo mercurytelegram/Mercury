@@ -47,12 +47,16 @@ struct ChatDetailView: View {
                  
                     ForEach(vm.messages) { message in
                         MessageView(vm: vm.getMessageVM(for: message))
-                            .id(message.id)
+                            .id(message.hashValue)
                             .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
                                 content
                                     .scaleEffect(phase.isIdentity ? 1 : 0.7)
                                     .opacity(phase.isIdentity ? 1 : 0)
                             }
+                            .onAppear {
+                                vm.didVisualize(message.id)
+                            }
+
                     }
                     .padding(.bottom)
                 }
@@ -66,23 +70,30 @@ struct ChatDetailView: View {
                 }
                 ToolbarItemGroup(placement: .bottomBar) {
                     
-                    TextFieldLink {
-                        Image(systemName: "keyboard.fill")
-                    } onSubmit: { value in
-                        sendMsgVM.sendTextMessage(value)
+                    if vm.canSendText {
+                        TextFieldLink {
+                            Image(systemName: "keyboard.fill")
+                        } onSubmit: { value in
+                            sendMsgVM.sendTextMessage(value)
+                        }
                     }
                     
-                    Button("Record", systemImage: "mic.fill") {
-                        showAudioMessageView = true
-                    }
-                    .controlSize(.large)
-                    .background {
-                        Circle().foregroundStyle(.ultraThinMaterial)
+                    if vm.canSendVoiceNotes {
+                        Button("Record", systemImage: "mic.fill") {
+                            showAudioMessageView = true
+                        }
+                        .controlSize(.large)
+                        .background {
+                            Circle().foregroundStyle(.ultraThinMaterial)
+                        }
                     }
                     
-                    Button("Stickers", systemImage: "face.smiling.inverse") {
-                        vm.showStickersView = true
+                    if vm.canSendStickers {
+                        Button("Stickers", systemImage: "face.smiling.inverse") {
+                            vm.showStickersView = true
+                        }
                     }
+                    
                 }
             }
             .containerBackground(for: .navigation){
@@ -98,6 +109,9 @@ struct ChatDetailView: View {
                 Text(vm.chat.td.title)
                     .foregroundStyle(.white)
             }
+            .onAppear(perform: vm.onOpenChat)
+            .onDisappear(perform: vm.onCloseChat)
+
         }
         .sheet(isPresented: $showAudioMessageView) {
             AudioMessageView(isPresented: $showAudioMessageView, chat: vm.chat)

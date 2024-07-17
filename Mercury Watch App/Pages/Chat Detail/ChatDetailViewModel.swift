@@ -15,6 +15,18 @@ class ChatDetailViewModel: TDLibViewModel {
     @Published var messages: [Message] = []
     @Published var showStickersView = false
     
+    var canSendVoiceNotes: Bool {
+        return self.chat.td.permissions.canSendVoiceNotes
+    }
+    
+    var canSendText: Bool {
+        return self.chat.td.permissions.canSendBasicMessages
+    }
+    
+    var canSendStickers: Bool {
+        return self.chat.td.permissions.canSendOtherMessages
+    }
+    
     let chat: ChatCellModel
     init(chat: ChatCellModel) {
         self.chat = chat
@@ -31,6 +43,12 @@ class ChatDetailViewModel: TDLibViewModel {
         switch update {
         case .updateChatLastMessage(let update):
             self.updateLastMessage(chatId: update.chatId, message: update.lastMessage)
+        case .updateDeleteMessages(let update):
+            self.updateDeleteMessages(chatId: update.chatId, messageIds: update.messageIds)
+        case .updateMessageContent(let update):
+            self.updateMessageContent(chatId: update.chatId, messageId: update.messageId)
+        case .updateMessageSendSucceeded(let update):
+            self.updateMessageSendSucceeded(oldId: update.oldMessageId, message: update.message)
         default:
             break
         }
@@ -43,6 +61,48 @@ class ChatDetailViewModel: TDLibViewModel {
             if let message {
                 self.insertMessage(at: .last, message: message)
             }
+        }
+    }
+    
+    func updateDeleteMessages(chatId: Int64, messageIds: [Int64]) {
+        guard chatId == self.chat.td.id else { return }
+        
+        DispatchQueue.main.async {
+            
+            for id in messageIds {
+                withAnimation {
+                    self.messages.removeAll(where: { $0.id == id })
+                }
+            }
+
+        }
+    }
+    
+    func updateMessageContent(chatId: Int64, messageId: Int64) {
+        guard chatId == self.chat.td.id else { return }
+        
+        guard let index = self.messages.firstIndex(where: { $0.id == messageId })
+        else { return }
+        
+        Task {
+            guard let message = try? await TDLibManager.shared.client?.getMessage(chatId: chatId, messageId: messageId)
+            else { return }
+            
+            await MainActor.run {
+                self.insertMessage(at: .index(index), message: message)
+            }
+            
+        }
+    }
+    
+    func updateMessageSendSucceeded(oldId: Int64, message: Message) {
+        
+        guard let index = self.messages.firstIndex(where: { $0.id == oldId })
+        else { return }
+        
+        DispatchQueue.main.async {
+            self.messages.remove(at: index)
+            self.insertMessage(at: .index(index), message: message)
         }
     }
     
@@ -103,18 +163,13 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     
-    enum InsertAt { case first, last}
+    enum InsertAt { case first, last, index(_ value: Int)}
     func insertMessage(at: InsertAt, message: Message) {
         
         if message.errorSending { return }
         
-        // if message has been already shown, update it bu removing the old one
+        // if message has been already shown, update it by removing the old one
         self.messages.removeAll(where: { $0.id == message.id })
-        
-        // if a message has been sent, use the local file path to update it
-        if let msgFilePath = message.contentLocalFilePath {
-            self.messages.removeAll(where: { $0.contentLocalFilePath == msgFilePath })
-        }
         
         withAnimation {
             switch at {
@@ -122,8 +177,46 @@ class ChatDetailViewModel: TDLibViewModel {
                 self.messages.insert(message, at: 0)
             case .last:
                 self.messages.append(message)
+            case .index(let value):
+                self.messages.insert(message, at: value)
             }
         }
     }
+    
+    func onOpenChat() {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.openChat(chatId: self.chat.td.id)
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func onCloseChat() {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.closeChat(chatId: self.chat.td.id)
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func didVisualize(_ id: Int64) {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.viewMessages(
+                    chatId: self.chat.td.id,
+                    forceRead: true,
+                    messageIds: [id],
+                    source: nil
+                )
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+
     
 }

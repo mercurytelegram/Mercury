@@ -275,8 +275,8 @@
 			isa = PBXGroup;
 			children = (
 				A026961C2BF3F4A700ACA12C /* ChatDetailViewModel.swift */,
-				A081AAD02C0638C4002A265C /* SendMessageViewModel.swift */,
 				9B3FC90C2BF3DF8400CDE217 /* ChatDetailView.swift */,
+				A081AAD02C0638C4002A265C /* SendMessageViewModel.swift */,
 			);
 			path = "Chat Detail";
 			sourceTree = "<group>";
