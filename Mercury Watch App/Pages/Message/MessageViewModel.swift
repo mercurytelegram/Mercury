@@ -10,7 +10,6 @@ import TDLibKit
 import AVFAudio
 
 class MessageViewModel: NSObject, ObservableObject {
-    
     var message: Message
     var chat: Chat
     
@@ -35,15 +34,6 @@ class MessageViewModel: NSObject, ObservableObject {
         }
     }
     
-    var showBubble: Bool {
-        switch message.content {
-        case .messagePhoto(_) :
-            return false
-        default:
-            return true
-        }
-    }
-    
     var senderID: Int64 {
         switch message.senderId {
         case .messageSenderUser(let messageSenderUser):
@@ -59,12 +49,7 @@ class MessageViewModel: NSObject, ObservableObject {
     
     var userFullName: String {
         guard let user else { return "placeholder" }
-        var string = user.firstName
-        if user.lastName != "" {
-            string += " " + user.lastName
-        }
-        
-        return string
+        return user.fullName
     }
     
     var userNameRedaction: RedactionReasons {

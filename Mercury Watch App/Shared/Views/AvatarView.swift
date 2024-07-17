@@ -11,7 +11,6 @@ import TDLibKit
 
 struct AvatarView: View {
     var model: AvatarModel
-    @State private var image: Image?
     
     var body: some View {
         GeometryReader { proxy in
@@ -43,23 +42,11 @@ struct AvatarView: View {
                     }
                 }
         }
-        .task {
-            guard let photo = model.tdPhoto else { return }
-            
-            // Thumbnail
-            if let imageData = photo.minithumbnail?.data,
-               let uiImage = UIImage(data: imageData) {
-                self.image = Image(uiImage: uiImage)
-            }
-            // Small
-            self.image = await FileService.getImage(for: photo.small)
-        }
     }
     
     @ViewBuilder func circle(_ size: CGFloat) -> some View {
-        if let image {
-            image
-                .resizable()
+        if let image = model.tdImage {
+            TdImageView(tdImage: image)
                 .clipShape(Circle())
         } else {
             Circle()

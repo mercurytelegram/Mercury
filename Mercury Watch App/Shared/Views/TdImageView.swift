@@ -8,9 +8,10 @@
 import SwiftUI
 import TDLibKit
 
-struct TdPhotoView: View {
+struct TdImageView: View {
     @State private var image: Image?
-    var tdPhoto: Photo
+    var tdImage: TDImage
+    var showHighRes: Bool = false
     
     
     var body: some View {
@@ -24,19 +25,19 @@ struct TdPhotoView: View {
             }
         }
         .task {
-            if let data = tdPhoto.minithumbnail?.data,
+            if let data = tdImage.minithumbnail?.data,
                let uiImage = UIImage(data: data) {
                 self.image = Image(uiImage: uiImage)
             }
             
-            if let file = tdPhoto.sizes.first?.photo {
+            if let file = tdImage.lowRes {
+                self.image = await FileService.getImage(for: file)
+            }
+            
+            if showHighRes, let file = tdImage.highRes {
                 self.image = await FileService.getImage(for: file)
             }
             
         }
     }
 }
-
-//#Preview {
-//    TdPhotoView()
-//}

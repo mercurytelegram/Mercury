@@ -10,7 +10,6 @@ import Combine
 import TDLibKit
 
 struct ChatDetailView: View {
-    
     @StateObject var vm: ChatDetailViewModel
     @StateObject var sendMsgVM: SendMessageViewModel
     
@@ -47,7 +46,7 @@ struct ChatDetailView: View {
                     .padding()
                  
                     ForEach(vm.messages) { message in
-                        MessageView(vm.getMessageVM(for: message))
+                        MessageView(vm: vm.getMessageVM(for: message))
                             .id(message.id)
                             .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
                                 content

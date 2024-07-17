@@ -64,7 +64,7 @@ struct ChatCellModel {
             showUnreadReaction: chat.unreadReactionCount != 0,
             time: date.stringDescription,
             message: chat.lastMessage?.description,
-            avatar: AvatarModel(tdPhoto: chat.photo, letters: letters),
+            avatar: AvatarModel(tdImage: chat.photo, letters: letters),
             userId: userID,
             unreadCount: 0,
             position: 0,

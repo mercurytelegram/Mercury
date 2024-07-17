@@ -9,87 +9,43 @@ import SwiftUI
 import TDLibKit
 
 struct MessageView: View {
-    @StateObject var vm: MessageViewModel
-    
-    init(_ vm: MessageViewModel) {
-        self._vm = StateObject(wrappedValue: vm)
-    }
+    @ObservedObject var vm: MessageViewModel
     
     var body: some View {
-        VStack(alignment: .trailing){
-            VStack(alignment: vm.textAlignment){
-                if vm.showSender {
-                    Text(vm.userFullName)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(vm.titleColor)
-                        .redacted(reason: vm.userNameRedaction)
-                }
-                content
-            }
-            
-            HStack(spacing: 10) {
-                Text(vm.date)
-                    .font(.system(size: 15))
-                    .foregroundStyle(.secondary)
-                
-                if vm.isSending {
-                    ProgressView()
-                        .font(.system(size: 15))
-                        .foregroundStyle(.secondary)
-                        .frame(width: 15, height: 15)
-                }
-            }
-            
-        }
-        .padding()
-        .padding(vm.message.isOutgoing ? .trailing : .leading, 5)
-        .background {
-            if vm.showBubble {
-                BubbleShape(myMessage: vm.message.isOutgoing)
-                    .foregroundStyle(vm.message.isOutgoing ? .blue.opacity(0.7) : .white.opacity(0.2))
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: vm.message.isOutgoing ? .trailing : .leading)
-    }
-    
-    @ViewBuilder
-    var content: some View {
         switch vm.message.content {
-        case .messageText(let messageText):
-            Text(messageText.text.attributedString)
+        case .messageText(let message):
+            Text(message.text.attributedString)
+                .bubbleStyle(vm: vm)
             
-        case .messagePhoto(let messagePhoto):
-            TdPhotoView(tdPhoto: messagePhoto.photo)
+        case .messagePhoto(let message):
+            TdImageView(tdImage: message.photo)
                 .clipShape(BubbleShape(myMessage: vm.message.isOutgoing))
                 .padding(vm.message.isOutgoing ? .trailing : .leading, -10)
 
         case .messageVoiceNote(let message):
             VoiceNoteContentView(message: message)
+                .bubbleStyle(vm: vm)
             
         default:
             Text(vm.message.description)
+                .bubbleStyle(vm: vm)
         }
     }
-    
 }
 
 
 #Preview("Messages") {
     VStack {
-        MessageView(MessageViewModelMock(name: "Craig Federighi"))
-        MessageView(MessageViewModelMock(message: .preview(
+        MessageView(vm: MessageViewModelMock(name: "Craig Federighi"))
+        MessageView(vm: MessageViewModelMock(message: .preview(
             content: .text("World"),
             isOutgoing: true
         )))
     }
 }
 
-#Preview("Loading") {
+#Preview("Loading Name") {
     VStack {
-        MessageView(MessageViewModelMock())
-        MessageView(MessageViewModelMock(message: .preview(
-            content: .text("World"),
-            isOutgoing: true
-        )))
+        MessageView(vm: MessageViewModelMock(showSender: true))
     }
 }

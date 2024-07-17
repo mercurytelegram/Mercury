@@ -13,7 +13,7 @@ struct UserCellView: View {
     
     var body: some View {
         HStack(spacing: 10) {
-            AvatarView(model: AvatarModel(tdPhoto: user?.profilePhoto, letters: nameLetters))
+            AvatarView(model: AvatarModel(tdImage: user?.profilePhoto, letters: nameLetters))
                 .frame(width: 40, height: 40)
             VStack(alignment: .leading) {
                 Text(fullName)

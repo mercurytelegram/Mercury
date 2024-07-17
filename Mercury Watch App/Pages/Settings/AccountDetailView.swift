@@ -48,16 +48,14 @@ struct AccountDetailView: View {
         ZStack {
             Image(uiImage: vm.profileThimbnail())
                 .resizable()
-                .frame(height: 120)
+                .frame(height: 150)
                 .clipShape(Ellipse())
-                .padding(.horizontal, -15)
                 .blur(radius: 30)
                 .opacity(0.5)
             
             VStack {
-                AvatarView(model: AvatarModel(tdPhoto: vm.user?.profilePhoto))
+                AvatarView(model: AvatarModel(tdImage: vm.user?.profilePhoto))
                     .frame(width: 50, height: 50)
-                    .clipShape(Circle())
                 Text(vm.user?.fullName ?? "")
                     .fontDesign(.rounded)
                     .fontWeight(.semibold)
