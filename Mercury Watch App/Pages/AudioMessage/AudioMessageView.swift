@@ -55,11 +55,7 @@ struct AudioMessageView: View {
     var body: some View {
         
         Waveform(
-            data: vm.waveformData,
-            normalizationRanges: (
-                input: vm.state == .recStarted ? Waveform.dBInputRange : Waveform.dataInputRange,
-                output: Waveform.suggestedOutputRange
-            )
+            data: vm.state == .recStarted ? vm.waveformData.suffix(Waveform.suggestedSamples) : vm.waveformData
         )
         .navigationTitle(elapsedTime)
         .defaultScrollAnchor(.bottom)

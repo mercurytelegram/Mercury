@@ -13,7 +13,7 @@ class RecorderService: NSObject, ObservableObject {
     
     static let updateInterval: Double = 0.10
     
-    @Published var waveformData: [Float] = Array(repeating: 0, count: Waveform.suggestedSamples)
+    @Published var waveformSample: Float = 0
     @Published var elapsedTime: TimeInterval = .zero
     
     private var audioRecorder: AVAudioRecorder?
@@ -25,20 +25,12 @@ class RecorderService: NSObject, ObservableObject {
         // Recording file path
         self.recFilePath = recFilePath
         super.init()
-       
-        // Waveform update timer
-        let queue = DispatchQueue.global(qos: .userInteractive)
         
         waveformTimer = Timer.scheduledTimer(
             withTimeInterval: RecorderService.updateInterval,
             repeats: true,
             block: updateWaveform
         )
-        
-        queue.async {
-            RunLoop.current.add(self.waveformTimer!, forMode: .default)
-            RunLoop.current.run()
-        }
         
     }
     
@@ -50,6 +42,16 @@ class RecorderService: NSObject, ObservableObject {
         waveformTimer?.invalidate()
         audioRecorder?.stop()
         audioRecorder = nil
+    }
+    
+    func startDataTimer() {
+        guard let timer = self.waveformTimer else { return }
+        let queue = DispatchQueue.global(qos: .userInteractive)
+        
+        queue.async {
+            RunLoop.current.add(timer, forMode: .default)
+            RunLoop.current.run()
+        }
     }
     
     func initAudioRecorder() {
@@ -82,11 +84,14 @@ class RecorderService: NSObject, ObservableObject {
         if audioRecorder?.isRecording ?? false {
             audioRecorder?.updateMeters()
             
-            guard let decibel = audioRecorder?.averagePower(forChannel: 0) // Gives -160...0 values
+            // Gives -160...0 values
+            guard let decibel = audioRecorder?.averagePower(forChannel: 0)
             else { return }
             
-            self.waveformData.append(decibel)
-            self.waveformData.remove(at: 0)
+            // Returns 0...160 values
+            let normalizedDecibel = decibel + 160
+            
+            self.waveformSample = normalizedDecibel
             self.elapsedTime += RecorderService.updateInterval
         }
         
@@ -95,6 +100,7 @@ class RecorderService: NSObject, ObservableObject {
     func startRecordingAudio() {
         print("[CLIENT] [\(type(of: self))] [\(#function)] Start recording")
         audioRecorder?.record()
+        startDataTimer()
     }
     
     func stopRecordingAudio() {
@@ -103,6 +109,6 @@ class RecorderService: NSObject, ObservableObject {
     }
     
     func clearWaveform() {
-        waveformData = Array(repeating: 0, count: Waveform.suggestedSamples)
+        waveformSample = 0
     }
 }

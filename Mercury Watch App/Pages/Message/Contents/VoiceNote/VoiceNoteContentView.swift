@@ -52,11 +52,11 @@ struct VoiceNoteContentView: View {
                 }
             
                 Waveform(
-                    data: data,
-                    normalizationRanges: (
-                        input: Waveform.dataInputRange,
-                        output: Waveform.suggestedOutputRange
-                    )
+                    data: data
+//                    normalizationRanges: (
+//                        input: Waveform.dataInputRange,
+//                        output: Waveform.suggestedOutputRange
+//                    )
                 )
                 .frame(height: 42, alignment: .leading)
                 

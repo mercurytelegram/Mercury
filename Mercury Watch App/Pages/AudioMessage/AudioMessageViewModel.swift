@@ -34,7 +34,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     @Published private var recorder: RecorderService
     @Published private var player: PlayerService?
     
-    @Published var waveformData: [Float] = []
+    @Published var waveformData: [Float] = Array(repeating: 0, count: Waveform.suggestedSamples)
     @Published var elapsedTime: TimeInterval = .zero
     
     private var recorderDataCancellable: AnyCancellable?
@@ -55,9 +55,10 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         
         super.init()
         
-        recorderDataCancellable = self.recorder.$waveformData.sink { [weak self] _ in
+        // Listen for recording sample to insert into waveform data
+        recorderDataCancellable = self.recorder.$waveformSample.sink { [weak self] newValue in
             guard let self, self.state == .recStarted else { return }
-            self.manageRecorderData()
+            self.manageRecorderSample(newValue)
         }
         
     }
@@ -68,11 +69,11 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         player?.dispose()
     }
     
-    private func manageRecorderData() {
+    private func manageRecorderSample(_ sample: Float) {
         DispatchQueue.main.async {
             withAnimation {
                 self.elapsedTime = self.recorder.elapsedTime
-                self.waveformData = self.recorder.waveformData
+                self.waveformData.append(sample)
             }
         }
     }
@@ -101,7 +102,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
             
             state = .recStopped
             
-            self.waveformData = player?.getWaveform() ?? []
+            self.waveformData = Array(self.waveformData.dropFirst(Waveform.suggestedSamples))
             
         case .recStopped, .playPaused:
             player?.startPlayingAudio()

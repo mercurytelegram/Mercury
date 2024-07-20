@@ -15,11 +15,12 @@ class PlayerService: NSObject, ObservableObject {
     
     private var audioPlayer: AVAudioPlayer?
     private var audioFilePath: URL
-    private var audioFilePathData: Data? { try? Data(contentsOf: audioFilePath) }
+    private var audioFilePathData: Data?
     
     init(audioFilePath: URL, delegate: AVAudioPlayerDelegate) throws {
         
         self.audioFilePath = audioFilePath
+        self.audioFilePathData = try? Data(contentsOf: audioFilePath)
         super.init()
         
         let audioSession = AVAudioSession.sharedInstance()
