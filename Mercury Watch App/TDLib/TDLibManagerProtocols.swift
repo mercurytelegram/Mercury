@@ -8,13 +8,7 @@
 import Foundation
 import TDLibKit
 
-protocol TDLibManagerProtocol {
+protocol TDLibManagerProtocol: AnyObject {
     func updateHandler(update: Update)
     func connectionStateUpdate(state: ConnectionState)
-    func subscribeID() -> String
-}
-extension TDLibManagerProtocol {
-    func subscribeID() -> String {
-        return "\(type(of: self))"
-    }
 }

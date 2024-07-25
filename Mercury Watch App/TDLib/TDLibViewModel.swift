@@ -22,7 +22,7 @@ class TDLibViewModel: ObservableObject, TDLibManagerProtocol {
     
     deinit {
         TDLibManager.shared.unsubscribe(self)
-        self.logger.log("uninitialised")
+        self.logger.log("deinitialised")
     }
     
     // TDLibManagerProtocol

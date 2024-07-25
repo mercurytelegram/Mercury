@@ -16,8 +16,13 @@ final class TDLibManager {
     
     // Properties
     public var client: TDLibClient?
-    public var delegates: [(id: String, delegate: TDLibManagerProtocol)] = []
     public var connectionState: ConnectionState?
+    
+    // Delegate
+    public var delegatesObj = NSHashTable<AnyObject>.weakObjects()
+    var delegates: [TDLibManagerProtocol] {
+        return delegatesObj.allObjects as? [TDLibManagerProtocol] ?? []
+    }
     
     private init() {
         self.manager = TDLibClientManager()
@@ -25,19 +30,14 @@ final class TDLibManager {
     }
     
     public func subscribe(_ delegate: TDLibManagerProtocol) {
-        let id = delegate.subscribeID()
-        self.delegates.append((id, delegate))
-        
+        self.delegatesObj.add(delegate)
         if let connectionState {
             updateConnectionState(state: connectionState)
         }
     }
     
     public func unsubscribe(_ delegate: TDLibManagerProtocol) {
-        let id = delegate.subscribeID()
-        self.delegates.removeAll { elem in
-            elem.id == id
-        }
+        self.delegatesObj.remove(delegate)
     }
     
     public func close() {
@@ -59,13 +59,13 @@ final class TDLibManager {
         }
         
         for elem in delegates {
-            elem.delegate.updateHandler(update: update)
+            elem.updateHandler(update: update)
         }
     }
     
     private func updateConnectionState(state: ConnectionState) {
         for elem in delegates {
-            elem.delegate.connectionStateUpdate(state: state)
+            elem.connectionStateUpdate(state: state)
         }
         self.connectionState = state
     }
