@@ -17,9 +17,7 @@ struct Waveform: View {
     let highlightOpacity: Double
     let numSamples: Int
     
-    /// Convert the provided data into an array of `numSamples` float sample by normalizing each value between `minValue` and `maxValue`
-    ///
-    /// - Warning: data count sould be major or euqal to `numSamples`
+    /// Convert the provided data into an array of `numSamples` float sample by normalizing each value between `0` and `1`
     ///
     /// - Parameters:
     ///

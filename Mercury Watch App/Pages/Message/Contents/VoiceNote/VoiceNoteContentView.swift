@@ -51,13 +51,7 @@ struct VoiceNoteContentView: View {
                     return String(format:"%02d:%02d", minutes, seconds)
                 }
             
-                Waveform(
-                    data: data
-//                    normalizationRanges: (
-//                        input: Waveform.dataInputRange,
-//                        output: Waveform.suggestedOutputRange
-//                    )
-                )
+                Waveform(data: data)
                 .frame(height: 42, alignment: .leading)
                 
                 Text(elapsedTime)

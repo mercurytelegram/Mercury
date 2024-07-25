@@ -36,8 +36,10 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     
     @Published var waveformData: [Float] = Array(repeating: 0, count: Waveform.suggestedSamples)
     @Published var elapsedTime: TimeInterval = .zero
+    @Published var hightlightIndex: Int?
     
     private var recorderDataCancellable: AnyCancellable?
+    private var playerDataCancellable: AnyCancellable?
     
     private let filePath: URL
     private let chat: ChatCellModel
@@ -61,12 +63,16 @@ class AudioMessageViewModel: NSObject, ObservableObject {
             self.manageRecorderSample(newValue)
         }
         
+        // Listen for playing time
+        playerDataCancellable = self.player?.$elapsedTime.sink { [weak self] value in
+            guard let self, self.state == .playStarted else { return }
+            self.managePlayerElapsedTime(value)
+        }
+        
     }
     
     deinit {
         recorderDataCancellable?.cancel()
-        recorder.dispose()
-        player?.dispose()
     }
     
     private func manageRecorderSample(_ sample: Float) {
@@ -74,6 +80,34 @@ class AudioMessageViewModel: NSObject, ObservableObject {
             withAnimation {
                 self.elapsedTime = self.recorder.elapsedTime
                 self.waveformData.append(sample)
+            }
+        }
+    }
+    
+    private func managePlayerElapsedTime(_ currentTime: TimeInterval) {
+        
+        var hightlightIndex = 0
+        
+        // Check if the current time is within the total time
+//        guard currentTime >= 0 && currentTime <= self.recorder.elapsedTime
+//        else { return }
+        
+        let arraySize = self.waveformData.count
+        
+        // Calculate the index
+        let index = Int((currentTime * Double(arraySize)) / self.recorder.elapsedTime)
+        
+        // Ensure the index does not exceed array size
+        if index >= arraySize {
+            hightlightIndex = arraySize - 1
+        } else {
+            hightlightIndex = index
+        }
+        
+        DispatchQueue.main.async {
+            withAnimation {
+                self.hightlightIndex = hightlightIndex
+                self.elapsedTime = currentTime
             }
         }
     }

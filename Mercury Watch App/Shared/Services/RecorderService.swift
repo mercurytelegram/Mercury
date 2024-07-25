@@ -29,29 +29,17 @@ class RecorderService: NSObject, ObservableObject {
         waveformTimer = Timer.scheduledTimer(
             withTimeInterval: RecorderService.updateInterval,
             repeats: true,
-            block: updateWaveform
+            block: { [weak self] _ in
+                self?.updateWaveform()
+            }
         )
         
     }
     
     deinit {
-        dispose()
-    }
-    
-    func dispose() {
         waveformTimer?.invalidate()
         audioRecorder?.stop()
         audioRecorder = nil
-    }
-    
-    func startDataTimer() {
-        guard let timer = self.waveformTimer else { return }
-        let queue = DispatchQueue.global(qos: .userInteractive)
-        
-        queue.async {
-            RunLoop.current.add(timer, forMode: .default)
-            RunLoop.current.run()
-        }
     }
     
     func initAudioRecorder() {
@@ -79,7 +67,17 @@ class RecorderService: NSObject, ObservableObject {
         }
     }
     
-    func updateWaveform(_ timer: Timer) {
+    func startDataTimer() {
+        guard let timer = self.waveformTimer else { return }
+        let queue = DispatchQueue.global(qos: .userInteractive)
+        
+        queue.async {
+            RunLoop.current.add(timer, forMode: .default)
+            RunLoop.current.run()
+        }
+    }
+    
+    func updateWaveform() {
         
         if audioRecorder?.isRecording ?? false {
             audioRecorder?.updateMeters()

@@ -11,11 +11,14 @@ import AVFoundation
 
 class PlayerService: NSObject, ObservableObject {
     
+    static let updateInterval: Double = 0.10
+    
     @Published var elapsedTime: TimeInterval = .zero
     
     private var audioPlayer: AVAudioPlayer?
     private var audioFilePath: URL
     private var audioFilePathData: Data?
+    var elapsedTimeTimer: Timer?
     
     init(audioFilePath: URL, delegate: AVAudioPlayerDelegate) throws {
         
@@ -38,15 +41,35 @@ class PlayerService: NSObject, ObservableObject {
         audioPlayer?.volume = 1.0
         audioPlayer?.prepareToPlay()
         
+        elapsedTimeTimer = Timer.scheduledTimer(
+            withTimeInterval: PlayerService.updateInterval,
+            repeats: true,
+            block: { [weak self] _ in
+                self?.updateElapsedTime()
+            }
+        )
     }
     
     deinit {
-        dispose()
-    }
-    
-    func dispose() {
+        elapsedTimeTimer?.invalidate()
         audioPlayer?.stop()
         audioPlayer = nil
+    }
+    
+    func startTimer() {
+        guard let timer = self.elapsedTimeTimer else { return }
+        let queue = DispatchQueue.global(qos: .userInteractive)
+        
+        queue.async {
+            RunLoop.current.add(timer, forMode: .default)
+            RunLoop.current.run()
+        }
+    }
+    
+    func updateElapsedTime() {
+        if audioPlayer?.isPlaying ?? false {
+            self.elapsedTime += PlayerService.updateInterval
+        }
     }
     
     func getWaveform() -> [Float] {
@@ -62,6 +85,7 @@ class PlayerService: NSObject, ObservableObject {
     func startPlayingAudio() {
         print("[CLIENT] [\(type(of: self))] [\(#function)] Start playing")
         audioPlayer?.play()
+        startTimer()
     }
     
     func pausePlayingAudio() {
