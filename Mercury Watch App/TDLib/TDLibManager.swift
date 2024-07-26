@@ -19,8 +19,8 @@ final class TDLibManager {
     public var connectionState: ConnectionState?
     
     // Delegate
-    public var delegatesObj = NSHashTable<AnyObject>.weakObjects()
-    var delegates: [TDLibManagerProtocol] {
+    private var delegatesObj = NSHashTable<AnyObject>.weakObjects()
+    private var delegates: [TDLibManagerProtocol] {
         return delegatesObj.allObjects as? [TDLibManagerProtocol] ?? []
     }
     
@@ -32,7 +32,7 @@ final class TDLibManager {
     public func subscribe(_ delegate: TDLibManagerProtocol) {
         self.delegatesObj.add(delegate)
         if let connectionState {
-            updateConnectionState(state: connectionState)
+            delegate.connectionStateUpdate(state: connectionState)
         }
     }
     
