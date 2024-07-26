@@ -9,7 +9,7 @@ import SwiftUI
 import TDLibKit
 
 struct MessageView: View {
-    @ObservedObject var vm: MessageViewModel
+    @StateObject var vm: MessageViewModel
     
     var body: some View {
         switch vm.message.content {

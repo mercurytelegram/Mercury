@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BubbleStyle: ViewModifier {
-    @ObservedObject var vm: MessageViewModel
+    @StateObject var vm: MessageViewModel
     
     func body(content: Content) -> some View {
         VStack(alignment: .trailing){
@@ -27,7 +27,7 @@ struct BubbleStyle: ViewModifier {
                     .font(.system(size: 15))
                     .foregroundStyle(.secondary)
                 
-                if vm.isSending {
+                if vm.state == .sending {
                     SendingLoaderView()
                 }
             }

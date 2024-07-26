@@ -45,22 +45,29 @@ class ChatDetailViewModel: TDLibViewModel {
             self.updateLastMessage(chatId: update.chatId, message: update.lastMessage)
         case .updateDeleteMessages(let update):
             self.updateDeleteMessages(chatId: update.chatId, messageIds: update.messageIds)
-        case .updateMessageContent(let update):
-            self.updateMessageContent(chatId: update.chatId, messageId: update.messageId)
-        case .updateMessageSendSucceeded(let update):
-            self.updateMessageSendSucceeded(oldId: update.oldMessageId, message: update.message)
         default:
             break
         }
     }
     
     func updateLastMessage(chatId: Int64, message: Message?) {
-        guard chatId == self.chat.td.id else { return }
+        guard let message, chatId == self.chat.td.id
+        else { return }
+        
+        // A message with same ID already exist, its updates will
+        // be managed by itself, no need to insert a new one
+        if messages.contains(where: { $0.id == message.id }) {
+            return
+        }
+        
+        // Outgoing message will manage the sendingState theirself so
+        // there is no need to insert a new one
+        if message.isOutgoing && message.sendingState == nil {
+            return
+        }
         
         DispatchQueue.main.async {
-            if let message {
-                self.insertMessage(at: .last, message: message)
-            }
+            self.insertMessage(at: .last, message: message)
         }
     }
     
@@ -68,41 +75,11 @@ class ChatDetailViewModel: TDLibViewModel {
         guard chatId == self.chat.td.id else { return }
         
         DispatchQueue.main.async {
-            
             for id in messageIds {
                 withAnimation {
                     self.messages.removeAll(where: { $0.id == id })
                 }
             }
-
-        }
-    }
-    
-    func updateMessageContent(chatId: Int64, messageId: Int64) {
-        guard chatId == self.chat.td.id else { return }
-        
-        guard let index = self.messages.firstIndex(where: { $0.id == messageId })
-        else { return }
-        
-        Task {
-            guard let message = try? await TDLibManager.shared.client?.getMessage(chatId: chatId, messageId: messageId)
-            else { return }
-            
-            await MainActor.run {
-                self.insertMessage(at: .index(index), message: message)
-            }
-            
-        }
-    }
-    
-    func updateMessageSendSucceeded(oldId: Int64, message: Message) {
-        
-        guard let index = self.messages.firstIndex(where: { $0.id == oldId })
-        else { return }
-        
-        DispatchQueue.main.async {
-            self.messages.remove(at: index)
-            self.insertMessage(at: .index(index), message: message)
         }
     }
     

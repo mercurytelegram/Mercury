@@ -9,13 +9,71 @@ import SwiftUI
 import TDLibKit
 import AVFAudio
 
-class MessageViewModel: NSObject, ObservableObject {
-    var message: Message
+class MessageViewModel: TDLibViewModel {
+    
     var chat: Chat
     
+    @Published var message: Message
     @Published var user: User?
-    @Published var isPlaying: Bool = false
-    @Published var isLoading: Bool = false
+    
+    enum State { case sending, delivered, seen, failed }
+    @Published var state: State? = nil
+    
+    init(message: Message, chat: Chat) {
+        self.message = message
+        self.chat = chat
+        self.state = message.sendingState != nil ? .sending : nil
+        super.init()
+        
+        initUser()
+    }
+    
+    override func updateHandler(update: Update) {
+        super.updateHandler(update: update)
+        switch update {
+        case .updateMessageContent(let update):
+            self.updateMessageContent(messageId: update.messageId)
+        case .updateMessageSendSucceeded(let update):
+            self.updateMessageSendStatus(oldId: update.oldMessageId, message: update.message, status: .success)
+        case .updateMessageSendFailed(let update):
+            self.updateMessageSendStatus(oldId: update.oldMessageId, message: update.message, status: .failure)
+        default:
+            break
+        }
+    }
+    
+    private func updateMessageContent(messageId: Int64) {
+        guard messageId == self.message.id else { return }
+        
+        Task {
+            guard let newMessage = try? await TDLibManager.shared.client?.getMessage(chatId: self.chat.id, messageId: messageId)
+            else { return }
+            
+            await MainActor.run {
+                withAnimation {
+                    self.message = newMessage
+                }
+            }
+            
+        }
+    }
+    
+    private enum MessageSendStatus { case success, failure }
+    private func updateMessageSendStatus(oldId: Int64, message: Message, status: MessageSendStatus) {
+        guard oldId == self.message.id else { return }
+        DispatchQueue.main.async {
+            withAnimation {
+                self.message = message
+                
+                switch status {
+                case .success:
+                    self.state = .delivered
+                case .failure:
+                    self.state = .failed
+                }
+            }
+        }
+    }
     
     var textAlignment: HorizontalAlignment {
         message.isOutgoing ? .trailing : .leading
@@ -58,18 +116,6 @@ class MessageViewModel: NSObject, ObservableObject {
     
     var titleColor: Color {
         return Color(fromUserId: senderID)
-    }
-    
-    var isSending: Bool {
-        return self.message.sendingState != nil
-    }
-    
-    init(message: Message, chat: Chat) {
-        self.message = message
-        self.chat = chat
-        super.init()
-        
-        initUser()
     }
     
     private func initUser() {

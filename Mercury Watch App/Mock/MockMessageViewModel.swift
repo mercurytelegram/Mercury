@@ -37,8 +37,4 @@ class MessageViewModelMock: MessageViewModel {
     override var showSender: Bool {
         _showSender
     }
-    
-    override var isSending: Bool {
-        _isSending
-    }
 }
