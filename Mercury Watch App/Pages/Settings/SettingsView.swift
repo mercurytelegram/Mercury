@@ -42,7 +42,7 @@ struct SettingsView: View {
             .navigationTitle("Mercury")
             .navigationDestination(for: ChatFolder.self) { folder in
                 return ChatListView(vm: chatListVM).task {
-                    chatListVM.selectChat(folder)
+                    chatListVM.selectChatFolder(folder)
                 }
             }
         }

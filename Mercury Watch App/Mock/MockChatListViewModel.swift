@@ -57,7 +57,7 @@ class MockChatListViewModel: ChatListViewModel {
         )
     ]
     
-    override func selectChat(_ chat: ChatFolder) {
+    override func selectChatFolder(_ chat: ChatFolder) {
         self.chats = []
         
         switch chat {

@@ -245,7 +245,7 @@ class ChatListViewModel: TDLibViewModel {
         SendMessageViewModel(chat: chat)
     }
     
-    func selectChat(_ chat: ChatFolder) {
+    func selectChatFolder(_ chat: ChatFolder) {
         guard chat != currentFolder else { return }
         
         self.currentFolder = chat
