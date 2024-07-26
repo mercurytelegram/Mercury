@@ -11,7 +11,7 @@ struct SendingLoaderView: View {
     @State private var animating = false
     
     var body: some View {
-        Image(systemName: "arrow.trianglehead.2.counterclockwise")
+        Image(systemName: "arrow.triangle.2.circlepath")
             .rotationEffect(animating ? .degrees(-360) : .zero)
             .font(.system(size: 15))
             .foregroundStyle(.secondary)
