@@ -87,10 +87,9 @@ class RecorderService: NSObject, ObservableObject {
             guard let decibel = audioRecorder?.averagePower(forChannel: 0)
             else { return }
             
-            // Returns 0...160 values
-            let normalizedDecibel = decibel + 160
+            let normalizedSample = Waveform.normalize(decibel, from: (-100, 0))
             
-            self.waveformSample = normalizedDecibel
+            self.waveformSample = normalizedSample
             self.elapsedTime += RecorderService.updateInterval
         }
         

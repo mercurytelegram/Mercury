@@ -73,16 +73,6 @@ class PlayerService: NSObject, ObservableObject {
         }
     }
     
-    func getWaveform() -> [Float] {
-        
-        guard let data = audioFilePathData else {
-            logger.log("nil waveform data", level: .error)
-            return []
-        }
-        
-        return [UInt8](data).map({ Float($0) })
-    }
-    
     func startPlayingAudio() {
         logger.log("Start playing")
         audioPlayer?.play()

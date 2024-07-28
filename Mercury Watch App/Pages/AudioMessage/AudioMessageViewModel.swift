@@ -34,7 +34,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     @Published private var recorder: RecorderService
     @Published private var player: PlayerService?
     
-    @Published var waveformData: [Float] = Array(repeating: 0, count: Waveform.suggestedSamples)
+    @Published var waveformData: [Float] = Array(repeating: 0.1, count: Waveform.suggestedSamples)
     @Published var elapsedTime: TimeInterval = .zero
     @Published var hightlightIndex: Int?
     
@@ -136,8 +136,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
             }
             
             state = .recStopped
-            
-            self.waveformData = Array(self.waveformData.dropFirst(Waveform.suggestedSamples))
+            processPlayerWaveform()
             
         case .recStopped, .playPaused:
             player?.startPlayingAudio()
@@ -162,6 +161,24 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         
         state = .sending
         
+    }
+    
+    private func processPlayerWaveform() {
+    
+        DispatchQueue.global(qos: .userInitiated).async {
+            
+            let data = Array(self.waveformData.dropFirst(Waveform.suggestedSamples))
+            
+            guard let min = data.min(), let max = data.max()
+            else { return }
+            
+            let aggregatedData = Waveform.aggregate(data)
+            let normalizedData = Waveform.normalize(aggregatedData, from: (min, max))
+
+            DispatchQueue.main.async {
+                self.waveformData = normalizedData
+            }
+        }
     }
 }
 

@@ -65,9 +65,9 @@ struct AudioMessageView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Send", systemImage: "arrow.up") {
+                    isPresented = false
                     vm.didPressSendButton()
                     onSend(vm.filePath, vm.elapsedTime)
-                    isPresented = false
                 }
                 .foregroundStyle(.white, .blue)
             }

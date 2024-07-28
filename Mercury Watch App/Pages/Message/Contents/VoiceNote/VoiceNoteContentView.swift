@@ -19,10 +19,6 @@ struct VoiceNoteContentView: View {
     
     var body: some View {
         
-        let data = [UInt8](vm.message.voiceNote.waveform).map({ u in
-            Float(u)
-        })
-        
         HStack(alignment: .top, spacing: 5) {
             
             Button(action: {
@@ -51,7 +47,7 @@ struct VoiceNoteContentView: View {
                     return String(format:"%02d:%02d", minutes, seconds)
                 }
             
-                Waveform(data: data)
+                Waveform(data: vm.waveformData)
                 .frame(height: 42, alignment: .leading)
                 
                 Text(elapsedTime)

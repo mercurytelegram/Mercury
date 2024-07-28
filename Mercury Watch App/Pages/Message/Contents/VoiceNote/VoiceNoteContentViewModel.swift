@@ -8,6 +8,7 @@
 import Foundation
 import TDLibKit
 import AVFAudio
+import SwiftUI
 
 class VoiceNoteContentViewModel: NSObject, ObservableObject {
     
@@ -16,9 +17,27 @@ class VoiceNoteContentViewModel: NSObject, ObservableObject {
     
     @Published var loading: Bool = false
     @Published var playing: Bool = false
+    @Published var waveformData: [Float] = []
     
     init(message: MessageVoiceNote) {
         self.message = message
+        super.init()
+        processWaveform(message.voiceNote.waveform)
+    }
+    
+    private func processWaveform(_ data: Data) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let floatData = [UInt8](data).map({ Float($0) })
+            guard let min = floatData.min(), let max = floatData.max()
+            else { return }
+            
+            let aggregatedData = Waveform.aggregate(floatData)
+            let normalizedData = Waveform.normalize(aggregatedData, from: (min, max))
+            
+            DispatchQueue.main.async {
+                self.waveformData = normalizedData
+            }
+        }
     }
     
     func play() {

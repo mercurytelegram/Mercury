@@ -10,18 +10,14 @@ import Charts
 
 struct Waveform: View {
     
-    static let suggestedSamples = 21
-    
     let data: [Float]
     let highlightIndex: Int
     let highlightOpacity: Double
     let numSamples: Int
     
-    /// Convert the provided data into an array of `numSamples` float sample by normalizing each value between `0` and `1`
-    ///
     /// - Parameters:
     ///
-    ///     - data: The data do display
+    ///     - data: The data do display, values should be in 0...1 range
     ///     - highlightIndex: The index of the last bar to highlight, if nil all the bars will be highlighted
     ///     - highlightOpacity: The opacity value applied to not highlighted bars
     ///     - numSamples: The numer of bars to show in the waveform
@@ -37,29 +33,12 @@ struct Waveform: View {
         self.numSamples = numSamples
     }
     
-    private var normalizedData: [Float] {
-        guard let min = data.min(), let max = data.max(), max != min else {
-            return Array(repeating: 0.5, count: data.count)
-        }
-        return data.map { ($0 - min) / (max - min) }
-    }
-    
-    private var aggregatedData: [Float] {
-        let segmentSize = data.count / numSamples
-        return (0..<numSamples).map { i in
-            let start = i * segmentSize
-            let end = min(start + segmentSize, data.count)
-            let segment = normalizedData[start..<end]
-            return segment.reduce(0, +) / Float(segment.count)
-        }
-    }
-    
     var body: some View {
         Chart {
-            ForEach(aggregatedData.indices, id: \.self) { index in
+            ForEach(data.indices, id: \.self) { index in
                 BarMark(
                     x: .value("Frequency", String(index)),
-                    y: .value("Magnitude", aggregatedData[index]),
+                    y: .value("Magnitude", data[index]),
                     stacking: .center
                 )
                 .opacity(index < highlightIndex ? 1.0 : highlightOpacity)
@@ -71,6 +50,50 @@ struct Waveform: View {
         .chartYScale(domain: -0.5...0.5)
         .chartXAxis(.hidden)
         .chartYAxis(.hidden)
+    }
+}
+
+/// Waveform utils
+extension Waveform {
+    
+    typealias MinMax = (min: Float, max: Float)
+    
+    static let suggestedSamples = 21
+    static let outputNormalizationRange: MinMax = (0.1, 1.0)
+    
+    static func normalize(
+        _ values: [Float],
+        from: MinMax,
+        to: MinMax = Waveform.outputNormalizationRange
+    ) -> [Float] {
+        return values.map { value in
+            return Waveform.normalize(value, from: from, to: to)
+        }
+    }
+    
+    static func normalize(
+        _ value: Float,
+        from: MinMax,
+        to: MinMax = Waveform.outputNormalizationRange
+    ) -> Float {
+        // Calculate the normalized value
+        let normalizedValue = (value - from.min) / (from.max - from.min)
+        
+        // Scale the normalized value to the end range
+        let scaledValue = (normalizedValue * (to.max - to.min)) + to.min
+        
+        return scaledValue
+    }
+    
+    static func aggregate(_ data: [Float], numSamples: Int = Waveform.suggestedSamples) -> [Float] {
+        let segmentSize = data.count / numSamples
+
+        return (0..<numSamples).map { i in
+            let start = i * segmentSize
+            let end = min(start + segmentSize, data.count)
+            let segment = data[start..<end]
+            return segment.reduce(0, +) / Float(segment.count)
+        }
     }
 }
 
