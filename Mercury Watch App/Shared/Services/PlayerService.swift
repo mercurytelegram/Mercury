@@ -18,6 +18,7 @@ class PlayerService: NSObject, ObservableObject {
     private var audioPlayer: AVAudioPlayer?
     private var audioFilePath: URL
     private var audioFilePathData: Data?
+    private let logger = LoggerService(PlayerService.self)
     var elapsedTimeTimer: Timer?
     
     init(audioFilePath: URL, delegate: AVAudioPlayerDelegate) throws {
@@ -31,7 +32,7 @@ class PlayerService: NSObject, ObservableObject {
         try audioSession.setActive(true)
         
         guard let data = audioFilePathData else {
-            print("[CLIENT] [\(type(of: self))] [\(#function)] nil data")
+            logger.log("nil data", level: .error)
             return
         }
         
@@ -75,7 +76,7 @@ class PlayerService: NSObject, ObservableObject {
     func getWaveform() -> [Float] {
         
         guard let data = audioFilePathData else {
-            print("[CLIENT] [\(type(of: self))] [\(#function)] nil data")
+            logger.log("nil waveform data", level: .error)
             return []
         }
         
@@ -83,18 +84,18 @@ class PlayerService: NSObject, ObservableObject {
     }
     
     func startPlayingAudio() {
-        print("[CLIENT] [\(type(of: self))] [\(#function)] Start playing")
+        logger.log("Start playing")
         audioPlayer?.play()
         startTimer()
     }
     
     func pausePlayingAudio() {
-        print("[CLIENT] [\(type(of: self))] [\(#function)] Stop playing")
+        logger.log("Pause playing")
         audioPlayer?.pause()
     }
     
     func stopPlayingAudio() {
-        print("[CLIENT] [\(type(of: self))] [\(#function)] Stop playing")
+        logger.log("Stop playing")
         audioPlayer?.stop()
     }
 }

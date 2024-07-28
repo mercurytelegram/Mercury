@@ -12,6 +12,7 @@ import AVFAudio
 class VoiceNoteContentViewModel: NSObject, ObservableObject {
     
     let message: MessageVoiceNote
+    private let logger = LoggerService(AudioMessageViewModel.self)
     
     @Published var loading: Bool = false
     @Published var playing: Bool = false
@@ -30,7 +31,7 @@ class VoiceNoteContentViewModel: NSObject, ObservableObject {
                 
                 loading = false
                 guard let filePath else {
-                    print("[CLIENT] [\(type(of: self))] [\(#function)] filePath is nil")
+                    logger.log("filePath is nil", level: .error)
                     return
                 }
                 
@@ -39,7 +40,7 @@ class VoiceNoteContentViewModel: NSObject, ObservableObject {
                     audioPlayer.startPlayingAudio()
                     playing = true
                 } catch {
-                    print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
+                    logger.log(error, level: .error)
                 }
                 
             }

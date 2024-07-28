@@ -43,6 +43,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     
     let filePath: URL
     private let chat: ChatCellModel
+    private let logger = LoggerService(AudioMessageViewModel.self)
       
     init(chat: ChatCellModel) {
         
@@ -131,7 +132,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
             do {
                 self.player = try PlayerService(audioFilePath: filePath, delegate: self)
             } catch {
-                print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
+                logger.log(error, level: .error)
             }
             
             state = .recStopped

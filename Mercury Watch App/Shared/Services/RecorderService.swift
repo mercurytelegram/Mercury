@@ -18,6 +18,7 @@ class RecorderService: NSObject, ObservableObject {
     
     private var audioRecorder: AVAudioRecorder?
     private var recFilePath: URL
+    private let logger = LoggerService(RecorderService.self)
     var waveformTimer: Timer?
     
     init(recFilePath: URL) {
@@ -62,7 +63,7 @@ class RecorderService: NSObject, ObservableObject {
             audioRecorder?.prepareToRecord()
             
         } catch {
-            print("[CLIENT] [\(type(of: self))] [\(#function)] recorder error: \(error)")
+            logger.log(error, level: .error)
             return
         }
     }
@@ -96,13 +97,13 @@ class RecorderService: NSObject, ObservableObject {
     }
     
     func startRecordingAudio() {
-        print("[CLIENT] [\(type(of: self))] [\(#function)] Start recording")
+        logger.log("Start recording")
         audioRecorder?.record()
         startDataTimer()
     }
     
     func stopRecordingAudio() {
-        print("[CLIENT] [\(type(of: self))] [\(#function)] Stop recording")
+        logger.log("Stop recording")
         audioRecorder?.stop()
     }
     
