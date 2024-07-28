@@ -11,7 +11,7 @@ import SwiftUI
 class MockChatDetailViewModel: ChatDetailViewModel {
     
     init(messages: [Message] = [], chat: ChatCellModel = .from(.preview())) {
-        super.init(chat: chat)
+        super.init(chat: chat, sendService: MockSendMessageService(chat: chat.td))
         isLoadingInitialMessages = false
         
         switch chat.td.title {

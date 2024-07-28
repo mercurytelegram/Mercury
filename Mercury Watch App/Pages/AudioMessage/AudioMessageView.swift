@@ -13,8 +13,10 @@ struct AudioMessageView: View {
     
     @StateObject var vm: AudioMessageViewModel
     @Binding var isPresented: Bool
+    var onSend: (URL, Double) -> Void
     
-    init(isPresented: Binding<Bool>, chat: ChatCellModel) {
+    init(isPresented: Binding<Bool>, chat: ChatCellModel, onSend: @escaping (URL, Double) -> Void ) {
+        self.onSend = onSend
         self._vm = StateObject(wrappedValue: AudioMessageViewModel(chat: chat))
         self._isPresented = isPresented
     }
@@ -63,12 +65,9 @@ struct AudioMessageView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Send", systemImage: "arrow.up") {
-                    Task {
-                        await vm.didPressSendButton()
-                        await MainActor.run {
-                            isPresented = false
-                        }
-                    }
+                    vm.didPressSendButton()
+                    onSend(vm.filePath, vm.elapsedTime)
+                    isPresented = false
                 }
                 .foregroundStyle(.white, .blue)
             }
@@ -95,9 +94,9 @@ struct AudioMessageView: View {
     
 }
 
-#Preview {
-    Text("background")
-        .sheet(isPresented: .constant(true), content: {
-            AudioMessageView(isPresented: .constant(true), chat: .preview())
-        })
-}
+//#Preview {
+//    Text("background")
+//        .sheet(isPresented: .constant(true), content: {
+//            AudioMessageView(isPresented: .constant(true), chat: .preview(), sendVM: <#SendMessageViewModel#>)
+//        })
+//}

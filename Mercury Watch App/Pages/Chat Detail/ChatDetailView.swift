@@ -11,7 +11,6 @@ import TDLibKit
 
 struct ChatDetailView: View {
     @StateObject var vm: ChatDetailViewModel
-    @StateObject var sendMsgVM: SendMessageViewModel
     
     @State var image: Image?
     @State var showAudioMessageView: Bool = false
@@ -19,10 +18,8 @@ struct ChatDetailView: View {
     init(chat: ChatCellModel, useMock: Bool = false) {
         if useMock {
             self._vm = StateObject(wrappedValue: MockChatDetailViewModel(chat: chat))
-            self._sendMsgVM = StateObject(wrappedValue: MockSendMessageViewModel(chat: chat))
         } else {
             self._vm = StateObject(wrappedValue: ChatDetailViewModel(chat: chat))
-            self._sendMsgVM = StateObject(wrappedValue: SendMessageViewModel(chat: chat))
         }
     }
     
@@ -73,7 +70,7 @@ struct ChatDetailView: View {
                         TextFieldLink {
                             Image(systemName: "keyboard.fill")
                         } onSubmit: { value in
-                            sendMsgVM.sendTextMessage(value)
+                            vm.sendService.sendTextMessage(value)
                         }
                     }
                     
@@ -113,7 +110,9 @@ struct ChatDetailView: View {
 
         }
         .sheet(isPresented: $showAudioMessageView) {
-            AudioMessageView(isPresented: $showAudioMessageView, chat: vm.chat)
+            AudioMessageView(isPresented: $showAudioMessageView, chat: vm.chat) { filePath, duration in
+                vm.sendService.sendVoiceNote(filePath, Int(duration))
+            }
         }
         .sheet(isPresented: $vm.showStickersView) {
             AlertView.inDevelopment("stickers are")

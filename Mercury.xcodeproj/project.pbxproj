@@ -16,7 +16,7 @@
 		4AA1C7CD2BD7CF1600EB01BC /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA1C7CC2BD7CF1600EB01BC /* InfoView.swift */; };
 		4AE620192C09C36800722512 /* MockChatDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE620182C09C36800722512 /* MockChatDetailViewModel.swift */; };
 		4AE6201B2C09C43500722512 /* MockMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */; };
-		4AE6201D2C09C4AA00722512 /* MockSendMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE6201C2C09C4AA00722512 /* MockSendMessageViewModel.swift */; };
+		4AE6201D2C09C4AA00722512 /* MockSendMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE6201C2C09C4AA00722512 /* MockSendMessageService.swift */; };
 		4AE6201F2C09C4E900722512 /* ChatCellModel+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE6201E2C09C4E900722512 /* ChatCellModel+Mock.swift */; };
 		4AE620222C09C6CF00722512 /* Extensions+FormattedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE620212C09C6CF00722512 /* Extensions+FormattedText.swift */; };
 		4AF90D692BEE65BA00435355 /* Extensions+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF90D682BEE65BA00435355 /* Extensions+Date.swift */; };
@@ -61,7 +61,7 @@
 		A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07438F12BD10D2D00945CB5 /* MercuryApp.swift */; };
 		A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F52BD10D2F00945CB5 /* Assets.xcassets */; };
 		A07438F92BD10D2F00945CB5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */; };
-		A081AAD12C0638C4002A265C /* SendMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD02C0638C4002A265C /* SendMessageViewModel.swift */; };
+		A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD02C0638C4002A265C /* SendMessageService.swift */; };
 		A081AAD32C071C82002A265C /* Extensions+ChatAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD22C071C82002A265C /* Extensions+ChatAction.swift */; };
 		A081AAD52C0721C2002A265C /* Extensions+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD42C0721C2002A265C /* Extensions+Chat.swift */; };
 		A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD62C072536002A265C /* Extensions+MessageSender.swift */; };
@@ -107,7 +107,7 @@
 		4AA1C7CC2BD7CF1600EB01BC /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4AE620182C09C36800722512 /* MockChatDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockChatDetailViewModel.swift; sourceTree = "<group>"; };
 		4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessageViewModel.swift; sourceTree = "<group>"; };
-		4AE6201C2C09C4AA00722512 /* MockSendMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSendMessageViewModel.swift; sourceTree = "<group>"; };
+		4AE6201C2C09C4AA00722512 /* MockSendMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSendMessageService.swift; sourceTree = "<group>"; };
 		4AE6201E2C09C4E900722512 /* ChatCellModel+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatCellModel+Mock.swift"; sourceTree = "<group>"; };
 		4AE620212C09C6CF00722512 /* Extensions+FormattedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+FormattedText.swift"; sourceTree = "<group>"; };
 		4AF90D682BEE65BA00435355 /* Extensions+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Date.swift"; sourceTree = "<group>"; };
@@ -152,7 +152,7 @@
 		A07438F12BD10D2D00945CB5 /* MercuryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercuryApp.swift; sourceTree = "<group>"; };
 		A07438F52BD10D2F00945CB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		A081AAD02C0638C4002A265C /* SendMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageViewModel.swift; sourceTree = "<group>"; };
+		A081AAD02C0638C4002A265C /* SendMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageService.swift; sourceTree = "<group>"; };
 		A081AAD22C071C82002A265C /* Extensions+ChatAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+ChatAction.swift"; sourceTree = "<group>"; };
 		A081AAD42C0721C2002A265C /* Extensions+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Chat.swift"; sourceTree = "<group>"; };
 		A081AAD62C072536002A265C /* Extensions+MessageSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+MessageSender.swift"; sourceTree = "<group>"; };
@@ -220,6 +220,7 @@
 		4AE620232C09C72600722512 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A081AAD02C0638C4002A265C /* SendMessageService.swift */,
 				9BB4FEAE2BF3E3BB000785BA /* FileService.swift */,
 				A027C3FE2C0C6EEB0056BF67 /* LoggerService.swift */,
 				A04388F92C3FE384007B83C0 /* PlayerService.swift */,
@@ -276,7 +277,6 @@
 			children = (
 				A026961C2BF3F4A700ACA12C /* ChatDetailViewModel.swift */,
 				9B3FC90C2BF3DF8400CDE217 /* ChatDetailView.swift */,
-				A081AAD02C0638C4002A265C /* SendMessageViewModel.swift */,
 			);
 			path = "Chat Detail";
 			sourceTree = "<group>";
@@ -302,7 +302,7 @@
 				9B0F6AB82C01F0AE00568319 /* MockChatListViewModel.swift */,
 				4AE620182C09C36800722512 /* MockChatDetailViewModel.swift */,
 				4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */,
-				4AE6201C2C09C4AA00722512 /* MockSendMessageViewModel.swift */,
+				4AE6201C2C09C4AA00722512 /* MockSendMessageService.swift */,
 				9B4451F72C45C5F900A6EBC2 /* MockSettingsViewModel.swift */,
 			);
 			path = Mock;
@@ -515,7 +515,7 @@
 			files = (
 				4A919FD12BD7C40600F78F03 /* PasswordView.swift in Sources */,
 				4AF90D692BEE65BA00435355 /* Extensions+Date.swift in Sources */,
-				A081AAD12C0638C4002A265C /* SendMessageViewModel.swift in Sources */,
+				A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */,
 				A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */,
 				4AE620192C09C36800722512 /* MockChatDetailViewModel.swift in Sources */,
 				9B4451F62C459A1300A6EBC2 /* SettingsCellView.swift in Sources */,
@@ -538,7 +538,7 @@
 				A027C3FF2C0C6EEB0056BF67 /* LoggerService.swift in Sources */,
 				9BB920E32C3D9B8B0023C616 /* SettingsViewModel.swift in Sources */,
 				9B2E1BE12C08739800B9B63D /* MessageView.swift in Sources */,
-				4AE6201D2C09C4AA00722512 /* MockSendMessageViewModel.swift in Sources */,
+				4AE6201D2C09C4AA00722512 /* MockSendMessageService.swift in Sources */,
 				9B2805CC2C4671C500F7DF72 /* Extensions+TDImage.swift in Sources */,
 				4A919FCF2BD7C3C800F78F03 /* LoginView.swift in Sources */,
 				A081AAD32C071C82002A265C /* Extensions+ChatAction.swift in Sources */,

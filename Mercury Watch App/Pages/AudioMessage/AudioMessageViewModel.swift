@@ -41,7 +41,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     private var recorderDataCancellable: AnyCancellable?
     private var playerDataCancellable: AnyCancellable?
     
-    private let filePath: URL
+    let filePath: URL
     private let chat: ChatCellModel
       
     init(chat: ChatCellModel) {
@@ -151,47 +151,15 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         }
     }
     
-    func didPressSendButton() async {
+    func didPressSendButton() {
         
-        if state == .sending { return }
+        guard state != .sending else { return }
         
         if state == .recStarted {
             recorder.stopRecordingAudio()
         }
         
-        await MainActor.run {
-            state = .sending
-        }
-        
-        let audioFile: InputFile = .inputFileLocal(.init(path: filePath.relativePath))
-        let audioDuration = Int(recorder.elapsedTime)
-        let audioWaveform = (try? Data(contentsOf: filePath)) ?? Data()
-        
-        let audio: InputMessageVoiceNote = .init(
-            caption: nil,
-            duration: audioDuration,
-            selfDestructType: nil,
-            voiceNote: audioFile,
-            waveform: audioWaveform
-        )
-        
-        do {
-            _ = try await TDLibManager.shared.client?.sendMessage(
-                chatId: self.chat.td.id,
-                inputMessageContent: .inputMessageVoiceNote(audio),
-                messageThreadId: nil,
-                options: nil,
-                replyMarkup: nil,
-                replyTo: nil
-            )
-            
-            // TODO: Delete local file after it has been sent
-//             try FileManager.default.removeItem(at: filePath)
-            
-            print("[CLIENT] [\(type(of: self))] [\(#function)] done")
-        } catch {
-            print("[CLIENT] [\(type(of: self))] [\(#function)] \(error)")
-        }
+        state = .sending
         
     }
 }

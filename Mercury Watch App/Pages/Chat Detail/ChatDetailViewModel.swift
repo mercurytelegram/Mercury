@@ -28,8 +28,11 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     let chat: ChatCellModel
-    init(chat: ChatCellModel) {
+    let sendService: SendMessageService
+    
+    init(chat: ChatCellModel, sendService: SendMessageService? = nil) {
         self.chat = chat
+        self.sendService = sendService ?? SendMessageService(chat: chat.td)
         super.init()
         self.requestInitialMessage()
     }
