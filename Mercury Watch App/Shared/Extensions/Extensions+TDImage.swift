@@ -40,4 +40,14 @@ extension Photo: TDImage {
     }
 }
 
+extension Video: TDImage {
+    var lowRes: File? {
+        return thumbnail?.file
+    }
+    
+    var highRes: File? {
+        return nil
+    }
+}
+
 

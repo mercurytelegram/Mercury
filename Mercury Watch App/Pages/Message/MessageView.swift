@@ -26,6 +26,17 @@ struct MessageView: View {
         case .messageVoiceNote(let message):
             VoiceNoteContentView(message: message)
             
+        case .messageVideo(let message):
+            MessageBubbleImageView(caption: message.caption.text) {
+                TdImageView(tdImage: message.video)
+            }
+            .overlay {
+                Image(systemName: "play.circle.fill")
+                    .font(.largeTitle)
+                    .foregroundStyle(.white, .ultraThinMaterial)
+            }
+            
+            
         default:
             MessageBubbleView {
                 Text(message.description)
