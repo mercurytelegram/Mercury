@@ -20,6 +20,8 @@ class MessageViewModelMock: MessageViewModel {
         _showSender = showSender
         _isSending = isSending
         super.init(message: message, chat: .preview())
+        
+        super.state = isSending ? .sending : nil
     }
     
     override var date: String {

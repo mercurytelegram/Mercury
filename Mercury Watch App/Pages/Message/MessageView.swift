@@ -9,26 +9,27 @@ import SwiftUI
 import TDLibKit
 
 struct MessageView: View {
-    @StateObject var vm: MessageViewModel
+    var message: Message
     
     var body: some View {
-        switch vm.message.content {
+        switch message.content {
         case .messageText(let message):
-            Text(message.text.attributedString)
-                .bubbleStyle(vm: vm)
+            MessageBubbleView {
+                Text(message.text.attributedString)
+            }
             
         case .messagePhoto(let message):
-            TdImageView(tdImage: message.photo)
-                .clipShape(BubbleShape(myMessage: vm.message.isOutgoing))
-                .padding(vm.message.isOutgoing ? .trailing : .leading, -10)
+            MessageBubbleImageView(caption: message.caption.text) {
+                TdImageView(tdImage: message.photo)
+            }
 
         case .messageVoiceNote(let message):
             VoiceNoteContentView(message: message)
-                .bubbleStyle(vm: vm)
             
         default:
-            Text(vm.message.description)
-                .bubbleStyle(vm: vm)
+            MessageBubbleView {
+                Text(message.description)
+            }
         }
     }
 }
@@ -36,16 +37,18 @@ struct MessageView: View {
 
 #Preview("Messages") {
     VStack {
-        MessageView(vm: MessageViewModelMock(name: "Craig Federighi"))
-        MessageView(vm: MessageViewModelMock(message: .preview(
-            content: .text("World"),
-            isOutgoing: true
-        )))
+        MessageView(message: .preview())
+            .environmentObject(MessageViewModelMock(name: "Craig Federighi") as MessageViewModel)
+        MessageView(message: .preview(
+            content: .text("World")
+        ))
+        .environmentObject(MessageViewModelMock(message: .preview(isOutgoing: true)) as MessageViewModel)
     }
 }
 
 #Preview("Loading Name") {
     VStack {
-        MessageView(vm: MessageViewModelMock(showSender: true))
+        MessageView(message: .preview())
+            .environmentObject(MessageViewModelMock(showSender: true) as MessageViewModel)
     }
 }

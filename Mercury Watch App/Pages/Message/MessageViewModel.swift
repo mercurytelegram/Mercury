@@ -15,9 +15,7 @@ class MessageViewModel: TDLibViewModel {
     
     @Published var message: Message
     @Published var user: User?
-    
-    enum State { case sending, delivered, seen, failed }
-    @Published var state: State? = nil
+    @Published var state: MessageSendingState? = nil
     
     init(message: Message, chat: Chat) {
         self.message = message
@@ -118,6 +116,10 @@ class MessageViewModel: TDLibViewModel {
         return Color(fromUserId: senderID)
     }
     
+    var bubbleColor: Color {
+        message.isOutgoing ? .blue.opacity(0.7) : .white.opacity(0.2)
+    }
+    
     private func initUser() {
         Task { [weak self] in
             guard let self else { return }
@@ -130,4 +132,8 @@ class MessageViewModel: TDLibViewModel {
         }
     }
     
+}
+
+enum MessageSendingState {
+    case sending, delivered, seen, failed
 }
