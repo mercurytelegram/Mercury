@@ -20,6 +20,8 @@ extension Message {
             stringMessage = "📷 Photo"
         case .messageLocation(_):
             stringMessage = "📍 Location"
+        case .messageVenue(let message):
+            stringMessage = "📍 \(message.venue.title)"
         case .messagePoll(let message):
             return "📊 " + message.poll.question.attributedString
         case .messageDocument(let doc):

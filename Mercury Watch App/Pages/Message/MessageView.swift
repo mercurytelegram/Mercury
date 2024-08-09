@@ -40,17 +40,14 @@ struct MessageView: View {
             }
             
         case .messageLocation(let message):
-            let coordinate = CLLocationCoordinate2D(
-                latitude: message.location.latitude,
-                longitude: message.location.longitude
-            )
             MessageBubbleImageView {
-                Map(interactionModes: []) {
-                    Marker("", coordinate: coordinate)
-                }
-                .frame(height: 120)
+                LocationContentView(coordinate: CLLocationCoordinate2D(latitude: message.location.latitude, longitude: message.location.longitude))
+                    
             }
-            
+        case .messageVenue(let message):
+            MessageBubbleImageView {
+                LocationContentView(venue: message.venue)
+            }
         default:
             MessageBubbleView {
                 Text(message.description)
