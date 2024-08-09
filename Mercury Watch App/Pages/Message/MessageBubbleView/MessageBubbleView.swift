@@ -7,10 +7,12 @@
 
 import SwiftUI
 
-struct BubbleStyle: ViewModifier {
-    @StateObject var vm: MessageViewModel
+struct MessageBubbleView<Content> : View where Content : View {
+    @EnvironmentObject var vm: MessageViewModel
+    var showBackground: Bool = true
+    @ViewBuilder var content: () -> Content
     
-    func body(content: Content) -> some View {
+    var body: some View {
         VStack(alignment: .trailing){
             VStack(alignment: vm.textAlignment){
                 if vm.showSender {
@@ -19,7 +21,7 @@ struct BubbleStyle: ViewModifier {
                         .foregroundStyle(vm.titleColor)
                         .redacted(reason: vm.userNameRedaction)
                 }
-                content
+                content()
             }
             
             HStack() {
@@ -36,49 +38,59 @@ struct BubbleStyle: ViewModifier {
         .padding()
         .padding(vm.message.isOutgoing ? .trailing : .leading, 5)
         .background {
-            BubbleShape(myMessage: vm.message.isOutgoing)
-                .foregroundStyle(vm.message.isOutgoing ? .blue.opacity(0.7) : .white.opacity(0.2))
-            
-        }
+            if showBackground {
+                BubbleShape(myMessage: vm.message.isOutgoing)
+                    .foregroundStyle(vm.bubbleColor)
+            }        }
         .frame(maxWidth: .infinity, alignment: vm.message.isOutgoing ? .trailing : .leading)
-    }
-}
-
-extension View {
-    func bubbleStyle(vm: MessageViewModel) -> some View {
-        modifier(BubbleStyle(vm: vm))
     }
 }
 
 #Preview("Message") {
     VStack {
-        Text("Hello")
-            .bubbleStyle(vm: MessageViewModelMock(
+        MessageBubbleView {
+            Text("Hello")
+        }
+        .environmentObject(
+            MessageViewModelMock(
                 name: "Craig Federighi",
-                showSender: true)
+                showSender: true
+            ) as MessageViewModel
         )
         
-        Text("World!")
-            .bubbleStyle(vm: MessageViewModelMock(
+        MessageBubbleView {
+            Text("World")
+        }
+        .environmentObject(
+            MessageViewModelMock(
                 message: .preview(
-                isOutgoing: true)
-            ))
+                    isOutgoing: true)
+            ) as MessageViewModel
+        )
     }
 }
 
 #Preview("Loading") {
     VStack {
-        Text("Hello")
-            .bubbleStyle(vm: MessageViewModelMock(
+        MessageBubbleView {
+            Text("Hello")
+        }
+        .environmentObject(
+            MessageViewModelMock(
                 name: "placeholder",
-                showSender: true)
+                showSender: true
+            ) as MessageViewModel
         )
         
-        Text("World!")
-            .bubbleStyle(vm: MessageViewModelMock(
+        MessageBubbleView {
+            Text("World")
+        }
+        .environmentObject(
+            MessageViewModelMock(
                 message: .preview(
-                isOutgoing: true),
+                    isOutgoing: true),
                 isSending: true
-            ))
+            ) as MessageViewModel
+        )
     }
 }

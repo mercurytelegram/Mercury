@@ -24,6 +24,14 @@ struct MessageBubbleImageView<Content> : View where Content : View {
                     .background(vm.bubbleColor)
             }
         }
+        .overlay {
+            if vm.showSender {
+                Rectangle()
+                    .foregroundStyle(.ultraThinMaterial)
+                    .frame(height: 35)
+                    .frame(maxHeight: .infinity, alignment: .top)
+            }
+        }
         .clipShape(BubbleShape(myMessage: false))
         .overlay {
             MessageBubbleView(showBackground: false) {

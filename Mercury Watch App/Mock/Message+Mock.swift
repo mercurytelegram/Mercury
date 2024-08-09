@@ -18,6 +18,10 @@ extension MessageContent {
     static func text(_ text: String) -> MessageContent {
         MessageContent.messageText(MessageText(linkPreviewOptions: nil, text: FormattedText(entities: [], text: text), webPage: nil))
     }
+    
+    static func location(_ latitude: Double = 37.33187132756376, _ longitude: Double = -122.02965972794414) -> MessageContent {
+        MessageContent.messageLocation(MessageLocation(expiresIn: 0, heading: 0, livePeriod: 0, location: Location(horizontalAccuracy: 0, latitude: latitude, longitude: longitude), proximityAlertRadius: 0))
+    }
 }
 
 extension MessageSender {

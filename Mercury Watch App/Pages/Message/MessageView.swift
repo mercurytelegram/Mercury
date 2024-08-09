@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TDLibKit
+import MapKit
 
 struct MessageView: View {
     var message: Message
@@ -24,7 +25,9 @@ struct MessageView: View {
             }
 
         case .messageVoiceNote(let message):
-            VoiceNoteContentView(message: message)
+            MessageBubbleView {
+                VoiceNoteContentView(message: message)
+            }
             
         case .messageVideo(let message):
             MessageBubbleImageView(caption: message.caption.text) {
@@ -36,6 +39,17 @@ struct MessageView: View {
                     .foregroundStyle(.white, .ultraThinMaterial)
             }
             
+        case .messageLocation(let message):
+            let coordinate = CLLocationCoordinate2D(
+                latitude: message.location.latitude,
+                longitude: message.location.longitude
+            )
+            MessageBubbleImageView {
+                Map(interactionModes: []) {
+                    Marker("", coordinate: coordinate)
+                }
+                .frame(height: 120)
+            }
             
         default:
             MessageBubbleView {
@@ -44,7 +58,6 @@ struct MessageView: View {
         }
     }
 }
-
 
 #Preview("Messages") {
     VStack {
@@ -57,9 +70,14 @@ struct MessageView: View {
     }
 }
 
-#Preview("Loading Name") {
-    VStack {
-        MessageView(message: .preview())
-            .environmentObject(MessageViewModelMock(showSender: true) as MessageViewModel)
-    }
+#Preview("Location") {
+    MessageView(message: .preview(content: .location()))
+        .environmentObject(MessageViewModelMock() as MessageViewModel)
+    
 }
+
+#Preview("Loading Name") {
+    MessageView(message: .preview())
+        .environmentObject(MessageViewModelMock(showSender: true) as MessageViewModel)
+}
+
