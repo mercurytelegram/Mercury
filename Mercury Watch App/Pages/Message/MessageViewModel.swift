@@ -120,6 +120,21 @@ class MessageViewModel: TDLibViewModel {
         message.isOutgoing ? .blue.opacity(0.7) : .white.opacity(0.2)
     }
     
+    var reactions: [Reaction] {
+        guard let reactions = message.interactionInfo?.reactions?.reactions else { return [] }
+        return reactions.map { reaction in
+            var emoji = "?"
+            if case .reactionTypeEmoji(let type) = reaction.type {
+                emoji = type.emoji
+            }
+            return Reaction(
+                emoji: emoji,
+                count: reaction.totalCount,
+                isSelected: reaction.isChosen
+            )
+        }
+    }
+    
     private func initUser() {
         Task { [weak self] in
             guard let self else { return }

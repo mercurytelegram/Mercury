@@ -17,11 +17,11 @@ struct LocationContentView: View {
     var markerSymbol: String
     
     var camera: MapCamera {
-        var editCord = coordinate
+        var editCoord = coordinate
         if vm.showSender {
-            editCord.latitude += 0.00015
+            editCoord.latitude += 0.00015
         }
-        return MapCamera(centerCoordinate: editCord, distance: 200)
+        return MapCamera(centerCoordinate: editCoord, distance: 200)
     }
     
     var body: some View {
@@ -72,5 +72,16 @@ struct LocationContentView: View {
 #Preview {
     LocationContentView(coordinate: CLLocationCoordinate2DMake(
         37.33187132756376, -122.02965972794414))
+    .environmentObject(MessageViewModelMock() as MessageViewModel)
+}
+
+#Preview {
+    LocationContentView(
+        title: "",
+        coordinate: CLLocationCoordinate2DMake(
+        37.33187132756376, -122.02965972794414),
+        color: .white,
+        markerSymbol: ""
+    )
     .environmentObject(MessageViewModelMock() as MessageViewModel)
 }

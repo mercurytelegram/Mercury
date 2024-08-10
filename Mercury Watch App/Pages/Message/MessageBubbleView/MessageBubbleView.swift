@@ -13,18 +13,21 @@ struct MessageBubbleView<Content> : View where Content : View {
     @ViewBuilder var content: () -> Content
     
     var body: some View {
-        VStack(alignment: .trailing){
-            VStack(alignment: vm.textAlignment){
-                if vm.showSender {
-                    Text(vm.userFullName)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(vm.titleColor)
-                        .redacted(reason: vm.userNameRedaction)
-                }
-                content()
+        VStack(alignment: .leading){
+            if vm.showSender {
+                Text(vm.userFullName)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(vm.titleColor)
+                    .redacted(reason: vm.userNameRedaction)
             }
+            content()
             
             HStack() {
+                
+                ForEach(vm.reactions, id: \.self){ reaction in
+                    ReactionsView(reaction: reaction)
+                }
+                
                 Text(vm.date)
                     .font(.system(size: 15))
                     .foregroundStyle(.secondary)
