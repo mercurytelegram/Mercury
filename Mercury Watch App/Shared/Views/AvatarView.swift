@@ -12,6 +12,14 @@ import TDLibKit
 struct AvatarView: View {
     var model: AvatarModel
     
+    init(model: AvatarModel) {
+        self.model = model
+    }
+    
+    init(image: TDImage) {
+        self.model = AvatarModel(tdImage: image)
+    }
+    
     var body: some View {
         GeometryReader { proxy in
             let size = proxy.size.width

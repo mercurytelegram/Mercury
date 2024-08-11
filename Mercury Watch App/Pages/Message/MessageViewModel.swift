@@ -130,7 +130,13 @@ class MessageViewModel: TDLibViewModel {
             return Reaction(
                 emoji: emoji,
                 count: reaction.totalCount,
-                isSelected: reaction.isChosen
+                isSelected: reaction.isChosen,
+                recentUsers: reaction.recentSenderIds.map { sender in
+                    if case .messageSenderUser(let user) = sender {
+                        return user.userId
+                    }
+                    return 0
+                }
             )
         }
     }
