@@ -45,7 +45,38 @@ struct SettingsView: View {
                     chatListVM.selectChatFolder(folder)
                 }
             }
+            
         }
+        .overlay(alignment: .bottom) {
+            if settingsVM.showConnectingToast {
+                connectingToast()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func connectingToast() -> some View {
+        HStack(spacing: 5) {
+            ProgressView()
+            Text("Connecting...")
+        }
+        .padding(10)
+        .background {
+            Capsule()
+                .foregroundStyle(.ultraThinMaterial)
+                .background {
+                    Capsule()
+                        .foregroundStyle(.ultraThinMaterial)
+                }
+        }
+        .fixedSize()
+        .offset(y: 20)
+        .transition(
+            .asymmetric(
+                insertion: .push(from: .bottom),
+                removal: .push(from: .top)
+            )
+        )
     }
 }
 
