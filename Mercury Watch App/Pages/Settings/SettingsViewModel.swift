@@ -52,7 +52,7 @@ class SettingsViewModel: TDLibViewModel {
         }
     }
     
-    func profileThimbnail() -> UIImage {
+    func profileThumbnail() -> UIImage {
         guard let data = user?.profilePhoto?.minithumbnail?.data else { return UIImage() }
         return UIImage(data: data) ?? UIImage()
     }

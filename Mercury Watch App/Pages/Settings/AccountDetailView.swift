@@ -46,7 +46,7 @@ struct AccountDetailView: View {
     
     func topView() -> some View {
         ZStack {
-            Image(uiImage: vm.profileThimbnail())
+            Image(uiImage: vm.profileThumbnail())
                 .resizable()
                 .frame(height: 150)
                 .clipShape(Ellipse())
