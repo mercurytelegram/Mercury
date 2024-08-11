@@ -169,8 +169,8 @@ class LoginViewModel: TDLibViewModel {
                     filesDirectory: nil,
                     systemLanguageCode: "en-US",
                     systemVersion: nil,
-                    useChatInfoDatabase: nil,
-                    useFileDatabase: nil,
+                    useChatInfoDatabase: true,
+                    useFileDatabase: true,
                     useMessageDatabase: true,
                     useSecretChats: false,
                     useTestDc: false
