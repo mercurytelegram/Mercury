@@ -52,6 +52,11 @@ struct SettingsView: View {
                 connectingToast()
             }
         }
+        .overlay {
+            if settingsVM.showConnectingBorder {
+                connectingBorder()
+            }
+        }
     }
     
     @ViewBuilder
@@ -77,6 +82,13 @@ struct SettingsView: View {
                 removal: .push(from: .top)
             )
         )
+    }
+    
+    @ViewBuilder
+    func connectingBorder() -> some View {
+        RoundedRectangle(cornerRadius: 42)
+            .stroke(settingsVM.connectingBorderColor, lineWidth: 5)
+            .ignoresSafeArea()
     }
 }
 
