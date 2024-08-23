@@ -13,7 +13,7 @@ import SwiftUI
 class ChatListViewModel: TDLibViewModel {
     
     @Published var chats: [ChatCellModel] = []
-    @Published var isLoading = true
+    @Published var isLoading = false
     @Published var showSettings = false
     @Published var showNewMessage = false
     var isMock = false
@@ -57,12 +57,16 @@ class ChatListViewModel: TDLibViewModel {
     }
     
     override func connectionStateUpdate(state: ConnectionState) {
-        guard state == .connectionStateReady else { return }
+        guard state == .connectionStateReady || state == .connectionStateConnecting else { return }
+        
+        // if state is connecting, request chats will load cached chats
+        // if state is ready, request chats will load chats from server
         self.requestChats()
     }
     
     func requestChats() {
         Task {
+            
             do {
                 let result = try await TDLibManager.shared.client?.getChats(chatList: currentFolder.chatList, limit: 10)
                 
@@ -90,7 +94,7 @@ class ChatListViewModel: TDLibViewModel {
             }
             
             DispatchQueue.main.async {
-                self.isLoading = false
+                self.isLoading = self.chats.isEmpty
             }
         }
     }
