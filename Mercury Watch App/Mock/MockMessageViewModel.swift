@@ -24,7 +24,7 @@ class MessageViewModelMock: MessageViewModel {
         super.state = isSending ? .sending : nil
     }
     
-    override var date: String {
+    override var time: String {
         "10:09"
     }
     

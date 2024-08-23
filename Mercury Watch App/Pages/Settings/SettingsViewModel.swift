@@ -28,6 +28,10 @@ class SettingsViewModel: ObservableObject {
         }
     }
     
+    func profileTDImage() -> TDImage? {
+        return self.user?.profilePhoto
+    }
+    
     func profileThimbnail() -> UIImage {
         guard let data = user?.profilePhoto?.minithumbnail?.data else { return UIImage() }
         return UIImage(data: data) ?? UIImage()

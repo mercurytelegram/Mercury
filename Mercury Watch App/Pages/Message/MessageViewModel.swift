@@ -99,8 +99,8 @@ class MessageViewModel: TDLibViewModel {
         }
     }
     
-    var date: String {
-        Date(fromUnixTimestamp: message.date).stringDescription
+    var time: String {
+        Date(fromUnixTimestamp: message.date).formatted(.dateTime.hour().minute())
     }
     
     var userFullName: String {

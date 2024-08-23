@@ -38,6 +38,8 @@
 		9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */; };
 		9B6D22372C398C78008A1054 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D22352C398C78008A1054 /* SettingsView.swift */; };
 		9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */; };
+		9B8493E82C7623B700AC90E9 /* Extensions+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* Extensions+View.swift */; };
+		9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E92C76241400AC90E9 /* MockTDImage.swift */; };
 		9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */; };
 		9BAC54B82C00CCD90055F1EE /* Chat+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */; };
 		9BB1D3A22C5E5CCC0065A03A /* MessageBubbleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB1D3A12C5E5CCC0065A03A /* MessageBubbleImageView.swift */; };
@@ -132,6 +134,8 @@
 		9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
 		9B6D22352C398C78008A1054 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFolder.swift; sourceTree = "<group>"; };
+		9B8493E72C7623B700AC90E9 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
+		9B8493E92C76241400AC90E9 /* MockTDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTDImage.swift; sourceTree = "<group>"; };
 		9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+Mock.swift"; sourceTree = "<group>"; };
 		9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Chat+Mock.swift"; sourceTree = "<group>"; };
 		9BB1D3A12C5E5CCC0065A03A /* MessageBubbleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubbleImageView.swift; sourceTree = "<group>"; };
@@ -219,6 +223,7 @@
 				4A4743F12BF796DF00264855 /* Extension+Color.swift */,
 				9B4451F92C45C63D00A6EBC2 /* Extensions+User.swift */,
 				9B2805CB2C4671C500F7DF72 /* Extensions+TDImage.swift */,
+				9B8493E72C7623B700AC90E9 /* Extensions+View.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -310,6 +315,7 @@
 				4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */,
 				4AE6201C2C09C4AA00722512 /* MockSendMessageService.swift */,
 				9B4451F72C45C5F900A6EBC2 /* MockSettingsViewModel.swift */,
+				9B8493E92C76241400AC90E9 /* MockTDImage.swift */,
 			);
 			path = Mock;
 			sourceTree = "<group>";
@@ -534,6 +540,7 @@
 				4AF90D692BEE65BA00435355 /* Extensions+Date.swift in Sources */,
 				A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */,
 				A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */,
+				9B8493E82C7623B700AC90E9 /* Extensions+View.swift in Sources */,
 				4AE620192C09C36800722512 /* MockChatDetailViewModel.swift in Sources */,
 				9B039F462C667FCF00CB6BE4 /* LocationContentView.swift in Sources */,
 				9B4451F62C459A1300A6EBC2 /* SettingsCellView.swift in Sources */,
@@ -541,6 +548,7 @@
 				9B3AD3522C397F7700CD4EF8 /* AlertView.swift in Sources */,
 				9B3FC90D2BF3DF8400CDE217 /* ChatDetailView.swift in Sources */,
 				9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */,
+				9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */,
 				A05C1A012BEB74B700724B6E /* ChatListView.swift in Sources */,
 				A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */,
 				9B2E1BDF2C08739800B9B63D /* MessageViewModel.swift in Sources */,

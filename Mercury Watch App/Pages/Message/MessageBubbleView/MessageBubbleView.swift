@@ -28,7 +28,7 @@ struct MessageBubbleView<Content> : View where Content : View {
                     ReactionsView(reaction: reaction)
                 }
                 
-                Text(vm.date)
+                Text(vm.time)
                     .font(.system(size: 15))
                     .foregroundStyle(.secondary)
                 
