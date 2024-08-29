@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PasswordView: View {
     @Binding var password: String
+    let showError: Bool
     var onCommit : () -> ()
     
     var body: some View {
@@ -20,7 +21,7 @@ struct PasswordView: View {
                 .rotationEffect(.degrees(45))
                 .padding(.top, -25)
             
-            Text("Insert your Telegram Password")
+            Text(showError ? "Wrong password, try again" : "Insert your Telegram Password")
                 .font(.title3)
                 .multilineTextAlignment(.center)
                 .padding(.bottom)
@@ -38,7 +39,9 @@ struct PasswordView: View {
 }
 
 #Preview {
-    PasswordView(password: .constant(""), onCommit: {
-        
-    })
+    PasswordView(password: .constant(""), showError: false, onCommit: {})
+}
+
+#Preview("With Error") {
+    PasswordView(password: .constant(""), showError: true, onCommit: {})
 }

@@ -11,15 +11,18 @@ import EFQRCode
 
 class LoginViewModel: TDLibViewModel {
     
-    // Published
-    @Published var authenticated: Bool? = nil
-    
+    // User input / output
     @Published var qrcodeImage: UIImage?
+    @Published var password = ""
     @Published var statusMessage: String = "Connecting..."
     
+    // Sheets management
     @Published var showPassword = false
-    @Published var password = ""
     @Published var isValidatingPassword = false
+    @Published var passwordValidationFailed = false
+    
+    // Navigation management
+    @Published var authenticated: Bool? = nil
     @Published var useMock = false
     
     private var isClosing = false
@@ -113,24 +116,37 @@ class LoginViewModel: TDLibViewModel {
     func validatePassword() {
         
         isValidatingPassword = true
+        passwordValidationFailed = false
         
         Task {
             do {
                 let result = try await TDLibManager.shared.client?.checkAuthenticationPassword(password: password)
                 self.logger.log(result)
+                
+                await MainActor.run {
+                    self.showPassword = false
+                }
+                
             } catch {
                 self.logger.log(error, level: .error)
+                guard let error = error as? TDLibKit.Error else { return }
+                
+                if error.message == "PASSWORD_HASH_INVALID" {
+                    await MainActor.run {
+                        self.password = ""
+                        self.passwordValidationFailed = true
+                    }
+                }
             }
             
             await MainActor.run {
                 self.isValidatingPassword = false
-                self.showPassword = false
             }
+            
         }
     }
     
     func logout() {
-        
         
         if useMock {
             useMock = false

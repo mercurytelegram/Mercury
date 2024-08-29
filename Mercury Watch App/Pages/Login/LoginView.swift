@@ -43,7 +43,7 @@ struct LoginView: View {
                 if vm.isValidatingPassword {
                     ProgressView()
                 } else {
-                    PasswordView(password: $vm.password) {
+                    PasswordView(password: $vm.password, showError: vm.passwordValidationFailed) {
                         vm.validatePassword()
                     }
                 }
@@ -51,6 +51,12 @@ struct LoginView: View {
             .sheet(isPresented: $showInfo, content: {
                 InfoView()
             })
+            .onChange(of: vm.showPassword) {
+                if vm.showPassword == false {
+                    // User dismissed password view
+                    vm.logout()
+                }
+            }
         }
     }
     
