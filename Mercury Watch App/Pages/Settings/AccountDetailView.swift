@@ -12,49 +12,20 @@ struct AccountDetailView: View {
     @ObservedObject var vm: SettingsViewModel
     
     var body: some View {
-        ScrollView {
-            personaView()
+        VStack {
+            avatarHeader()
+            Spacer()
             Button("Logout", role: .destructive) {
                 loginVM.logout()
             }
         }
-            // TODO: Future enhancement
-//            List {
-//                personaView()
-//                NavigationLink {
-//                    Button("Logout", role: .destructive) {
-//                        loginVM.logout()
-//                    }
-//                } label: {
-//                    SettingsCellView(
-//                        text: "Account",
-//                        iconName: "person",
-//                        color: .green
-//                    )
-//                }
-//                SettingsCellView(
-//                    text: "Appearance",
-//                    iconName: "sun.max",
-//                    color: .orange
-//                )
-//                SettingsCellView(
-//                    text: "Notifications",
-//                    iconName: "bell",
-//                    color: .red
-//                )
-//                SettingsCellView(
-//                    text: "Privacy",
-//                    iconName: "lock.shield",
-//                    color: .blue
-//                )
-//            }
     }
     
-    func personaView() -> some View {
+    func avatarHeader() -> some View {
         ZStack {
             Image(uiImage: vm.profileThimbnail())
                 .resizable()
-                .frame(height: 150)
+                .frame(height: 120)
                 .clipShape(Ellipse())
                 .blur(radius: 30)
                 .opacity(0.5)
@@ -74,8 +45,6 @@ struct AccountDetailView: View {
             }
         }
         .frame(height: 120)
-        .listItemTint(.black)
-        .offset(y: -10)
     }
 }
 
