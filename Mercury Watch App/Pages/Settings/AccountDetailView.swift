@@ -12,39 +12,45 @@ struct AccountDetailView: View {
     @ObservedObject var vm: SettingsViewModel
     
     var body: some View {
-        List {
-            topView()
-            
-            NavigationLink {
-                Button("Logout", role: .destructive) {
-                    loginVM.logout()
-                }
-            } label: {
-                SettingsCellView(
-                    text: "Account",
-                    iconName: "person",
-                    color: .green
-                )
+        ScrollView {
+            personaView()
+            Button("Logout", role: .destructive) {
+                loginVM.logout()
             }
-            SettingsCellView(
-                text: "Appearance",
-                iconName: "sun.max",
-                color: .orange
-            )
-            SettingsCellView(
-                text: "Notifications",
-                iconName: "bell",
-                color: .red
-            )
-            SettingsCellView(
-                text: "Privacy",
-                iconName: "lock.shield",
-                color: .blue
-            )
         }
+            // TODO: Future enhancement
+//            List {
+//                personaView()
+//                NavigationLink {
+//                    Button("Logout", role: .destructive) {
+//                        loginVM.logout()
+//                    }
+//                } label: {
+//                    SettingsCellView(
+//                        text: "Account",
+//                        iconName: "person",
+//                        color: .green
+//                    )
+//                }
+//                SettingsCellView(
+//                    text: "Appearance",
+//                    iconName: "sun.max",
+//                    color: .orange
+//                )
+//                SettingsCellView(
+//                    text: "Notifications",
+//                    iconName: "bell",
+//                    color: .red
+//                )
+//                SettingsCellView(
+//                    text: "Privacy",
+//                    iconName: "lock.shield",
+//                    color: .blue
+//                )
+//            }
     }
     
-    func topView() -> some View {
+    func personaView() -> some View {
         ZStack {
             Image(uiImage: vm.profileThimbnail())
                 .resizable()
