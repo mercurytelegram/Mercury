@@ -42,7 +42,9 @@ class ChatListViewModel: TDLibViewModel {
                 self.updateCounters(chatId: update.chatId, mentionCount: update.unreadMentionCount)
             case .updateChatUnreadReactionCount(let update):
                 self.updateCounters(chatId: update.chatId, reactionCount: update.unreadReactionCount)
-            
+            case .updateMessageUnreadReactions(let update):
+                self.updateCounters(chatId: update.chatId, reactionCount: update.unreadReactionCount)
+                
             // Chat Action update
             case .updateChatAction(let update):
                 self.setChatAction(chatId: update.chatId, sender: update.senderId, action: update.action)
