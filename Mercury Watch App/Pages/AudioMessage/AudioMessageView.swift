@@ -57,17 +57,23 @@ struct AudioMessageView: View {
     var body: some View {
         
         Waveform(
-            data: vm.state == .recStarted ? vm.waveformData.suffix(Waveform.suggestedSamples) : vm.waveformData,
+            data: vm.state == .recStopped ? vm.waveformData : vm.waveformData.suffix(Waveform.suggestedSamples),
             highlightIndex: vm.hightlightIndex
         )
+        .overlay {
+            if vm.isLoadingPlayerWaveform {
+                ProgressView().background(.black.opacity(0.5))
+            }
+        }
         .navigationTitle(elapsedTime)
         .defaultScrollAnchor(.bottom)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Send", systemImage: "arrow.up") {
                     isPresented = false
-                    vm.didPressSendButton()
-                    onSend(vm.filePath, vm.elapsedTime)
+                    if vm.didPressSendButton() {
+                        onSend(vm.filePath, vm.elapsedTime)
+                    }
                 }
                 .foregroundStyle(.white, .blue)
             }
