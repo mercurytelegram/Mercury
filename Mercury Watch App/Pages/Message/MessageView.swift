@@ -48,8 +48,16 @@ struct MessageView: View {
                 LocationContentView(venue: message.venue)
             }
         case .messagePinMessage(_):
-            PinnedMessageView()
-            
+            PillMessageView(description: "pinned a message")
+        case .messageChatChangeTitle(let message):
+            PillMessageView(description: "changed the group name to \"\(message.title)\"")
+        case .messageChatChangePhoto(let message):
+            VStack {
+                PillMessageView(description: "changed group photo")
+                TdImageView(tdImage: message.photo)
+                    .frame(width: 60, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
         default:
             MessageBubbleView {
                 Text(message.description)
@@ -78,5 +86,15 @@ struct MessageView: View {
 #Preview("Loading Name") {
     MessageView(message: .preview())
         .environmentObject(MessageViewModelMock(showSender: true) as MessageViewModel)
+}
+
+#Preview("Group Photo Change") {
+    VStack {
+        PillMessageView(description: "changed group photo")
+        TdImageView(tdImage: TDImageMock("craig"))
+            .frame(width: 60, height: 60)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+    }
+    .environmentObject(MessageViewModelMock() as MessageViewModel)
 }
 

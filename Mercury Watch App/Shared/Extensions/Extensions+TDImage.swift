@@ -50,4 +50,14 @@ extension Video: TDImage {
     }
 }
 
+extension ChatPhoto: TDImage {
+    var lowRes: File? {
+        self.sizes.isEmpty ? nil :  self.sizes[0].photo
+    }
+    
+    var highRes: File? {
+        return nil
+    }
+}
+
 

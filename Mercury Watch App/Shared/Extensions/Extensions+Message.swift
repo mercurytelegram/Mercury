@@ -37,7 +37,7 @@ extension Message {
         case .messageContact(let message):
             stringMessage = "👤 \(message.contact.firstName) \(message.contact.lastName)"
         case .messageChatChangePhoto(_):
-            stringMessage = "📷 Photo changed"
+            stringMessage = "📷 Changed group photo"
         case .messageChatChangeTitle(let change):
             stringMessage = change.title
         case .messageAnimatedEmoji(let data):
