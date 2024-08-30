@@ -10,15 +10,25 @@ import TDLibKit
 
 struct ReactionsView: View {
     var reaction: Reaction
+    var blurredBg: Bool = false
     @State private var images: [TDImage] = []
     
     var shouldShowAvatars: Bool {
         reaction.count <= 3 && !images.isEmpty
     }
     
+    var bgColor: AnyShapeStyle {
+        reaction.isSelected ? AnyShapeStyle(.blue) :
+        AnyShapeStyle(.white
+            .opacity(blurredBg ? 0.8 : 0.2)
+            .blendMode(blurredBg ? .overlay : .normal)
+        )
+    }
+    
     var body: some View {
         HStack(spacing: 2) {
             Text(reaction.emoji)
+                .frame(minWidth: 20)
             
             if shouldShowAvatars {
                 avatarsView()
@@ -29,8 +39,14 @@ struct ReactionsView: View {
         .padding(.vertical, 3)
         .padding(.horizontal, 6)
         .background {
-            Capsule()
-                .foregroundStyle(reaction.isSelected ? .blue : .white.opacity(0.2))
+            ZStack {
+                if blurredBg {
+                    Capsule()
+                        .foregroundStyle(.ultraThinMaterial)
+                }
+                Capsule()
+                    .foregroundStyle(bgColor)
+            }
         }
         .task {
             if reaction.count <= 3 {
@@ -45,8 +61,20 @@ struct ReactionsView: View {
             ForEach(images.indices, id: \.self) { index in
                 AvatarView(image: images[index])
                     .frame(width: 20, height: 20)
-                    .padding(.leading, index == 0 ? 0 : -10)
+                    .if(index != 0) { view in
+                            view.mask {
+                                Rectangle()
+                                    .overlay {
+                                        Circle()
+                                            .frame(width: 21, height: 21)
+                                            .blendMode(.destinationOut)
+                                            .offset(x: -11)
+                                    }
+                            }
+                    }
+                    .padding(.leading, index == 0 ? 0 : -8)
                     .zIndex(Double(images.count - index))
+                    
             }
         }
     }

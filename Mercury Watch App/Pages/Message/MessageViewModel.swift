@@ -35,8 +35,20 @@ class MessageViewModel: TDLibViewModel {
             self.updateMessageSendStatus(oldId: update.oldMessageId, message: update.message, status: .success)
         case .updateMessageSendFailed(let update):
             self.updateMessageSendStatus(oldId: update.oldMessageId, message: update.message, status: .failure)
+        case .updateMessageInteractionInfo(let update):
+            updateMessageInteractionInfo(update)
         default:
             break
+        }
+    }
+    
+    private func updateMessageInteractionInfo(_ update: UpdateMessageInteractionInfo) {
+        guard update.messageId == self.message.id else { return }
+        
+        DispatchQueue.main.async {
+            withAnimation {
+                self.message = self.message.setinteractionInfo(update.interactionInfo)
+            }
         }
     }
     
@@ -117,7 +129,9 @@ class MessageViewModel: TDLibViewModel {
     }
     
     var bubbleColor: Color {
-        message.isOutgoing ? .blue.opacity(0.7) : .white.opacity(0.2)
+        state == .failed ? .red.opacity(0.7) :
+        message.isOutgoing ? .blue.opacity(0.7) :
+        .white.opacity(0.2)
     }
     
     var reactions: [Reaction] {
@@ -139,6 +153,10 @@ class MessageViewModel: TDLibViewModel {
                 }
             )
         }
+    }
+    
+    var hasReactions: Bool {
+        reactions.count > 0
     }
     
     private func initUser() {

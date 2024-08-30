@@ -69,4 +69,56 @@ extension Message {
         
     }
     
+    func setinteractionInfo(_ info: MessageInteractionInfo?) -> Message {
+        Message(
+            authorSignature: self.authorSignature,
+            autoDeleteIn: self.autoDeleteIn,
+            canBeDeletedForAllUsers: self.canBeDeletedForAllUsers,
+            canBeDeletedOnlyForSelf: self.canBeDeletedOnlyForSelf,
+            canBeEdited: self.canBeEdited,
+            canBeForwarded: self.canBeForwarded,
+            canBeRepliedInAnotherChat: self.canBeRepliedInAnotherChat,
+            canBeSaved: self.canBeSaved,
+            canGetAddedReactions: self.canGetAddedReactions,
+            canGetMediaTimestampLinks: self.canGetMediaTimestampLinks,
+            canGetMessageThread: self.canGetMessageThread,
+            canGetReadDate: self.canGetReadDate,
+            canGetStatistics: self.canGetStatistics,
+            canGetViewers: self.canGetViewers,
+            canReportReactions: self.canReportReactions,
+            chatId: self.chatId,
+            containsUnreadMention: self.containsUnreadMention,
+            content: self.content,
+            date: self.date,
+            editDate: self.editDate,
+            forwardInfo: self.forwardInfo,
+            hasTimestampedMedia: self.hasTimestampedMedia,
+            id: self.id,
+            importInfo: self.importInfo,
+            interactionInfo: info,
+            isChannelPost: self.isChannelPost,
+            isFromOffline: self.isFromOffline,
+            isOutgoing: self.isOutgoing,
+            isPinned: self.isPinned,
+            isTopicMessage: self.isTopicMessage,
+            mediaAlbumId: self.mediaAlbumId,
+            messageThreadId: self.messageThreadId,
+            replyMarkup: self.replyMarkup,
+            replyTo: self.replyTo,
+            restrictionReason: self.restrictionReason,
+            savedMessagesTopicId: self.savedMessagesTopicId,
+            schedulingState: self.schedulingState,
+            selfDestructIn: self.selfDestructIn,
+            selfDestructType: self.selfDestructType,
+            senderBoostCount: self.senderBoostCount,
+            senderBusinessBotUserId: self.senderBusinessBotUserId,
+            senderId: self.senderId,
+            sendingState: self.sendingState,
+            unreadReactions: self.unreadReactions,
+            viaBotUserId: self.viaBotUserId
+        )
+    }
+    
+    
 }
+

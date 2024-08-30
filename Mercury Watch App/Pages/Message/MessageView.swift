@@ -20,7 +20,7 @@ struct MessageView: View {
             }
             
         case .messagePhoto(let message):
-            MessageBubbleImageView(caption: message.caption.text) {
+            MessageBubbleView(style: .fullScreen, caption: message.caption.text) {
                 TdImageView(tdImage: message.photo)
             }
 
@@ -30,7 +30,7 @@ struct MessageView: View {
             }
             
         case .messageVideo(let message):
-            MessageBubbleImageView(caption: message.caption.text) {
+            MessageBubbleView(style: .fullScreen, caption: message.caption.text) {
                 TdImageView(tdImage: message.video)
             }
             .overlay {
@@ -40,14 +40,16 @@ struct MessageView: View {
             }
             
         case .messageLocation(let message):
-            MessageBubbleImageView {
+            MessageBubbleView(style: .fullScreen) {
                 LocationContentView(coordinate: CLLocationCoordinate2D(latitude: message.location.latitude, longitude: message.location.longitude))
-                    
             }
         case .messageVenue(let message):
-            MessageBubbleImageView {
+            MessageBubbleView(style: .fullScreen) {
                 LocationContentView(venue: message.venue)
             }
+        case .messagePinMessage(_):
+            PinnedMessageView()
+            
         default:
             MessageBubbleView {
                 Text(message.description)
