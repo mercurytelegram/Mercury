@@ -16,8 +16,9 @@ class ChatListViewModel: TDLibViewModel {
     @Published var isLoading = false
     @Published var showSettings = false
     @Published var showNewMessage = false
+    @Published var folders: [ChatFolder] = [.main, .archive]
     var isMock = false
-    var folders: [ChatFolder] = [.main, .archive]
+    
     private(set) var currentFolder: ChatFolder = .main
     
     override func updateHandler(update: Update) {
@@ -235,11 +236,17 @@ class ChatListViewModel: TDLibViewModel {
     }
     
     func updateChatFolders(update: UpdateChatFolders) {
+        self.folders = [.main, .archive]
         for chatFolderInfo in update.chatFolders {
             let chatList = ChatList.chatListFolder(ChatListFolder(chatFolderId: chatFolderInfo.id))
             let folder = ChatFolder(title: chatFolderInfo.title, chatList: chatList)
-            // To leave Archive in the last position
-            self.folders.insert(folder, at: folders.count - 1)
+            
+            DispatchQueue.main.async {
+                withAnimation {
+                    // To leave Archive in the last position
+                    self.folders.insert(folder, at: self.folders.count - 1)
+                }
+            }
         }
     }
     
