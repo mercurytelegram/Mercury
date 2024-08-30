@@ -7,45 +7,76 @@
 
 import SwiftUI
 import TDLibKit
+import MapKit
 
 struct MessageView: View {
-    @StateObject var vm: MessageViewModel
+    var message: Message
     
     var body: some View {
-        switch vm.message.content {
+        switch message.content {
         case .messageText(let message):
-            Text(message.text.attributedString)
-                .bubbleStyle(vm: vm)
+            MessageBubbleView {
+                Text(message.text.attributedString)
+            }
             
         case .messagePhoto(let message):
-            TdImageView(tdImage: message.photo)
-                .clipShape(BubbleShape(myMessage: vm.message.isOutgoing))
-                .padding(vm.message.isOutgoing ? .trailing : .leading, -10)
+            MessageBubbleView(style: .fullScreen, caption: message.caption.text) {
+                TdImageView(tdImage: message.photo)
+            }
 
         case .messageVoiceNote(let message):
-            VoiceNoteContentView(message: message)
-                .bubbleStyle(vm: vm)
+            MessageBubbleView {
+                VoiceNoteContentView(message: message)
+            }
+            
+        case .messageVideo(let message):
+            MessageBubbleView(style: .fullScreen, caption: message.caption.text) {
+                TdImageView(tdImage: message.video)
+            }
+            .overlay {
+                Image(systemName: "play.circle.fill")
+                    .font(.largeTitle)
+                    .foregroundStyle(.white, .ultraThinMaterial)
+            }
+            
+        case .messageLocation(let message):
+            MessageBubbleView(style: .fullScreen) {
+                LocationContentView(coordinate: CLLocationCoordinate2D(latitude: message.location.latitude, longitude: message.location.longitude))
+            }
+        case .messageVenue(let message):
+            MessageBubbleView(style: .fullScreen) {
+                LocationContentView(venue: message.venue)
+            }
+        case .messagePinMessage(_):
+            PinnedMessageView()
             
         default:
-            Text(vm.message.description)
-                .bubbleStyle(vm: vm)
+            MessageBubbleView {
+                Text(message.description)
+            }
         }
     }
 }
 
-
 #Preview("Messages") {
     VStack {
-        MessageView(vm: MessageViewModelMock(name: "Craig Federighi"))
-        MessageView(vm: MessageViewModelMock(message: .preview(
-            content: .text("World"),
-            isOutgoing: true
-        )))
+        MessageView(message: .preview())
+            .environmentObject(MessageViewModelMock(name: "Craig Federighi") as MessageViewModel)
+        MessageView(message: .preview(
+            content: .text("World")
+        ))
+        .environmentObject(MessageViewModelMock(message: .preview(isOutgoing: true)) as MessageViewModel)
     }
+}
+
+#Preview("Location") {
+    MessageView(message: .preview(content: .location()))
+        .environmentObject(MessageViewModelMock() as MessageViewModel)
+    
 }
 
 #Preview("Loading Name") {
-    VStack {
-        MessageView(vm: MessageViewModelMock(showSender: true))
-    }
+    MessageView(message: .preview())
+        .environmentObject(MessageViewModelMock(showSender: true) as MessageViewModel)
 }
+

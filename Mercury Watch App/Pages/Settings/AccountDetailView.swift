@@ -28,10 +28,10 @@ struct AccountDetailView: View {
                 .frame(height: 120)
                 .clipShape(Ellipse())
                 .blur(radius: 30)
-                .opacity(0.5)
+                .opacity(0.8)
             
             VStack {
-                AvatarView(model: AvatarModel(tdImage: vm.user?.profilePhoto))
+                AvatarView(model: AvatarModel(tdImage: vm.profileTDImage()))
                     .frame(width: 50, height: 50)
                 Text(vm.user?.fullName ?? "")
                     .fontDesign(.rounded)

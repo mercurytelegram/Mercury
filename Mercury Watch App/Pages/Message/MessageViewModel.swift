@@ -15,9 +15,7 @@ class MessageViewModel: TDLibViewModel {
     
     @Published var message: Message
     @Published var user: User?
-    
-    enum State { case sending, delivered, seen, failed }
-    @Published var state: State? = nil
+    @Published var state: MessageSendingState? = nil
     
     init(message: Message, chat: Chat) {
         self.message = message
@@ -37,8 +35,20 @@ class MessageViewModel: TDLibViewModel {
             self.updateMessageSendStatus(oldId: update.oldMessageId, message: update.message, status: .success)
         case .updateMessageSendFailed(let update):
             self.updateMessageSendStatus(oldId: update.oldMessageId, message: update.message, status: .failure)
+        case .updateMessageInteractionInfo(let update):
+            updateMessageInteractionInfo(update)
         default:
             break
+        }
+    }
+    
+    private func updateMessageInteractionInfo(_ update: UpdateMessageInteractionInfo) {
+        guard update.messageId == self.message.id else { return }
+        
+        DispatchQueue.main.async {
+            withAnimation {
+                self.message = self.message.setinteractionInfo(update.interactionInfo)
+            }
         }
     }
     
@@ -101,8 +111,8 @@ class MessageViewModel: TDLibViewModel {
         }
     }
     
-    var date: String {
-        Date(fromUnixTimestamp: message.date).stringDescription
+    var time: String {
+        Date(fromUnixTimestamp: message.date).formatted(.dateTime.hour().minute())
     }
     
     var userFullName: String {
@@ -118,6 +128,37 @@ class MessageViewModel: TDLibViewModel {
         return Color(fromUserId: senderID)
     }
     
+    var bubbleColor: Color {
+        state == .failed ? .red.opacity(0.7) :
+        message.isOutgoing ? .blue.opacity(0.7) :
+        .white.opacity(0.2)
+    }
+    
+    var reactions: [Reaction] {
+        guard let reactions = message.interactionInfo?.reactions?.reactions else { return [] }
+        return reactions.map { reaction in
+            var emoji = "?"
+            if case .reactionTypeEmoji(let type) = reaction.type {
+                emoji = type.emoji
+            }
+            return Reaction(
+                emoji: emoji,
+                count: reaction.totalCount,
+                isSelected: reaction.isChosen,
+                recentUsers: reaction.recentSenderIds.map { sender in
+                    if case .messageSenderUser(let user) = sender {
+                        return user.userId
+                    }
+                    return 0
+                }
+            )
+        }
+    }
+    
+    var hasReactions: Bool {
+        reactions.count > 0
+    }
+    
     private func initUser() {
         Task { [weak self] in
             guard let self else { return }
@@ -130,4 +171,8 @@ class MessageViewModel: TDLibViewModel {
         }
     }
     
+}
+
+enum MessageSendingState {
+    case sending, delivered, seen, failed
 }

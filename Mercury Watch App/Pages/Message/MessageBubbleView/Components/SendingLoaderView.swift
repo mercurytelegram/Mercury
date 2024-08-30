@@ -12,7 +12,7 @@ struct SendingLoaderView: View {
     
     var body: some View {
         Image(systemName: "arrow.triangle.2.circlepath")
-            .rotationEffect(animating ? .degrees(-360) : .zero)
+            .rotationEffect(animating ? .degrees(360) : .zero)
             .font(.system(size: 15))
             .foregroundStyle(.secondary)
             .onAppear {
