@@ -119,8 +119,7 @@ struct MessageBubbleView<Content> : View where Content : View {
                     Image(systemName: "checkmark")
                         .font(.footnote)
                 case .seen:
-                    Image(systemName: "eye.fill")
-                        .font(.footnote)
+                    seenIcon()
                 case .failed:
                     Image(systemName: "exclamationmark.circle.fill")
                 case .none:
@@ -132,6 +131,28 @@ struct MessageBubbleView<Content> : View where Content : View {
     
     enum BubbleStyle {
         case regular, fullScreen, hideBackground
+    }
+    
+    @ViewBuilder
+    func seenIcon() -> some View {
+        ZStack {
+            
+            Image(systemName: "checkmark")
+                .font(.footnote)
+                
+            Image(systemName: "checkmark")
+                .font(.footnote)
+                .offset(x: 5)
+                .mask(alignment: .leading) {
+                    Rectangle()
+                        .offset(x: 10, y: -4)
+                        .rotationEffect(Angle(degrees: 33))
+                        
+                }
+                .opacity(0.5)
+            
+            
+        }
     }
 }
 
@@ -248,6 +269,17 @@ struct MessageBubbleView<Content> : View where Content : View {
                 message: .preview(
                     isOutgoing: true),
                 state: .failed
+            ) as MessageViewModel
+        )
+        
+        MessageBubbleView {
+            Text("Seen test")
+        }
+        .environmentObject(
+            MessageViewModelMock(
+                message: .preview(
+                    isOutgoing: true),
+                state: .seen
             ) as MessageViewModel
         )
         
