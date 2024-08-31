@@ -31,12 +31,14 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     }
     
     @Published var state: RecordingState = .recStarted
-    @Published private var recorder: RecorderService
-    @Published private var player: PlayerService?
     
     @Published var waveformData: [Float] = Array(repeating: 0.1, count: Waveform.suggestedSamples)
     @Published var elapsedTime: TimeInterval = .zero
     @Published var hightlightIndex: Int?
+    @Published var isLoadingPlayerWaveform: Bool = false
+    
+    private var recorder: RecorderService
+    private var player: PlayerService?
     
     private var recorderDataCancellable: AnyCancellable?
     private var playerDataCancellable: AnyCancellable?
@@ -128,15 +130,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         switch state {
         case .recStarted:
             recorder.stopRecordingAudio()
-            
-            do {
-                self.player = try PlayerService(audioFilePath: filePath, delegate: self)
-            } catch {
-                logger.log(error, level: .error)
-            }
-            
-            state = .recStopped
-            processPlayerWaveform()
+            createPlayer()
             
         case .recStopped, .playPaused:
             player?.startPlayingAudio()
@@ -151,21 +145,31 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         }
     }
     
-    func didPressSendButton() {
+    func didPressSendButton() -> Bool {
         
-        guard state != .sending else { return }
+        guard state != .sending else { return false }
         
         if state == .recStarted {
             recorder.stopRecordingAudio()
         }
         
         state = .sending
-        
+        return true
     }
     
-    private func processPlayerWaveform() {
-    
+    private func createPlayer() {
+        
+        DispatchQueue.main.async {
+            self.isLoadingPlayerWaveform = true
+        }
+        
         DispatchQueue.global(qos: .userInitiated).async {
+            
+            do {
+                self.player = try PlayerService(audioFilePath: self.filePath, delegate: self)
+            } catch {
+                self.logger.log(error, level: .error)
+            }
             
             let data = Array(self.waveformData.dropFirst(Waveform.suggestedSamples))
             
@@ -176,10 +180,15 @@ class AudioMessageViewModel: NSObject, ObservableObject {
             let normalizedData = Waveform.normalize(aggregatedData, from: (min, max))
 
             DispatchQueue.main.async {
+                self.isLoadingPlayerWaveform = false
                 self.waveformData = normalizedData
+                self.state = .recStopped
             }
+            
         }
+        
     }
+    
 }
 
 extension AudioMessageViewModel: AVAudioPlayerDelegate {

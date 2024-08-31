@@ -11,7 +11,7 @@ import AVFoundation
 
 class RecorderService: NSObject, ObservableObject {
     
-    static let updateInterval: Double = 0.10
+    static let updateInterval: Double = 0.20
     
     @Published var waveformSample: Float = 0
     @Published var elapsedTime: TimeInterval = .zero
