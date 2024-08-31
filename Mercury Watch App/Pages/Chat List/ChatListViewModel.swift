@@ -35,6 +35,8 @@ class ChatListViewModel: TDLibViewModel {
                                        newPositions: update.positions)
             case .updateChatPosition(let update):
                 self.updateChatPosition(chatId: update.chatId, positions: [update.position])
+            case .updateChatReadOutbox(let update):
+                self.updateChatReadOutbox(chatId: update.chatId, lastReadMessageId: update.lastReadOutboxMessageId)
                 
             // Chat Counters update
             case .updateChatReadInbox(let update):
@@ -232,6 +234,19 @@ class ChatListViewModel: TDLibViewModel {
                 self.chats[index].position = position.order.rawValue
                 self.chats = self.chats.sorted()
             }
+        }
+    }
+    
+    func updateChatReadOutbox(chatId: Int64, lastReadMessageId: Int64) {
+        
+        let index = self.chats.firstIndex {
+            c in c.td.id == chatId
+        }
+        
+        guard let index, index != -1 else { return }
+        
+        withAnimation {
+            self.chats[index].lastReadOutboxMessageId = lastReadMessageId
         }
     }
     

@@ -11,19 +11,44 @@ import AVFAudio
 
 class MessageViewModel: TDLibViewModel {
     
-    var chat: Chat
+    var chat: ChatCellModel
     
     @Published var message: Message
     @Published var user: User?
     @Published var state: MessageSendingState? = nil
     
-    init(message: Message, chat: Chat) {
+    init(message: Message, chat: ChatCellModel) {
         self.message = message
         self.chat = chat
-        self.state = message.sendingState != nil ? .sending : nil
+        
         super.init()
         
         initUser()
+        setMessageStatus(lastReadMessageId: self.chat.lastReadOutboxMessageId)
+    }
+    
+    private func setMessageStatus(lastReadMessageId: Int64) {
+        
+        var newState: MessageSendingState? = .delivered
+
+        if !self.message.isOutgoing {
+            // The state will not appear on ingoing messages
+            newState = nil
+        }
+        else if self.message.sendingState != nil {
+            // message is still sending
+            newState = .sending
+        }
+        else if self.message.id <= lastReadMessageId {
+            newState = .seen
+        }
+        
+        DispatchQueue.main.async {
+            withAnimation {
+                self.state = newState
+            }
+        }
+        
     }
     
     override func updateHandler(update: Update) {
@@ -37,6 +62,8 @@ class MessageViewModel: TDLibViewModel {
             self.updateMessageSendStatus(oldId: update.oldMessageId, message: update.message, status: .failure)
         case .updateMessageInteractionInfo(let update):
             updateMessageInteractionInfo(update)
+        case .updateChatReadOutbox(let update):
+            updateChatReadOutbox(chatId: update.chatId, latestReadMessageId: update.lastReadOutboxMessageId)
         default:
             break
         }
@@ -56,7 +83,7 @@ class MessageViewModel: TDLibViewModel {
         guard messageId == self.message.id else { return }
         
         Task {
-            guard let newMessage = try? await TDLibManager.shared.client?.getMessage(chatId: self.chat.id, messageId: messageId)
+            guard let newMessage = try? await TDLibManager.shared.client?.getMessage(chatId: self.chat.td.id, messageId: messageId)
             else { return }
             
             await MainActor.run {
@@ -85,6 +112,11 @@ class MessageViewModel: TDLibViewModel {
         }
     }
     
+    private func updateChatReadOutbox(chatId: Int64, latestReadMessageId: Int64) {
+        guard chatId == chat.td.id else { return }
+        self.setMessageStatus(lastReadMessageId: latestReadMessageId)
+    }
+    
     var textAlignment: HorizontalAlignment {
         message.isOutgoing ? .trailing : .leading
     }
@@ -94,7 +126,7 @@ class MessageViewModel: TDLibViewModel {
             return false
         }
         
-        switch chat.type {
+        switch chat.td.type {
         case .chatTypePrivate(_):
             return false
         default:

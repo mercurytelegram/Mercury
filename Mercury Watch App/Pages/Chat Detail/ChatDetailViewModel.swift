@@ -39,7 +39,7 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     func getMessageVM(for message: Message) -> MessageViewModel {
-        MessageViewModel(message: message, chat: chat.td)
+        MessageViewModel(message: message, chat: chat)
     }
     
     override func updateHandler(update: Update) {
