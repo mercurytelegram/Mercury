@@ -43,8 +43,7 @@ struct ChatDetailView: View {
                     .padding()
                  
                     ForEach(vm.messages) { message in
-                        MessageView(message: message)
-                            .environmentObject(vm.getMessageVM(for: message))
+                        MessageView(vm: vm.getMessageVM(for: message))
                             .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
                                 content
                                     .scaleEffect(phase.isIdentity ? 1 : 0.7)
