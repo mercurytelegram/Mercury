@@ -14,6 +14,7 @@ class ChatDetailViewModel: TDLibViewModel {
     @Published var isLoadingInitialMessages = true
     @Published var messages: [Message] = []
     @Published var showStickersView = false
+    var localRemoteIdMap: [Int64 : Int64] = [:]
     
     var canSendVoiceNotes: Bool {
         return self.chat.td.permissions.canSendVoiceNotes
@@ -44,16 +45,20 @@ class ChatDetailViewModel: TDLibViewModel {
     override func updateHandler(update: Update) {
         super.updateHandler(update: update)
         switch update {
-        case .updateChatLastMessage(let update):
-            self.updateLastMessage(chatId: update.chatId, message: update.lastMessage)
+        case .updateNewMessage(let update):
+            self.updateNewMessage(chatId: update.message.chatId, message: update.message)
         case .updateDeleteMessages(let update):
             self.updateDeleteMessages(chatId: update.chatId, messageIds: update.messageIds)
+        case .updateMessageSendFailed(let update):
+            self.localRemoteIdMap[update.oldMessageId] = update.message.id
+        case .updateMessageSendSucceeded(let update):
+            self.localRemoteIdMap[update.oldMessageId] = update.message.id
         default:
             break
         }
     }
     
-    func updateLastMessage(chatId: Int64, message: Message?) {
+    func updateNewMessage(chatId: Int64, message: Message?) {
         guard let message, chatId == self.chat.td.id
         else { return }
         
@@ -63,14 +68,9 @@ class ChatDetailViewModel: TDLibViewModel {
             return
         }
         
-        // Outgoing message will manage the sendingState theirself so
-        // there is no need to insert a new one
-        if message.isOutgoing && message.sendingState == nil {
-            return
-        }
-        
         DispatchQueue.main.async {
             self.insertMessage(at: .last, message: message)
+            self.localRemoteIdMap[message.id] = 0
         }
     }
     
@@ -80,7 +80,15 @@ class ChatDetailViewModel: TDLibViewModel {
         DispatchQueue.main.async {
             for id in messageIds {
                 withAnimation {
+                    
+                    // Remove messages from other client (remote id == local id)
                     self.messages.removeAll(where: { $0.id == id })
+                    
+                    // Remove messages sent from mercury (remote id != local id)
+                    if let idMapResult = self.localRemoteIdMap.first(where: { $1 == id }) {
+                        self.messages.removeAll(where: { $0.id == idMapResult.key })
+                    }
+                    
                 }
             }
         }
