@@ -28,7 +28,7 @@ struct MessageBubbleView<Content> : View where Content : View {
                     Spacer()
                         .frame(height: vm.hasReactions ? 30 : 15)
                 }
-                .frame(minWidth: vm.hasReactions ? 130 : 50, alignment: .leading)
+                .frame(minWidth: vm.hasReactions ? 130 : 80, alignment: .leading)
                 .overlay {
                     footerView()
                         .frame(maxHeight: .infinity, alignment: .bottom)
