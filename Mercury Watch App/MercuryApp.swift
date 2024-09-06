@@ -17,17 +17,16 @@ struct Mercury_Watch_AppApp: App {
         WindowGroup {
             
             if let auth = vm.authenticated {
-                if auth || vm.useMock{
-                    SettingsView()
-                        .environmentObject(vm)
+                if auth || vm.useMock {
+                    SettingsView(useMock: vm.useMock)
                 } else {
                     LoginView()
-                        .environmentObject(vm)
                 }
             } else {
                 ProgressView()
             }
             
         }
+        .environmentObject(vm)
     }
 }
