@@ -23,10 +23,15 @@ struct ChatCellView: View {
                         .font(.headline)
                         .lineLimit(2)
                     HStack {
-                        if model.unreadCount != 0 {
-                            Image(systemName: model.unreadSymbol)
-                                .font(.title3)
-                                .foregroundStyle(.white, model.unreadSymbolColor)
+                        if model.hasUnreadMsg {
+                            if model.showUnreadSymbol {
+                                Image(systemName: model.unreadSymbol)
+                                    .font(.title3)
+                                    .foregroundStyle(.white, model.unreadSymbolColor)
+                            } else {
+                                unreadNumber
+                            }
+                            
                         }
                         Text(model.time)
                             .font(.caption)
@@ -66,6 +71,25 @@ struct ChatCellView: View {
             AlertView.inDevelopment("mute is")
         }
     }
+    
+    @ViewBuilder
+    var unreadNumber: some View {
+        let size: CGFloat = 22
+        Text("\(model.unreadCount)")
+            .font(.system(size: 16))
+            .fontDesign(.rounded)
+            .fontWeight(.medium)
+            .padding(.horizontal, 5)
+            .background {
+                RoundedRectangle(cornerRadius: size)
+                    .frame(height: size)
+                    .frame(minWidth: size)
+                    .foregroundStyle(.blue)
+            }
+            .frame(minWidth: 25)
+            .padding(.vertical, 1)
+    }
+    
 }
 
 #if DEBUG
@@ -73,6 +97,8 @@ struct ChatCellView: View {
     List {
         ChatCellView(model: .preview())
         ChatCellView(model: .preview(unreadCount: 3))
+        ChatCellView(model: .preview(unreadCount: 30))
+        ChatCellView(model: .preview(unreadCount: 300))
         ChatCellView(model: .preview(showUnreadMention: true))
         ChatCellView(model: .preview(showUnreadReaction: true))
     }
@@ -86,4 +112,10 @@ struct ChatCellView: View {
     }
     .listStyle(.carousel)
 }
+
+#Preview("Test") {
+    let number = 1
+    return ChatCellView(model: .preview(unreadCount: 1)).unreadNumber
+}
+
 #endif

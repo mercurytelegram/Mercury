@@ -37,7 +37,15 @@ struct ChatCellModel {
     var unreadSymbol: String {
         showUnreadMention ? "at.circle.fill" :
         showUnreadReaction ? "heart.circle.fill" :
-        "\(unreadCount).circle.fill"
+        "questionmark.circle.fill"
+    }
+    
+    var hasUnreadMsg: Bool {
+        unreadCount != 0
+    }
+    
+    var showUnreadSymbol: Bool {
+        showUnreadMention || showUnreadReaction
     }
     
     var unreadSymbolColor: Color {
