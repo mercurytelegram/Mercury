@@ -136,7 +136,6 @@ struct MessageBubbleView<Content> : View where Content : View {
     @ViewBuilder
     func seenIcon() -> some View {
         ZStack {
-            
             Image(systemName: "checkmark")
                 .font(.footnote)
                 
@@ -149,10 +148,8 @@ struct MessageBubbleView<Content> : View where Content : View {
                         .rotationEffect(Angle(degrees: 33))
                         
                 }
-                .opacity(0.5)
-            
-            
         }
+        .offset(x: -3)
     }
 }
 
@@ -262,17 +259,6 @@ struct MessageBubbleView<Content> : View where Content : View {
         )
         
         MessageBubbleView {
-            Text("Failed test")
-        }
-        .environmentObject(
-            MessageViewModelMock(
-                message: .preview(
-                    isOutgoing: true),
-                state: .failed
-            ) as MessageViewModel
-        )
-        
-        MessageBubbleView {
             Text("Seen test")
         }
         .environmentObject(
@@ -280,6 +266,17 @@ struct MessageBubbleView<Content> : View where Content : View {
                 message: .preview(
                     isOutgoing: true),
                 state: .seen
+            ) as MessageViewModel
+        )
+        
+        MessageBubbleView {
+            Text("Failed test")
+        }
+        .environmentObject(
+            MessageViewModelMock(
+                message: .preview(
+                    isOutgoing: true),
+                state: .failed
             ) as MessageViewModel
         )
         

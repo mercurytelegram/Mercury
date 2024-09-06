@@ -18,7 +18,9 @@ class MessageViewModelMock: MessageViewModel {
         _titleColor = titleColor
         _showSender = showSender
         super.init(message: message, chat: .preview())
-        super.state = state
+        DispatchQueue.main.async {
+            super.state = state
+        }
     }
     
     override var time: String {
