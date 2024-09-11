@@ -11,9 +11,7 @@ import TDLibKit
 
 struct ChatDetailView: View {
     @StateObject var vm: ChatDetailViewModel
-    
     @State var image: Image?
-    @State var showAudioMessageView: Bool = false
     
     init(chat: ChatCellModel, useMock: Bool = false) {
         if useMock {
@@ -52,6 +50,10 @@ struct ChatDetailView: View {
                             .onAppear {
                                 vm.didVisualize(message.id)
                             }
+                            .onTapGesture(count: 2) {
+                                vm.selectedMessage = message
+                                vm.showOptionsView = true
+                            }
 
                     }
                     .padding(.bottom)
@@ -76,7 +78,7 @@ struct ChatDetailView: View {
                     
                     if vm.canSendVoiceNotes {
                         Button("Record", systemImage: "mic.fill") {
-                            showAudioMessageView = true
+                            vm.showAudioMessageView = true
                         }
                         .controlSize(.large)
                         .background {
@@ -109,13 +111,16 @@ struct ChatDetailView: View {
             .onDisappear(perform: vm.onCloseChat)
 
         }
-        .sheet(isPresented: $showAudioMessageView) {
-            AudioMessageView(isPresented: $showAudioMessageView, chat: vm.chat) { filePath, duration in
+        .sheet(isPresented: $vm.showAudioMessageView) {
+            AudioMessageView(isPresented: $vm.showAudioMessageView, chat: vm.chat) { filePath, duration in
                 vm.sendService.sendVoiceNote(filePath, Int(duration))
             }
         }
         .sheet(isPresented: $vm.showStickersView) {
             AlertView.inDevelopment("stickers are")
+        }
+        .sheet(isPresented: $vm.showOptionsView) {
+            MessageOptionsView(isPresented: $vm.showOptionsView, message: vm.selectedMessage ?? .preview(), chat: vm.chat.td)
         }
     }
     

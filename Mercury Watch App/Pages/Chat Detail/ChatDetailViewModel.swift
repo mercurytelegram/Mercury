@@ -13,7 +13,11 @@ class ChatDetailViewModel: TDLibViewModel {
     
     @Published var isLoadingInitialMessages = true
     @Published var messages: [Message] = []
+    @Published var showAudioMessageView: Bool = false
     @Published var showStickersView = false
+    @Published var showOptionsView = false
+    @Published var selectedMessage: Message?
+    
     var localRemoteIdMap: [Int64 : Int64] = [:]
     
     var canSendVoiceNotes: Bool {
@@ -205,6 +209,4 @@ class ChatDetailViewModel: TDLibViewModel {
             }
         }
     }
-
-    
 }
