@@ -96,6 +96,8 @@ struct MessageView: View {
             .frame(width: 60, height: 60)
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(.blue.opacity(0.3))
     .environmentObject(MessageViewModelMock() as MessageViewModel)
 }
 

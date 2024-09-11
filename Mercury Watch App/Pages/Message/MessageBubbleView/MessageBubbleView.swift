@@ -22,6 +22,10 @@ struct MessageBubbleView<Content> : View where Content : View {
                     if vm.showSender {
                         senderView()
                     }
+                    
+                    if vm.showReply {
+                        ReplyView(message: vm.message)
+                    }
                     content()
                     
                     //Spacing for the footerView

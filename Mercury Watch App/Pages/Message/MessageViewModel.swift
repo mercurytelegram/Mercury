@@ -191,6 +191,14 @@ class MessageViewModel: TDLibViewModel {
         reactions.count > 0
     }
     
+    var showReply: Bool {
+        message.replyTo != nil
+    }
+    
+    var replyColor: Color {
+        message.isOutgoing ? .white : .blue
+    }
+    
     private func initUser() {
         Task { [weak self] in
             guard let self else { return }

@@ -8,12 +8,12 @@
 import TDLibKit
 import Foundation
 
-extension Message {
+extension MessageContent {
     /// A textual desctiption of the message content
     var description: AttributedString {
         var stringMessage = ""
         
-        switch self.content {
+        switch self {
         case .messageText(let message):
             return message.text.attributedString
         case .messagePhoto(_):
@@ -52,12 +52,18 @@ extension Message {
         case .messagePinMessage(_):
             stringMessage = "📌 Pinned a message"
         default:
-            stringMessage = "\(self.content)"
+            stringMessage = "\(self)"
         }
         
         return AttributedString(stringMessage)
     }
+}
     
+extension Message {
+    var description: AttributedString {
+        self.content.description
+    }
+
     var errorSending: Bool {
         
         switch self.sendingState {
