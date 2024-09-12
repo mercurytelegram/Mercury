@@ -22,21 +22,25 @@ class MessageOptionsViewModel: ObservableObject {
         self.chatId = chatId
         
         Task {
-            let reactions = try? await TDLibManager.shared.client?.getMessageAvailableReactions(
-                chatId: chatId,
-                messageId: messageId,
-                rowSize: 4
-            )
-            let availableEmojis = reactions?.topReactions.map { reaction in
-                if case .reactionTypeEmoji(let emojiReaction) = reaction.type {
-                    return emojiReaction.emoji
-                }
-                return "?"
+            await self.getReactions()
+        }
+    }
+    
+    func getReactions() async {
+        let reactions = try? await TDLibManager.shared.client?.getMessageAvailableReactions(
+            chatId: chatId,
+            messageId: messageId,
+            rowSize: 4
+        )
+        let availableEmojis = reactions?.topReactions.map { reaction in
+            if case .reactionTypeEmoji(let emojiReaction) = reaction.type {
+                return emojiReaction.emoji
             }
-            
-            await MainActor.run {
-                self.emojis = availableEmojis ?? []
-            }
+            return "?"
+        }
+        
+        await MainActor.run {
+            self.emojis = availableEmojis ?? []
         }
     }
     
@@ -47,5 +51,6 @@ class MessageOptionsViewModel: ObservableObject {
             messageId: messageId,
             reactionType: .reactionTypeEmoji(ReactionTypeEmoji(emoji: emoji)),
             updateRecentReactions: false)
+        WKInterfaceDevice.current().play(.click)
     }
 }
