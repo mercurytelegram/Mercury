@@ -173,7 +173,9 @@ class LoginViewModel: TDLibViewModel {
             do {
                 
                 let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                let deviceModel = deviceModel()
+                let device = WKInterfaceDevice.current()
+                let deviceModel = device.name
+                let systemVersion = "\(device.systemName) \(device.systemVersion)"
                 
                 let result = try await TDLibManager.shared.client?.setTdlibParameters(
                     apiHash: Secrets.apiHash,
@@ -184,7 +186,7 @@ class LoginViewModel: TDLibViewModel {
                     deviceModel: deviceModel,
                     filesDirectory: nil,
                     systemLanguageCode: "en-US",
-                    systemVersion: nil,
+                    systemVersion: systemVersion,
                     useChatInfoDatabase: true,
                     useFileDatabase: true,
                     useMessageDatabase: true,
@@ -205,19 +207,4 @@ class LoginViewModel: TDLibViewModel {
             }
         }
     }
-    
-    private func deviceModel() -> String {
-        var systemInfo = utsname()
-        uname(&systemInfo)
-        
-        let modelCode = withUnsafePointer(to: &systemInfo.machine) {
-            $0.withMemoryRebound(to: CChar.self, capacity: 1) {
-                ptr in String.init(validatingUTF8: ptr)
-            }
-        }
-        
-        return modelCode ?? "unknown"
-        
-    }
-
 }
