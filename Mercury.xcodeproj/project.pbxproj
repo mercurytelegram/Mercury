@@ -74,12 +74,12 @@
 		A081AAD32C071C82002A265C /* Extensions+ChatAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD22C071C82002A265C /* Extensions+ChatAction.swift */; };
 		A081AAD52C0721C2002A265C /* Extensions+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD42C0721C2002A265C /* Extensions+Chat.swift */; };
 		A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD62C072536002A265C /* Extensions+MessageSender.swift */; };
+		A0951E982C95CDFE00CF638C /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = A0951E972C95CDFE00CF638C /* QRCode */; };
 		A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA7BA52BF90FC200E66219 /* AppDelegate.swift */; };
 		A0CF531A2BDFA57A00BA394B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53192BDFA57A00BA394B /* LoginViewModel.swift */; };
 		A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53262BDFD78900BA394B /* TDLibManager.swift */; };
 		A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */; };
 		A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */; };
-		A0F63BDE2BD6728800F7135E /* EFQRCode in Frameworks */ = {isa = PBXBuildFile; productRef = A0F63BDD2BD6728800F7135E /* EFQRCode */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,8 +187,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A0F63BDE2BD6728800F7135E /* EFQRCode in Frameworks */,
 				A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */,
+				A0951E982C95CDFE00CF638C /* QRCode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -484,8 +484,8 @@
 			);
 			name = "Mercury Watch App";
 			packageProductDependencies = (
-				A0F63BDD2BD6728800F7135E /* EFQRCode */,
 				A0054EA52BF3E12F009F2CEB /* TDLibKit */,
+				A0951E972C95CDFE00CF638C /* QRCode */,
 			);
 			productName = "Mercury Watch App";
 			productReference = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */;
@@ -519,8 +519,8 @@
 			);
 			mainGroup = A07438DF2BD10D2D00945CB5;
 			packageReferences = (
-				A0F63BDC2BD6728800F7135E /* XCRemoteSwiftPackageReference "EFQRCode" */,
 				A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */,
+				A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */,
 			);
 			productRefGroup = A07438E72BD10D2D00945CB5 /* Products */;
 			projectDirPath = "";
@@ -895,12 +895,12 @@
 				revision = 9aa7ba777c6c21fd4bf0710c47c2f6f3beb9c8c9;
 			};
 		};
-		A0F63BDC2BD6728800F7135E /* XCRemoteSwiftPackageReference "EFQRCode" */ = {
+		A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/EFPrefix/EFQRCode";
+			repositoryURL = "https://github.com/dagronf/QRCode?tab=readme-ov-file";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 6.2.2;
+				minimumVersion = 21.0.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -911,10 +911,10 @@
 			package = A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */;
 			productName = TDLibKit;
 		};
-		A0F63BDD2BD6728800F7135E /* EFQRCode */ = {
+		A0951E972C95CDFE00CF638C /* QRCode */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A0F63BDC2BD6728800F7135E /* XCRemoteSwiftPackageReference "EFQRCode" */;
-			productName = EFQRCode;
+			package = A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */;
+			productName = QRCode;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
