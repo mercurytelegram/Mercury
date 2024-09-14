@@ -37,6 +37,8 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     @Published var hightlightIndex: Int?
     @Published var isLoadingPlayerWaveform: Bool = false
     
+    @Binding var action: ChatAction?
+    
     private var recorder: RecorderService
     private var player: PlayerService?
     
@@ -47,7 +49,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     private let chat: ChatCellModel
     private let logger = LoggerService(AudioMessageViewModel.self)
       
-    init(chat: ChatCellModel) {
+    init(chat: ChatCellModel, action: Binding<ChatAction?>) {
         
         // Recording file path
         let recName = "\(UUID().uuidString).m4a"
@@ -57,6 +59,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         self.recorder = RecorderService(recFilePath: filePath)
         self.chat = chat
         self.state = .recStarted
+        self._action = action
         
         super.init()
         
@@ -79,6 +82,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     }
     
     private func manageRecorderSample(_ sample: Float) {
+        action = .chatActionRecordingVoiceNote
         DispatchQueue.main.async {
             withAnimation {
                 self.elapsedTime = self.recorder.elapsedTime
@@ -126,9 +130,14 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         return hasPermission
     }
     
+    func onDisappear() {
+        action = nil
+    }
+    
     func didPressMainAction() {
         switch state {
         case .recStarted:
+            action = nil
             recorder.stopRecordingAudio()
             createPlayer()
             
@@ -149,6 +158,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         
         guard state != .sending else { return false }
         
+        action = .chatActionUploadingVoiceNote(.init(progress: 0))
         if state == .recStarted {
             recorder.stopRecordingAudio()
         }

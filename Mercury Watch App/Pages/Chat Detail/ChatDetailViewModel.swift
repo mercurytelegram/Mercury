@@ -18,6 +18,9 @@ class ChatDetailViewModel: TDLibViewModel {
     @Published var showOptionsView = false
     @Published var selectedMessage: Message?
     
+    var chatAction: ChatAction?
+    var chatActionTimer: Timer?
+    
     var localRemoteIdMap: [Int64 : Int64] = [:]
     
     var canSendVoiceNotes: Bool {
@@ -40,6 +43,20 @@ class ChatDetailViewModel: TDLibViewModel {
         self.sendService = sendService ?? SendMessageService(chat: chat.td)
         super.init()
         self.requestInitialMessage()
+        
+        chatActionTimer = Timer.scheduledTimer(
+            withTimeInterval: 1,
+            repeats: true,
+            block: { [weak self] _ in
+                guard let self else { return }
+                self.setChatAction(self.chatAction)
+            }
+        )
+    }
+    
+    deinit {
+        chatActionTimer?.invalidate()
+        chatActionTimer = nil
     }
     
     func getMessageVM(for message: Message) -> MessageViewModel {
@@ -176,6 +193,7 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     func onOpenChat() {
+        chatAction = nil
         Task {
             do {
                 try await TDLibManager.shared.client?.openChat(chatId: self.chat.td.id)
@@ -203,6 +221,50 @@ class ChatDetailViewModel: TDLibViewModel {
                     forceRead: true,
                     messageIds: [id],
                     source: nil
+                )
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func showInputController() {
+        
+        self.chatAction = .chatActionTyping
+        
+        WKExtension.shared()
+            .visibleInterfaceController?
+            .presentTextInputController(withSuggestions: [],
+                                        allowedInputMode: .plain) { result in
+                
+                self.chatAction = nil
+                guard let result = result as? [String],
+                      let text = result.first
+                else { return }
+                
+                self.sendService.sendTextMessage(text)
+                
+            }
+    }
+    
+    func showVoiceRecording() {
+        self.chatAction = .chatActionRecordingVoiceNote
+        self.showAudioMessageView = true
+    }
+    
+    func showStickersSelection() {
+        self.showStickersView = true
+    }
+    
+    /// Do not call this function manually, it is periodically called from a task
+    private func setChatAction(_ action: ChatAction?) {
+        Task.detached(priority: .background) {
+            do {
+                try await TDLibManager.shared.client?.sendChatAction(
+                    action: action,
+                    businessConnectionId: nil,
+                    chatId: self.chat.td.id,
+                    messageThreadId: 0
                 )
             } catch {
                 self.logger.log(error, level: .error)
