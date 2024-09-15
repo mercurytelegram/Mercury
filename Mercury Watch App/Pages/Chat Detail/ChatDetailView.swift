@@ -41,7 +41,8 @@ struct ChatDetailView: View {
                     .padding()
                  
                     ForEach(vm.messages) { message in
-                        MessageView(vm: vm.getMessageVM(for: message))
+                        MessageView(message: message, chat: vm.chat)
+                            .id(message.id)
                             .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
                                 content
                                     .scaleEffect(phase.isIdentity ? 1 : 0.7)
@@ -57,6 +58,16 @@ struct ChatDetailView: View {
 
                     }
                     .padding(.bottom)
+                    .onAppear {
+                        // Scroll to the first unread message
+                        let lastReadInboxMessageId = vm.chat.lastReadInboxMessageId
+                        for message in vm.messages {
+                            if message.id >= lastReadInboxMessageId {
+                                proxy.scrollTo(message.id)
+                                break
+                            }
+                        }
+                    }
                 }
                 
             }

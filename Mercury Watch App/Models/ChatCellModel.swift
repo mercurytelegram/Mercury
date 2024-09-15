@@ -33,6 +33,7 @@ struct ChatCellModel {
     var position: Int64
     var action: AttributedString?
     var lastReadOutboxMessageId: Int64
+    var lastReadInboxMessageId: Int64
     
     var unreadSymbol: String {
         showUnreadMention ? "at.circle.fill" :
@@ -78,7 +79,8 @@ struct ChatCellModel {
             unreadCount: 0,
             position: 0,
             action: nil,
-            lastReadOutboxMessageId: chat.lastReadOutboxMessageId
+            lastReadOutboxMessageId: chat.lastReadOutboxMessageId,
+            lastReadInboxMessageId: chat.lastReadInboxMessageId
         )
     }
 }

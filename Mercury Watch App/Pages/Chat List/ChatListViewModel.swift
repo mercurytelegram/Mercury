@@ -36,11 +36,12 @@ class ChatListViewModel: TDLibViewModel {
             case .updateChatPosition(let update):
                 self.updateChatPosition(chatId: update.chatId, positions: [update.position])
             case .updateChatReadOutbox(let update):
-                self.updateChatReadOutbox(chatId: update.chatId, lastReadMessageId: update.lastReadOutboxMessageId)
+                self.updateChatReadMessageId(type: .outbox, chatId: update.chatId, lastReadMessageId: update.lastReadOutboxMessageId)
+            case .updateChatReadInbox(let update):
+                self.updateChatReadMessageId(type: .inbox, chatId: update.chatId, lastReadMessageId: update.lastReadInboxMessageId)
+                self.updateCounters(chatId: update.chatId, unreadCount: update.unreadCount)
                 
             // Chat Counters update
-            case .updateChatReadInbox(let update):
-                self.updateCounters(chatId: update.chatId, unreadCount: update.unreadCount)
             case .updateChatUnreadMentionCount(let update):
                 self.updateCounters(chatId: update.chatId, mentionCount: update.unreadMentionCount)
             case .updateChatUnreadReactionCount(let update):
@@ -237,7 +238,8 @@ class ChatListViewModel: TDLibViewModel {
         }
     }
     
-    func updateChatReadOutbox(chatId: Int64, lastReadMessageId: Int64) {
+    enum ChatReadMessageIdType { case inbox, outbox }
+    func updateChatReadMessageId(type: ChatReadMessageIdType, chatId: Int64, lastReadMessageId: Int64) {
         
         let index = self.chats.firstIndex {
             c in c.td.id == chatId
@@ -246,7 +248,12 @@ class ChatListViewModel: TDLibViewModel {
         guard let index, index != -1 else { return }
         
         withAnimation {
-            self.chats[index].lastReadOutboxMessageId = lastReadMessageId
+            switch type {
+            case .inbox:
+                self.chats[index].lastReadInboxMessageId = lastReadMessageId
+            case .outbox:
+                self.chats[index].lastReadOutboxMessageId = lastReadMessageId
+            }
         }
     }
     

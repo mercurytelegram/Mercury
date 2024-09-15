@@ -22,6 +22,7 @@ class ChatDetailViewModel: TDLibViewModel {
     var chatActionTimer: Timer?
     
     var localRemoteIdMap: [Int64 : Int64] = [:]
+    var isLoadingMoreMessages = false
     
     var canSendVoiceNotes: Bool {
         return self.chat.td.permissions.canSendVoiceNotes
@@ -57,10 +58,6 @@ class ChatDetailViewModel: TDLibViewModel {
     deinit {
         chatActionTimer?.invalidate()
         chatActionTimer = nil
-    }
-    
-    func getMessageVM(for message: Message) -> MessageViewModel {
-        MessageViewModel(message: message, chat: chat)
     }
     
     override func updateHandler(update: Update) {
@@ -154,6 +151,10 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     func requestMoreMessages(limit: Int = 30) async {
+        
+        if isLoadingMoreMessages { return }
+        isLoadingMoreMessages = true
+        
         self.logger.log("loading \(limit) messages")
         
         let result2 = try? await TDLibManager.shared.client?.getChatHistory(
@@ -168,6 +169,8 @@ class ChatDetailViewModel: TDLibViewModel {
             for elem in result2?.messages ?? [] {
                 self.insertMessage(at: .first, message: elem)
             }
+            
+            self.isLoadingMoreMessages = false
         }
     }
     

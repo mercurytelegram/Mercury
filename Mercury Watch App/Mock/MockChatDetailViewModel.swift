@@ -56,27 +56,4 @@ class MockChatDetailViewModel: ChatDetailViewModel {
     
     override func requestInitialMessage() {}
     override func requestMoreMessages(limit: Int = 30) async {}
-    
-    override func getMessageVM(for message: Message) -> MessageViewModel {
-        var sender = ""
-        var color: Color = .blue
-        
-        switch message.content {
-        case .messageText(let messageText):
-            switch messageText.text.attributedString {
-            case "Who's excited for WWDC? 😁":
-                sender = "Alessandro"
-                color = .tdOrange
-            case "SwiftUI or UIKit?":
-                sender = "Marco"
-                color = .tdTeal
-            default:
-                break
-            }
-        default:
-            break
-        }
-        
-        return MessageViewModelMock(message: message, name: sender, titleColor: color, showSender: sender != "")
-    }
 }

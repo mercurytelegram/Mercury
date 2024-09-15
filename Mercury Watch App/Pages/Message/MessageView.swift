@@ -12,8 +12,12 @@ import MapKit
 struct MessageView: View {
     @StateObject var vm: MessageViewModel
     
-    init(vm: MessageViewModel) {
+    init(vm: MessageViewModelMock) {
         self._vm = StateObject(wrappedValue: vm)
+    }
+    
+    init(message: Message, chat: ChatCellModel) {
+        self._vm = StateObject(wrappedValue: MessageViewModel(message: message, chat: chat))
     }
     
     var body: some View {
@@ -75,18 +79,18 @@ struct MessageView: View {
 
 #Preview("Messages") {
     VStack {
-        MessageView(vm: MessageViewModelMock(name: "Craig Federighi") as MessageViewModel)
-        MessageView(vm: MessageViewModelMock(message: .preview(isOutgoing: true)) as MessageViewModel)
+        MessageView(vm: MessageViewModelMock(name: "Craig Federighi"))
+        MessageView(vm: MessageViewModelMock(message: .preview(isOutgoing: true)))
     }
 }
 
 #Preview("Location") {
-    MessageView(vm: MessageViewModelMock() as MessageViewModel)
+    MessageView(vm: MessageViewModelMock())
     
 }
 
 #Preview("Loading Name") {
-    MessageView(vm: MessageViewModelMock(showSender: true) as MessageViewModel)
+    MessageView(vm: MessageViewModelMock(showSender: true))
 }
 
 #Preview("Group Photo Change") {
