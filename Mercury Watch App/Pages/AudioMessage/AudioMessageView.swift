@@ -8,6 +8,7 @@
 import SwiftUI
 import Charts
 import AVFAudio
+import TDLibKit
 
 struct AudioMessageView: View {
     
@@ -15,9 +16,9 @@ struct AudioMessageView: View {
     @Binding var isPresented: Bool
     var onSend: (URL, Double) -> Void
     
-    init(isPresented: Binding<Bool>, chat: ChatCellModel, onSend: @escaping (URL, Double) -> Void ) {
+    init(isPresented: Binding<Bool>, action: Binding<ChatAction?>, chat: ChatCellModel, onSend: @escaping (URL, Double) -> Void ) {
         self.onSend = onSend
-        self._vm = StateObject(wrappedValue: AudioMessageViewModel(chat: chat))
+        self._vm = StateObject(wrappedValue: AudioMessageViewModel(chat: chat, action: action))
         self._isPresented = isPresented
     }
     
@@ -94,6 +95,9 @@ struct AudioMessageView: View {
         .task {
             // Dismiss audio message if no recording permission
             isPresented = await vm.onAppear()
+        }
+        .onDisappear {
+            vm.onDisappear()
         }
         
     }

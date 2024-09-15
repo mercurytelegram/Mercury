@@ -8,6 +8,7 @@
 import SwiftUI
 import EFQRCode
 import TDLibKit
+import QRCode
 
 struct LoginView: View {
 
@@ -63,23 +64,30 @@ struct LoginView: View {
     @ViewBuilder
     var qrView: some View {
         
-        if  let image = vm.qrcodeImage {
+        if let link = vm.qrcodeLink, let shape = try? QRCodeShape(
+            text: link,
+            errorCorrection: .low
+        ) {
             
-            Image(uiImage: image)
-                .resizable()
+            ZStack {
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(.white)
+                    
+                shape
+                .eyeShape(QRCode.EyeShape.Squircle())
+                .pupilShape(QRCode.PupilShape.Squircle())
                 .padding()
-                .aspectRatio(1, contentMode: showFullscreenQR ? .fill : .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .background{
-                    RoundedRectangle(cornerRadius: 20)
-                        .foregroundStyle(Color.white)
-                        .ignoresSafeArea(edges: showFullscreenQR ? .all : .bottom)
+                .blendMode(.destinationOut)
+            }
+            .compositingGroup()
+            .aspectRatio(showFullscreenQR ? 0.75 : 1, contentMode: showFullscreenQR ? .fill : .fit)
+            .ignoresSafeArea(edges: showFullscreenQR ? .all : .bottom)
+            .padding(.top)
+            .onTapGesture {
+                withAnimation(.bouncy) {
+                    showFullscreenQR.toggle()
                 }
-                .onTapGesture {
-                    withAnimation(.bouncy) {
-                        showFullscreenQR.toggle()
-                    }
-                }
+            }
             
         } else {
             ProgressView()

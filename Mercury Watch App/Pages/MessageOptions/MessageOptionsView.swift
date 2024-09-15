@@ -38,7 +38,13 @@ struct MessageOptionsView: View {
                         }
                     }, label: {
                         Text(emoji)
-                            .font(.system(size: 35))
+                            .font(.system(size: 30))
+                            .background {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(.white.opacity(0.2))
+                                    .opacity(vm.selectedEmoji == emoji ? 1 : 0)
+                                    
+                            }
                     })
                     .buttonStyle(PlainButtonStyle())
                 }

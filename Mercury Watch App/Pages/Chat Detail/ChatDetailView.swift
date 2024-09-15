@@ -69,16 +69,14 @@ struct ChatDetailView: View {
                 ToolbarItemGroup(placement: .bottomBar) {
                     
                     if vm.canSendText {
-                        TextFieldLink {
-                            Image(systemName: "keyboard.fill")
-                        } onSubmit: { value in
-                            vm.sendService.sendTextMessage(value)
+                        Button("Stickers", systemImage: "keyboard.fill") {
+                            vm.showInputController()
                         }
                     }
                     
                     if vm.canSendVoiceNotes {
                         Button("Record", systemImage: "mic.fill") {
-                            vm.showAudioMessageView = true
+                            vm.showVoiceRecording()
                         }
                         .controlSize(.large)
                         .background {
@@ -88,7 +86,7 @@ struct ChatDetailView: View {
                     
                     if vm.canSendStickers {
                         Button("Stickers", systemImage: "face.smiling.inverse") {
-                            vm.showStickersView = true
+                            vm.showStickersSelection()
                         }
                     }
                     
@@ -112,7 +110,7 @@ struct ChatDetailView: View {
 
         }
         .sheet(isPresented: $vm.showAudioMessageView) {
-            AudioMessageView(isPresented: $vm.showAudioMessageView, chat: vm.chat) { filePath, duration in
+            AudioMessageView(isPresented: $vm.showAudioMessageView, action: $vm.chatAction, chat: vm.chat) { filePath, duration in
                 vm.sendService.sendVoiceNote(filePath, Int(duration))
             }
         }

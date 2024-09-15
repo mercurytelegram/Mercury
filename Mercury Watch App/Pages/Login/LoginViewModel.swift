@@ -7,12 +7,11 @@
 
 import SwiftUI
 import TDLibKit
-import EFQRCode
 
 class LoginViewModel: TDLibViewModel {
     
     // User input / output
-    @Published var qrcodeImage: UIImage?
+    @Published var qrcodeLink: String?
     @Published var password = ""
     @Published var statusMessage: String = "Connecting..."
     
@@ -62,15 +61,12 @@ class LoginViewModel: TDLibViewModel {
             break
         case .authorizationStateWaitOtherDeviceConfirmation(let info):
             DispatchQueue.main.async {
-                let link = info.link
-                if let cgimage = EFQRCode.generate(for: link) {
-                    self.qrcodeImage = UIImage(cgImage: cgimage)
-                }
+                self.qrcodeLink = info.link
             }
             break
         case .authorizationStateWaitPassword(_):
             DispatchQueue.main.async {
-                self.qrcodeImage = nil
+                self.qrcodeLink = nil
                 self.showPassword = true
             }
             break
@@ -82,7 +78,7 @@ class LoginViewModel: TDLibViewModel {
             DispatchQueue.main.async {
                 self.isValidatingPassword = false
                 self.showPassword = false
-                self.qrcodeImage = nil
+                self.qrcodeLink = nil
                 self.statusMessage = "Connecting..."
                 self.password = ""
                 self.authenticated = nil
