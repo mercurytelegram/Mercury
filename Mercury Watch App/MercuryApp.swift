@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct Mercury_Watch_AppApp: App {
-    
+    @Environment(\.isLuminanceReduced) var isLuminanceReduced
     @StateObject var vm = LoginViewModel()
     @WKApplicationDelegateAdaptor var appDelegate: AppDelegate
     
@@ -25,8 +25,16 @@ struct Mercury_Watch_AppApp: App {
             } else {
                 ProgressView()
             }
+                
             
         }
         .environmentObject(vm)
+        .onChange(of: isLuminanceReduced) {
+            if isLuminanceReduced {
+                LoginViewModel.setOfflineStatus()
+            } else {
+                LoginViewModel.setOnlineStatus()
+            }
+        }
     }
 }

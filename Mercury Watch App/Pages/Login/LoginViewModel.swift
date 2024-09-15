@@ -207,4 +207,23 @@ class LoginViewModel: TDLibViewModel {
             }
         }
     }
+    
+    static func setOnlineStatus(online: Bool = true) {
+        Task {
+            let logger = LoggerService(LoginViewModel.self)
+            do {
+                let result = try await TDLibManager.shared.client?.setOption(
+                    name: "online",
+                    value: .optionValueBoolean(.init(value: online))
+                )
+                logger.log(result)
+            } catch {
+                logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    static func setOfflineStatus() {
+        setOnlineStatus(online: false)
+    }
 }
