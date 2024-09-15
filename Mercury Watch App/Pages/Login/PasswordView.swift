@@ -21,12 +21,20 @@ struct PasswordView: View {
                 .rotationEffect(.degrees(45))
                 .padding(.top, -25)
             
-            Text(showError ? "Wrong password, try again" : "Insert your Telegram Password")
+            Text(showError ? "Wrong password, try again!" : "Insert your Telegram Password")
                 .font(.title3)
                 .multilineTextAlignment(.center)
                 .padding(.bottom)
                 
             SecureField("\(Image(systemName: "lock.fill")) Password", text: $password, onCommit: onCommit)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .clipped()
+                .if(showError, transform: { view in
+                    view.overlay {
+                        RoundedRectangle(cornerRadius: 15).stroke(.red)
+                    }
+                })
+                .padding(.horizontal, 1)
             
             Text("You have Two-Step Verification enabled, so your account is protected with an additional password.")
                 .font(.footnote)
