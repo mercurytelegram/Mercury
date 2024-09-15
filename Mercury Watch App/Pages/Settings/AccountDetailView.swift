@@ -12,12 +12,14 @@ struct AccountDetailView: View {
     @ObservedObject var vm: SettingsViewModel
     
     var body: some View {
-        VStack {
+        ScrollView {
             avatarHeader()
             Spacer()
             Button("Logout", role: .destructive) {
                 loginVM.logout()
             }
+            credits()
+                .padding(.top)
         }
     }
     
@@ -45,6 +47,43 @@ struct AccountDetailView: View {
             }
         }
         .frame(height: 120)
+    }
+    
+    func credits() -> some View {
+        VStack {
+            HStack {
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundStyle(.secondary)
+                Text("by")
+                Rectangle()
+                    .frame(height: 1)
+                    .foregroundStyle(.secondary)
+            }
+            HStack {
+                creditsAvatar(
+                    name: "Alessandro\nAlberti",
+                    image: "alessandro"
+                )
+                Spacer()
+                creditsAvatar(
+                    name: "Marco\nTammaro",
+                    image: "marco"
+                )
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    func creditsAvatar(name: String, image: String) -> some View {
+        VStack {
+            Image(image)
+                .resizable()
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
+            Text(name)
+                .multilineTextAlignment(.center)
+        }
     }
 }
 
