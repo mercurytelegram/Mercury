@@ -75,6 +75,7 @@
 		A081AAD52C0721C2002A265C /* Extensions+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD42C0721C2002A265C /* Extensions+Chat.swift */; };
 		A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD62C072536002A265C /* Extensions+MessageSender.swift */; };
 		A0951E982C95CDFE00CF638C /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = A0951E972C95CDFE00CF638C /* QRCode */; };
+		A09F310F2CC0487700F6ACC8 /* SwiftOGG in Frameworks */ = {isa = PBXBuildFile; productRef = A09F310E2CC0487700F6ACC8 /* SwiftOGG */; };
 		A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA7BA52BF90FC200E66219 /* AppDelegate.swift */; };
 		A0CF531A2BDFA57A00BA394B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53192BDFA57A00BA394B /* LoginViewModel.swift */; };
 		A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53262BDFD78900BA394B /* TDLibManager.swift */; };
@@ -188,6 +189,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */,
+				A09F310F2CC0487700F6ACC8 /* SwiftOGG in Frameworks */,
 				A0951E982C95CDFE00CF638C /* QRCode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -486,6 +488,7 @@
 			packageProductDependencies = (
 				A0054EA52BF3E12F009F2CEB /* TDLibKit */,
 				A0951E972C95CDFE00CF638C /* QRCode */,
+				A09F310E2CC0487700F6ACC8 /* SwiftOGG */,
 			);
 			productName = "Mercury Watch App";
 			productReference = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */;
@@ -521,6 +524,7 @@
 			packageReferences = (
 				A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */,
 				A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */,
+				A09F310D2CC0487700F6ACC8 /* XCRemoteSwiftPackageReference "swift-ogg" */,
 			);
 			productRefGroup = A07438E72BD10D2D00945CB5 /* Products */;
 			projectDirPath = "";
@@ -903,6 +907,14 @@
 				minimumVersion = 21.0.3;
 			};
 		};
+		A09F310D2CC0487700F6ACC8 /* XCRemoteSwiftPackageReference "swift-ogg" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mercurytelegram/swift-ogg";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -915,6 +927,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */;
 			productName = QRCode;
+		};
+		A09F310E2CC0487700F6ACC8 /* SwiftOGG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A09F310D2CC0487700F6ACC8 /* XCRemoteSwiftPackageReference "swift-ogg" */;
+			productName = SwiftOGG;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

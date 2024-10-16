@@ -11,7 +11,6 @@ import TDLibKit
 struct VoiceNoteContentView: View {
     
     @StateObject var vm: VoiceNoteContentViewModel
-    @State private var showPlayAudioAlert: Bool = false
     
     init(message: MessageVoiceNote) {
         self._vm = StateObject(wrappedValue: VoiceNoteContentViewModel(message: message))
@@ -22,7 +21,7 @@ struct VoiceNoteContentView: View {
         HStack(alignment: .top, spacing: 5) {
             
             Button(action: {
-                showPlayAudioAlert = true
+                vm.play()
             }, label: {
                 
                 ZStack {
@@ -55,9 +54,6 @@ struct VoiceNoteContentView: View {
                     .bold()
                     .foregroundStyle(.blue)
             }
-        }
-        .sheet(isPresented: $showPlayAudioAlert) {
-            AlertView.inDevelopment("play audio is")
         }
     }
 }

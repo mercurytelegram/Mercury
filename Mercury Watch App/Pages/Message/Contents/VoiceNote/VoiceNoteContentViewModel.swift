@@ -13,6 +13,7 @@ import SwiftUI
 class VoiceNoteContentViewModel: NSObject, ObservableObject {
     
     let message: MessageVoiceNote
+    var player: PlayerService?
     private let logger = LoggerService(AudioMessageViewModel.self)
     
     @Published var loading: Bool = false
@@ -22,6 +23,7 @@ class VoiceNoteContentViewModel: NSObject, ObservableObject {
     init(message: MessageVoiceNote) {
         self.message = message
         super.init()
+        processAudio()
         processWaveform(message.voiceNote.waveform)
     }
     
@@ -40,29 +42,39 @@ class VoiceNoteContentViewModel: NSObject, ObservableObject {
         }
     }
     
-    func play() {
-        
+    private func processAudio() {
         loading = true
-        Task {
+        Task.detached {
             
-            let filePath = await FileService.getFilePath(for: message.voiceNote.voice)
+            let filePath = await FileService.getFilePath(for: self.message.voiceNote.voice)
             await MainActor.run {
                 
-                loading = false
+                self.loading = false
                 guard let filePath else {
-                    logger.log("filePath is nil", level: .error)
+                    self.logger.log("filePath is nil", level: .error)
                     return
                 }
                 
                 do {
-                    let audioPlayer = try PlayerService(audioFilePath: filePath, delegate: self)
-                    audioPlayer.startPlayingAudio()
-                    playing = true
+                    self.player = try PlayerService(audioFilePath: filePath, delegate: self)
                 } catch {
-                    logger.log(error, level: .error)
+                    self.logger.log(error, level: .error)
                 }
                 
             }
+        }
+    }
+    
+    func play() {
+        
+        if self.loading { return }
+        
+        if playing {
+            self.player?.pausePlayingAudio()
+            playing = false
+        } else {
+            self.player?.startPlayingAudio()
+            playing = true
         }
     }
     
