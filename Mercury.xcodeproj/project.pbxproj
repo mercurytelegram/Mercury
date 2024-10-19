@@ -44,8 +44,10 @@
 		9B778D212C92D7760022B093 /* MockMessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */; };
 		9B8493E82C7623B700AC90E9 /* Extensions+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* Extensions+View.swift */; };
 		9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E92C76241400AC90E9 /* MockTDImage.swift */; };
+		9B85FD192CC3B08B00C90938 /* WebpStickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B85FD182CC3B08B00C90938 /* WebpStickerView.swift */; };
 		9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */; };
 		9BAC54B82C00CCD90055F1EE /* Chat+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */; };
+		9BACFAA02CBFC9A0000E44C3 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9BACFA9F2CBFC9A0000E44C3 /* SDWebImageWebPCoder */; };
 		9BB4FEAF2BF3E3BB000785BA /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB4FEAE2BF3E3BB000785BA /* FileService.swift */; };
 		9BB920E12C3D95320023C616 /* UserCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB920E02C3D95320023C616 /* UserCellView.swift */; };
 		9BB920E32C3D9B8B0023C616 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB920E22C3D9B8B0023C616 /* SettingsViewModel.swift */; };
@@ -144,6 +146,7 @@
 		9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessageOptionsViewModel.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
 		9B8493E92C76241400AC90E9 /* MockTDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTDImage.swift; sourceTree = "<group>"; };
+		9B85FD182CC3B08B00C90938 /* WebpStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebpStickerView.swift; sourceTree = "<group>"; };
 		9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+Mock.swift"; sourceTree = "<group>"; };
 		9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Chat+Mock.swift"; sourceTree = "<group>"; };
 		9BB4FEAE2BF3E3BB000785BA /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 			files = (
 				A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */,
 				A0951E982C95CDFE00CF638C /* QRCode in Frameworks */,
+				9BACFAA02CBFC9A0000E44C3 /* SDWebImageWebPCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +367,7 @@
 			children = (
 				9B039F452C667FCF00CB6BE4 /* LocationContentView.swift */,
 				9BFE1AAB2C82045300B3BBFC /* PillMessageView.swift */,
+				9B85FD182CC3B08B00C90938 /* WebpStickerView.swift */,
 				A04388FE2C3FE394007B83C0 /* VoiceNote */,
 			);
 			path = Contents;
@@ -486,6 +491,7 @@
 			packageProductDependencies = (
 				A0054EA52BF3E12F009F2CEB /* TDLibKit */,
 				A0951E972C95CDFE00CF638C /* QRCode */,
+				9BACFA9F2CBFC9A0000E44C3 /* SDWebImageWebPCoder */,
 			);
 			productName = "Mercury Watch App";
 			productReference = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */;
@@ -521,6 +527,7 @@
 			packageReferences = (
 				A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */,
 				A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */,
+				9BACFA9E2CBFC9A0000E44C3 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 			);
 			productRefGroup = A07438E72BD10D2D00945CB5 /* Products */;
 			projectDirPath = "";
@@ -598,6 +605,7 @@
 				9B2E1BE02C08739800B9B63D /* BubbleShape.swift in Sources */,
 				9B2805D02C4687DC00F7DF72 /* SendingLoaderView.swift in Sources */,
 				9B0F6AB92C01F0AE00568319 /* MockChatListViewModel.swift in Sources */,
+				9B85FD192CC3B08B00C90938 /* WebpStickerView.swift in Sources */,
 				A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */,
 				A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */,
 				A0CF531A2BDFA57A00BA394B /* LoginViewModel.swift in Sources */,
@@ -887,6 +895,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9BACFA9E2CBFC9A0000E44C3 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageWebPCoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.6;
+			};
+		};
 		A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swiftgram/TDLibKit";
@@ -906,6 +922,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9BACFA9F2CBFC9A0000E44C3 /* SDWebImageWebPCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BACFA9E2CBFC9A0000E44C3 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
+			productName = SDWebImageWebPCoder;
+		};
 		A0054EA52BF3E12F009F2CEB /* TDLibKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */;

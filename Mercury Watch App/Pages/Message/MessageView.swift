@@ -67,6 +67,12 @@ struct MessageView: View {
                         .frame(width: 60, height: 60)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
+            case .messageSticker(let message):
+                MessageBubbleView(style: .hideBackground) {
+                    WebpStickerView(sticker: message.sticker)
+                        .frame(maxWidth: 100)
+                        .padding()
+                }
             default:
                 MessageBubbleView {
                     Text(vm.message.description)

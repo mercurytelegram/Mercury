@@ -64,7 +64,8 @@ struct MessageBubbleView<Content> : View where Content : View {
                 }
             }
         }
-        .padding(vm.message.isOutgoing ? .trailing : .leading, 5)
+        .padding(vm.message.isOutgoing ? .trailing : .leading,
+                 style == .hideBackground ? 0 : 5)
         .if(style == .fullScreen) { view in
             view.clipShape(BubbleShape(myMessage: vm.message.isOutgoing))
         }
