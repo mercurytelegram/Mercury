@@ -44,10 +44,8 @@
 		9B778D212C92D7760022B093 /* MockMessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */; };
 		9B8493E82C7623B700AC90E9 /* Extensions+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* Extensions+View.swift */; };
 		9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E92C76241400AC90E9 /* MockTDImage.swift */; };
-		9B85FD192CC3B08B00C90938 /* WebpStickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B85FD182CC3B08B00C90938 /* WebpStickerView.swift */; };
 		9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */; };
 		9BAC54B82C00CCD90055F1EE /* Chat+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */; };
-		9BACFAA02CBFC9A0000E44C3 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9BACFA9F2CBFC9A0000E44C3 /* SDWebImageWebPCoder */; };
 		9BB4FEAF2BF3E3BB000785BA /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB4FEAE2BF3E3BB000785BA /* FileService.swift */; };
 		9BB920E12C3D95320023C616 /* UserCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB920E02C3D95320023C616 /* UserCellView.swift */; };
 		9BB920E32C3D9B8B0023C616 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB920E22C3D9B8B0023C616 /* SettingsViewModel.swift */; };
@@ -64,19 +62,27 @@
 		A04389012C3FE395007B83C0 /* VoiceNoteContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04388FD2C3FE394007B83C0 /* VoiceNoteContentViewModel.swift */; };
 		A04389052C3FE3B2007B83C0 /* AudioMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04389022C3FE3B2007B83C0 /* AudioMessageView.swift */; };
 		A04389062C3FE3B2007B83C0 /* AudioMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04389032C3FE3B2007B83C0 /* AudioMessageViewModel.swift */; };
-		A04389082C3FE6E5007B83C0 /* Waveform.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04389072C3FE6E5007B83C0 /* Waveform.swift */; };
+		A0524FAE2CC8EC4E0021D3FA /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A0524FAD2CC8EC4E0021D3FA /* DSWaveformImage */; };
+		A0524FB02CC8EC4E0021D3FA /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A0524FAF2CC8EC4E0021D3FA /* DSWaveformImageViews */; };
 		A05C1A012BEB74B700724B6E /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05C1A002BEB74B700724B6E /* ChatListView.swift */; };
 		A05C1A032BEB74C200724B6E /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05C1A022BEB74C200724B6E /* ChatListViewModel.swift */; };
 		A05C1AC52BECCF4B00724B6E /* Extensions+Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05C1AC42BECCF4B00724B6E /* Extensions+Message.swift */; };
+		A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE8592CCAB6EE003282B2 /* DSWaveformImage */; };
+		A06AE85C2CCAB6EE003282B2 /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */; };
+		A06AE85F2CCAB812003282B2 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */; };
+		A06AE8612CCAB85C003282B2 /* WebpStickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06AE8602CCAB85C003282B2 /* WebpStickerView.swift */; };
 		A07438ED2BD10D2D00945CB5 /* Mercury Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07438F12BD10D2D00945CB5 /* MercuryApp.swift */; };
 		A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F52BD10D2F00945CB5 /* Assets.xcassets */; };
 		A07438F92BD10D2F00945CB5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */; };
+		A07D48DF2CC93D9900DC34EF /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A07D48DE2CC93D9900DC34EF /* DSWaveformImage */; };
+		A07D48E12CC93D9900DC34EF /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A07D48E02CC93D9900DC34EF /* DSWaveformImageViews */; };
 		A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD02C0638C4002A265C /* SendMessageService.swift */; };
 		A081AAD32C071C82002A265C /* Extensions+ChatAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD22C071C82002A265C /* Extensions+ChatAction.swift */; };
 		A081AAD52C0721C2002A265C /* Extensions+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD42C0721C2002A265C /* Extensions+Chat.swift */; };
 		A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD62C072536002A265C /* Extensions+MessageSender.swift */; };
 		A0951E982C95CDFE00CF638C /* QRCode in Frameworks */ = {isa = PBXBuildFile; productRef = A0951E972C95CDFE00CF638C /* QRCode */; };
+		A09F310F2CC0487700F6ACC8 /* SwiftOGG in Frameworks */ = {isa = PBXBuildFile; productRef = A09F310E2CC0487700F6ACC8 /* SwiftOGG */; };
 		A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CA7BA52BF90FC200E66219 /* AppDelegate.swift */; };
 		A0CF531A2BDFA57A00BA394B /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53192BDFA57A00BA394B /* LoginViewModel.swift */; };
 		A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53262BDFD78900BA394B /* TDLibManager.swift */; };
@@ -146,7 +152,6 @@
 		9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessageOptionsViewModel.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
 		9B8493E92C76241400AC90E9 /* MockTDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTDImage.swift; sourceTree = "<group>"; };
-		9B85FD182CC3B08B00C90938 /* WebpStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebpStickerView.swift; sourceTree = "<group>"; };
 		9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+Mock.swift"; sourceTree = "<group>"; };
 		9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Chat+Mock.swift"; sourceTree = "<group>"; };
 		9BB4FEAE2BF3E3BB000785BA /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
@@ -164,10 +169,10 @@
 		A04388FD2C3FE394007B83C0 /* VoiceNoteContentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceNoteContentViewModel.swift; sourceTree = "<group>"; };
 		A04389022C3FE3B2007B83C0 /* AudioMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMessageView.swift; sourceTree = "<group>"; };
 		A04389032C3FE3B2007B83C0 /* AudioMessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel.swift; sourceTree = "<group>"; };
-		A04389072C3FE6E5007B83C0 /* Waveform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Waveform.swift; sourceTree = "<group>"; };
 		A05C1A002BEB74B700724B6E /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		A05C1A022BEB74C200724B6E /* ChatListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewModel.swift; sourceTree = "<group>"; };
 		A05C1AC42BECCF4B00724B6E /* Extensions+Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Message.swift"; sourceTree = "<group>"; };
+		A06AE8602CCAB85C003282B2 /* WebpStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebpStickerView.swift; sourceTree = "<group>"; };
 		A07438E62BD10D2D00945CB5 /* Mercury.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mercury.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mercury Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438F12BD10D2D00945CB5 /* MercuryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercuryApp.swift; sourceTree = "<group>"; };
@@ -190,9 +195,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */,
+				A07D48E12CC93D9900DC34EF /* DSWaveformImageViews in Frameworks */,
+				A0524FAE2CC8EC4E0021D3FA /* DSWaveformImage in Frameworks */,
+				A0524FB02CC8EC4E0021D3FA /* DSWaveformImageViews in Frameworks */,
 				A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */,
+				A09F310F2CC0487700F6ACC8 /* SwiftOGG in Frameworks */,
+				A06AE85C2CCAB6EE003282B2 /* DSWaveformImageViews in Frameworks */,
+				A07D48DF2CC93D9900DC34EF /* DSWaveformImage in Frameworks */,
+				A06AE85F2CCAB812003282B2 /* SDWebImageWebPCoder in Frameworks */,
 				A0951E982C95CDFE00CF638C /* QRCode in Frameworks */,
-				9BACFAA02CBFC9A0000E44C3 /* SDWebImageWebPCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +272,6 @@
 				4A01E2042BF765D800EBC96D /* TdImageView.swift */,
 				4A5D784C2BEBA7C200D9D805 /* AvatarView.swift */,
 				9BB920E02C3D95320023C616 /* UserCellView.swift */,
-				A04389072C3FE6E5007B83C0 /* Waveform.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -367,7 +378,7 @@
 			children = (
 				9B039F452C667FCF00CB6BE4 /* LocationContentView.swift */,
 				9BFE1AAB2C82045300B3BBFC /* PillMessageView.swift */,
-				9B85FD182CC3B08B00C90938 /* WebpStickerView.swift */,
+				A06AE8602CCAB85C003282B2 /* WebpStickerView.swift */,
 				A04388FE2C3FE394007B83C0 /* VoiceNote */,
 			);
 			path = Contents;
@@ -491,7 +502,14 @@
 			packageProductDependencies = (
 				A0054EA52BF3E12F009F2CEB /* TDLibKit */,
 				A0951E972C95CDFE00CF638C /* QRCode */,
-				9BACFA9F2CBFC9A0000E44C3 /* SDWebImageWebPCoder */,
+				A09F310E2CC0487700F6ACC8 /* SwiftOGG */,
+				A0524FAD2CC8EC4E0021D3FA /* DSWaveformImage */,
+				A0524FAF2CC8EC4E0021D3FA /* DSWaveformImageViews */,
+				A07D48DE2CC93D9900DC34EF /* DSWaveformImage */,
+				A07D48E02CC93D9900DC34EF /* DSWaveformImageViews */,
+				A06AE8592CCAB6EE003282B2 /* DSWaveformImage */,
+				A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */,
+				A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */,
 			);
 			productName = "Mercury Watch App";
 			productReference = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */;
@@ -527,7 +545,9 @@
 			packageReferences = (
 				A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */,
 				A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */,
-				9BACFA9E2CBFC9A0000E44C3 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
+				A09F310D2CC0487700F6ACC8 /* XCRemoteSwiftPackageReference "swift-ogg" */,
+				A06AE8582CCAB6EE003282B2 /* XCRemoteSwiftPackageReference "DSWaveformImage" */,
+				A06AE85D2CCAB812003282B2 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 			);
 			productRefGroup = A07438E72BD10D2D00945CB5 /* Products */;
 			projectDirPath = "";
@@ -589,6 +609,7 @@
 				9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */,
 				9BAC54B82C00CCD90055F1EE /* Chat+Mock.swift in Sources */,
 				A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */,
+				A06AE8612CCAB85C003282B2 /* WebpStickerView.swift in Sources */,
 				A04389012C3FE395007B83C0 /* VoiceNoteContentViewModel.swift in Sources */,
 				A027C3FF2C0C6EEB0056BF67 /* LoggerService.swift in Sources */,
 				9BB920E32C3D9B8B0023C616 /* SettingsViewModel.swift in Sources */,
@@ -605,13 +626,11 @@
 				9B2E1BE02C08739800B9B63D /* BubbleShape.swift in Sources */,
 				9B2805D02C4687DC00F7DF72 /* SendingLoaderView.swift in Sources */,
 				9B0F6AB92C01F0AE00568319 /* MockChatListViewModel.swift in Sources */,
-				9B85FD192CC3B08B00C90938 /* WebpStickerView.swift in Sources */,
 				A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */,
 				A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */,
 				A0CF531A2BDFA57A00BA394B /* LoginViewModel.swift in Sources */,
 				A04389052C3FE3B2007B83C0 /* AudioMessageView.swift in Sources */,
 				9B039F482C68176800CB6BE4 /* ReactionsView.swift in Sources */,
-				A04389082C3FE6E5007B83C0 /* Waveform.swift in Sources */,
 				A04389062C3FE3B2007B83C0 /* AudioMessageViewModel.swift in Sources */,
 				4AE620222C09C6CF00722512 /* Extensions+FormattedText.swift in Sources */,
 				9BFE1AAC2C82045300B3BBFC /* PillMessageView.swift in Sources */,
@@ -895,20 +914,28 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		9BACFA9E2CBFC9A0000E44C3 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImageWebPCoder";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.14.6;
-			};
-		};
 		A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swiftgram/TDLibKit";
 			requirement = {
 				kind = revision;
 				revision = 9aa7ba777c6c21fd4bf0710c47c2f6f3beb9c8c9;
+			};
+		};
+		A06AE8582CCAB6EE003282B2 /* XCRemoteSwiftPackageReference "DSWaveformImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mercurytelegram/DSWaveformImage";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		A06AE85D2CCAB812003282B2 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageWebPCoder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.6;
 			};
 		};
 		A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */ = {
@@ -919,23 +946,62 @@
 				minimumVersion = 21.0.3;
 			};
 		};
+		A09F310D2CC0487700F6ACC8 /* XCRemoteSwiftPackageReference "swift-ogg" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mercurytelegram/swift-ogg";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9BACFA9F2CBFC9A0000E44C3 /* SDWebImageWebPCoder */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9BACFA9E2CBFC9A0000E44C3 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
-			productName = SDWebImageWebPCoder;
-		};
 		A0054EA52BF3E12F009F2CEB /* TDLibKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */;
 			productName = TDLibKit;
 		};
+		A0524FAD2CC8EC4E0021D3FA /* DSWaveformImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DSWaveformImage;
+		};
+		A0524FAF2CC8EC4E0021D3FA /* DSWaveformImageViews */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DSWaveformImageViews;
+		};
+		A06AE8592CCAB6EE003282B2 /* DSWaveformImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A06AE8582CCAB6EE003282B2 /* XCRemoteSwiftPackageReference "DSWaveformImage" */;
+			productName = DSWaveformImage;
+		};
+		A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A06AE8582CCAB6EE003282B2 /* XCRemoteSwiftPackageReference "DSWaveformImage" */;
+			productName = DSWaveformImageViews;
+		};
+		A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A06AE85D2CCAB812003282B2 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */;
+			productName = SDWebImageWebPCoder;
+		};
+		A07D48DE2CC93D9900DC34EF /* DSWaveformImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DSWaveformImage;
+		};
+		A07D48E02CC93D9900DC34EF /* DSWaveformImageViews */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DSWaveformImageViews;
+		};
 		A0951E972C95CDFE00CF638C /* QRCode */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A0951E962C95CDFD00CF638C /* XCRemoteSwiftPackageReference "QRCode" */;
 			productName = QRCode;
+		};
+		A09F310E2CC0487700F6ACC8 /* SwiftOGG */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A09F310D2CC0487700F6ACC8 /* XCRemoteSwiftPackageReference "swift-ogg" */;
+			productName = SwiftOGG;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -16,39 +16,36 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     /*
      
      State Diagram:
-                                   ┌───────────────┬──────────────────┬──────────────────┬──> sending ──> Final State
-                                   │               │                  │                  │
-     Initial State ──> recStarted ─┴─> recStopped ─┴─┬─> playStarted ─┴─> playPaused  ───┤
-                                                     │                                   │
-                                                     └───────────────────────────────────┘
+                           ┌───────────────┬───────────────┬─────────────────┬───> sending ──> Final State
+                           │               │               │                 │
+     Initial State ──> recStarted ───> recStopped ───> playStarted ───> playPaused
+                                                           ^                 │
+                                                           └─────────────────┘
      
      Notice: From each state it is possible to reach the cancel
-             state that consist in the sheet dismissal
+     state that consist in the sheet dismissal
      
-    */
+     */
     enum RecordingState {
         case recStarted, recStopped, playStarted, playPaused, sending
     }
     
     @Published var state: RecordingState = .recStarted
-    
-    @Published var waveformData: [Float] = Array(repeating: 0.1, count: Waveform.suggestedSamples)
-    @Published var elapsedTime: TimeInterval = .zero
     @Published var hightlightIndex: Int?
     @Published var isLoadingPlayerWaveform: Bool = false
     
     @Binding var action: ChatAction?
     
-    private var recorder: RecorderService
-    private var player: PlayerService?
+    @Published var recorder: RecorderService
+    @Published var player: PlayerService?
     
-    private var recorderDataCancellable: AnyCancellable?
-    private var playerDataCancellable: AnyCancellable?
+    private var recorderCancellable: AnyCancellable? = nil
+    private var playerCancellable: AnyCancellable? = nil
     
     let filePath: URL
     private let chat: ChatCellModel
     private let logger = LoggerService(AudioMessageViewModel.self)
-      
+    
     init(chat: ChatCellModel, action: Binding<ChatAction?>) {
         
         // Recording file path
@@ -63,66 +60,21 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         
         super.init()
         
-        // Listen for recording sample to insert into waveform data
-        recorderDataCancellable = self.recorder.$waveformSample.sink { [weak self] newValue in
-            guard let self, self.state == .recStarted else { return }
-            self.manageRecorderSample(newValue)
-        }
-        
-        // Listen for playing time
-        playerDataCancellable = self.player?.$elapsedTime.sink { [weak self] value in
-            guard let self, self.state == .playStarted else { return }
-            self.managePlayerElapsedTime(value)
+        recorderCancellable = recorder.objectWillChange.sink { [weak self] (_) in
+            self?.objectWillChange.send()
         }
         
     }
     
     deinit {
-        recorderDataCancellable?.cancel()
-    }
-    
-    private func manageRecorderSample(_ sample: Float) {
-        action = .chatActionRecordingVoiceNote
-        DispatchQueue.main.async {
-            withAnimation {
-                self.elapsedTime = self.recorder.elapsedTime
-                self.waveformData.append(sample)
-            }
-        }
-    }
-    
-    private func managePlayerElapsedTime(_ currentTime: TimeInterval) {
-        
-        var hightlightIndex = 0
-        
-        // Check if the current time is within the total time
-//        guard currentTime >= 0 && currentTime <= self.recorder.elapsedTime
-//        else { return }
-        
-        let arraySize = self.waveformData.count
-        
-        // Calculate the index
-        let index = Int((currentTime * Double(arraySize)) / self.recorder.elapsedTime)
-        
-        // Ensure the index does not exceed array size
-        if index >= arraySize {
-            hightlightIndex = arraySize - 1
-        } else {
-            hightlightIndex = index
-        }
-        
-        DispatchQueue.main.async {
-            withAnimation {
-                self.hightlightIndex = hightlightIndex
-                self.elapsedTime = currentTime
-            }
-        }
+        recorderCancellable?.cancel()
+        playerCancellable?.cancel()
     }
     
     /// Returns true if has recording permission, false otherwise
     func onAppear() async -> Bool {
         let hasPermission = await AVAudioApplication.requestRecordPermission()
-        if hasPermission { 
+        if hasPermission {
             self.recorder.initAudioRecorder()
             self.recorder.startRecordingAudio()
         }
@@ -144,7 +96,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         case .recStopped, .playPaused:
             player?.startPlayingAudio()
             state = .playStarted
-                    
+            
         case .playStarted:
             player?.stopPlayingAudio()
             state = .playPaused
@@ -168,35 +120,19 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     }
     
     private func createPlayer() {
-        
         DispatchQueue.main.async {
-            self.isLoadingPlayerWaveform = true
-        }
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            
             do {
+                self.isLoadingPlayerWaveform = true
                 self.player = try PlayerService(audioFilePath: self.filePath, delegate: self)
+                self.playerCancellable = self.player!.objectWillChange.sink { [weak self] (_) in
+                    self?.objectWillChange.send()
+                }
+                self.isLoadingPlayerWaveform = false
             } catch {
                 self.logger.log(error, level: .error)
             }
-            
-            let data = Array(self.waveformData.dropFirst(Waveform.suggestedSamples))
-            
-            guard let min = data.min(), let max = data.max()
-            else { return }
-            
-            let aggregatedData = Waveform.aggregate(data)
-            let normalizedData = Waveform.normalize(aggregatedData, from: (min, max))
-
-            DispatchQueue.main.async {
-                self.isLoadingPlayerWaveform = false
-                self.waveformData = normalizedData
-                self.state = .recStopped
-            }
-            
+            self.state = .recStopped
         }
-        
     }
     
 }

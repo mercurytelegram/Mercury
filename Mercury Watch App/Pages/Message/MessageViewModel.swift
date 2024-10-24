@@ -195,8 +195,12 @@ class MessageViewModel: TDLibViewModel {
         message.replyTo != nil
     }
     
-    var replyColor: Color {
+    var replyForegroundColor: Color {
         message.isOutgoing ? .white : .blue
+    }
+    
+    var replyBackgroundColor: Color {
+        message.isOutgoing ? .blue : .white
     }
     
     private func initUser() {

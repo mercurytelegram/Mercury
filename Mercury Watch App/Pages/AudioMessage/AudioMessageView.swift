@@ -9,6 +9,7 @@ import SwiftUI
 import Charts
 import AVFAudio
 import TDLibKit
+import DSWaveformImageViews
 
 struct AudioMessageView: View {
     
@@ -23,7 +24,7 @@ struct AudioMessageView: View {
     }
     
     var elapsedTime: String {
-        let time = vm.elapsedTime
+        let time = (vm.state == .playStarted ? vm.player?.elapsedTime : vm.recorder.elapsedTime) ?? 0
         let seconds = Int(time.truncatingRemainder(dividingBy: 60))
         let minutes = Int(time / 60)
         return String(format:"%02d:%02d", minutes, seconds)
@@ -57,9 +58,13 @@ struct AudioMessageView: View {
     
     var body: some View {
         
-        Waveform(
-            data: vm.state == .recStopped ? vm.waveformData : vm.waveformData.suffix(Waveform.suggestedSamples),
-            highlightIndex: vm.hightlightIndex
+        WaveformLiveCanvas(
+            samples: vm.recorder.waveformSamples,
+            configuration: .init(
+                style: .striped(),
+                verticalScalingFactor: 0.3
+            ),
+            shouldDrawSilencePadding: true
         )
         .overlay {
             if vm.isLoadingPlayerWaveform {
@@ -73,7 +78,7 @@ struct AudioMessageView: View {
                 Button("Send", systemImage: "arrow.up") {
                     isPresented = false
                     if vm.didPressSendButton() {
-                        onSend(vm.filePath, vm.elapsedTime)
+                        onSend(vm.filePath, vm.recorder.elapsedTime)
                     }
                 }
                 .foregroundStyle(.white, .blue)

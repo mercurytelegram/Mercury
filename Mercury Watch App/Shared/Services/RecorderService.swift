@@ -11,9 +11,8 @@ import AVFoundation
 
 class RecorderService: NSObject, ObservableObject {
     
-    static let updateInterval: Double = 0.20
-    
-    @Published var waveformSample: Float = 0
+    static let updateInterval: Double = 0.01
+    @Published var waveformSamples: [Float] = []
     @Published var elapsedTime: TimeInterval = .zero
     
     private var audioRecorder: AVAudioRecorder?
@@ -80,18 +79,28 @@ class RecorderService: NSObject, ObservableObject {
     
     func updateWaveform() {
         
-        if audioRecorder?.isRecording ?? false {
-            audioRecorder?.updateMeters()
-            
-            // Gives -160...0 values
-            guard let decibel = audioRecorder?.averagePower(forChannel: 0)
-            else { return }
-            
-            let normalizedSample = Waveform.normalize(decibel, from: (-100, 0))
-            
-            self.waveformSample = normalizedSample
-            self.elapsedTime += RecorderService.updateInterval
-        }
+        guard audioRecorder?.isRecording ?? false
+        else { return }
+        
+        audioRecorder?.updateMeters()
+        
+        // Gives -160...0 values
+        guard let decibel = audioRecorder?.averagePower(forChannel: 0)
+        else { return }
+        
+        // Normalization parameters
+        typealias MinMax = (min: Float, max: Float)
+        let normalizationFrom: MinMax = (-60, -20)
+        let normalizationTo: MinMax = (1.0, 0.1)
+        
+        // Calculate the normalized value
+        let normalizedValue = (decibel - normalizationFrom.min) / (normalizationFrom.max - normalizationFrom.min)
+        
+        // Scale the normalized value to the end range
+        let scaledNormalizedValue = (normalizedValue * (normalizationTo.max - normalizationTo.min)) + normalizationTo.min
+        
+        self.waveformSamples.append(scaledNormalizedValue)
+        self.elapsedTime += RecorderService.updateInterval
         
     }
     
@@ -104,9 +113,10 @@ class RecorderService: NSObject, ObservableObject {
     func stopRecordingAudio() {
         logger.log("Stop recording")
         audioRecorder?.stop()
+        waveformTimer?.invalidate()
     }
     
     func clearWaveform() {
-        waveformSample = 0
+        waveformSamples = []
     }
 }
