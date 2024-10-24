@@ -19,10 +19,11 @@ class PlayerService: NSObject, ObservableObject {
     private var audioPlayer: AVAudioPlayer?
     private let logger = LoggerService(PlayerService.self)
     var elapsedTimeTimer: Timer?
+    var filePath: URL
     
     init(audioFilePath: URL, delegate: AVAudioPlayerDelegate) throws {
         
-        var filePath = audioFilePath
+        self.filePath = audioFilePath
         
         // if audio file format is oga or ogg, convert to m4a
         if audioFilePath.pathExtension == "oga" || audioFilePath.pathExtension == "ogg" {
@@ -33,18 +34,18 @@ class PlayerService: NSObject, ObservableObject {
                 try OGGConverter.convertOpusOGGToM4aFile(src: audioFilePath, dest: dest)
             }
             
-            filePath = dest
+            self.filePath = dest
         }
         
         super.init()
         
-        logger.log(filePath.absoluteString, level: .debug)
+        logger.log(self.filePath.absoluteString, level: .debug)
         
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.playback, mode: .default)
         try audioSession.setActive(true)
         
-        audioPlayer = try AVAudioPlayer(contentsOf: filePath)
+        audioPlayer = try AVAudioPlayer(contentsOf: self.filePath)
         audioPlayer?.delegate = delegate
         audioPlayer?.isMeteringEnabled = true
         audioPlayer?.volume = 1.0

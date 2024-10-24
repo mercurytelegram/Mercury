@@ -7,10 +7,12 @@
 
 import SwiftUI
 import TDLibKit
+import DSWaveformImageViews
 
 struct VoiceNoteContentView: View {
     
     @StateObject var vm: VoiceNoteContentViewModel
+    @EnvironmentObject var messageVM: MessageViewModel
     
     init(message: MessageVoiceNote) {
         self._vm = StateObject(wrappedValue: VoiceNoteContentViewModel(message: message))
@@ -26,11 +28,13 @@ struct VoiceNoteContentView: View {
                 
                 ZStack {
                     ProgressView().opacity(vm.loading ? 1 : 0)
-                    Image(systemName: vm.playing ? "pause.fill" : "play.fill").opacity(vm.loading ? 0 : 1)
+                    Image(systemName: vm.playing ? "pause.fill" : "play.fill")
+                        .opacity(vm.loading ? 0 : 1)
+                        .foregroundStyle(messageVM.replyBackgroundColor)
                 }
                 .font(.system(size: 24))
                 .padding(12)
-                .background(Color.blue)
+                .background(messageVM.replyForegroundColor)
                 .clipShape(Circle())
                 
             })
@@ -45,14 +49,22 @@ struct VoiceNoteContentView: View {
                     let minutes = Int(time / 60)
                     return String(format:"%02d:%02d", minutes, seconds)
                 }
-            
-                Waveform(data: vm.waveformData)
-                .frame(height: 42, alignment: .leading)
+                
+                if let url = vm.fileUrl {
+                    WaveformView(
+                        audioURL: url,
+                        configuration: .init(
+                            style: .striped(.init(color: UIColor(messageVM.replyForegroundColor))),
+                            verticalScalingFactor: 0.4
+                        )
+                    )
+                    .frame(height: 42, alignment: .leading)
+                }
                 
                 Text(elapsedTime)
                     .font(.system(size: 15))
                     .bold()
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(messageVM.replyForegroundColor)
             }
         }
     }
