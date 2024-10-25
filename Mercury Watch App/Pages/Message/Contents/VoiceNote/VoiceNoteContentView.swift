@@ -27,7 +27,9 @@ struct VoiceNoteContentView: View {
             }, label: {
                 
                 ZStack {
-                    ProgressView().opacity(vm.loading ? 1 : 0)
+                    ProgressView()
+                        .opacity(vm.loading ? 1 : 0)
+                        .foregroundStyle(messageVM.replyBackgroundColor)
                     Image(systemName: vm.playing ? "pause.fill" : "play.fill")
                         .opacity(vm.loading ? 0 : 1)
                         .foregroundStyle(messageVM.replyBackgroundColor)
