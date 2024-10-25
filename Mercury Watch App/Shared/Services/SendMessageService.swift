@@ -7,6 +7,7 @@
 
 import Foundation
 import TDLibKit
+import SwiftOGG
 
 class SendMessageService {
     
@@ -45,7 +46,22 @@ class SendMessageService {
         
         Task {
             do {
-                let audioFile: InputFile = .inputFileLocal(.init(path: filePath.relativePath))
+                
+                var audioFilePath = filePath
+                
+                // if audio file format is m4a, convert to ogg for faster upload
+                if audioFilePath.pathExtension == "m4a" {
+                    let dest: URL = audioFilePath.deletingPathExtension().appendingPathExtension("ogg")
+                    
+                    // Check if file has been already converted
+                    if !FileManager.default.fileExists(atPath: dest.absoluteString) {
+                        try OGGConverter.convertM4aFileToOpusOGG(src: audioFilePath, dest: dest)
+                    }
+                    
+                    audioFilePath = dest
+                }
+                
+                let audioFile: InputFile = .inputFileLocal(.init(path: audioFilePath.relativePath))
                 let audioWaveform = try Data(contentsOf: filePath)
                 
                 let audio: InputMessageVoiceNote = .init(
@@ -65,7 +81,6 @@ class SendMessageService {
                     replyTo: nil
                 )
     
-//             try FileManager.default.removeItem(at: filePath)
                 self.logger.log(result)
     
             } catch {

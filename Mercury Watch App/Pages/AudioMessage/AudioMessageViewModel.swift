@@ -50,9 +50,9 @@ class AudioMessageViewModel: NSObject, ObservableObject {
         
         // Recording file path
         let recName = "\(UUID().uuidString).m4a"
-        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let tmpFolder = FileManager.default.tmpFolder
         
-        self.filePath = (urls[0] as URL).appendingPathComponent(recName)
+        self.filePath = tmpFolder.appendingPathComponent(recName)
         self.recorder = RecorderService(recFilePath: filePath)
         self.chat = chat
         self.state = .recStarted

@@ -88,6 +88,7 @@
 		A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53262BDFD78900BA394B /* TDLibManager.swift */; };
 		A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */; };
 		A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */; };
+		A0DF848A2CCB9A7500CC101E /* Extensions+FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF84892CCB9A6F00CC101E /* Extensions+FileManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,6 +188,7 @@
 		A0CF53262BDFD78900BA394B /* TDLibManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManager.swift; sourceTree = "<group>"; };
 		A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManagerProtocols.swift; sourceTree = "<group>"; };
 		A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibViewModel.swift; sourceTree = "<group>"; };
+		A0DF84892CCB9A6F00CC101E /* Extensions+FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+FileManager.swift"; sourceTree = "<group>"; };
 		A0F63BD82BD63B0500F7135E /* Mercury-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mercury-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -240,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				A05C1AC42BECCF4B00724B6E /* Extensions+Message.swift */,
+				A0DF84892CCB9A6F00CC101E /* Extensions+FileManager.swift */,
 				4AE620212C09C6CF00722512 /* Extensions+FormattedText.swift */,
 				A081AAD62C072536002A265C /* Extensions+MessageSender.swift */,
 				A081AAD42C0721C2002A265C /* Extensions+Chat.swift */,
@@ -637,6 +640,7 @@
 				4A5D784D2BEBA7C200D9D805 /* AvatarView.swift in Sources */,
 				A04388FA2C3FE384007B83C0 /* RecorderService.swift in Sources */,
 				4AE6201F2C09C4E900722512 /* ChatCellModel+Mock.swift in Sources */,
+				A0DF848A2CCB9A7500CC101E /* Extensions+FileManager.swift in Sources */,
 				4AE6201B2C09C43500722512 /* MockMessageViewModel.swift in Sources */,
 				9B778D1E2C91F8B30022B093 /* MessageOptionsViewModel.swift in Sources */,
 				9B4451F82C45C5F900A6EBC2 /* MockSettingsViewModel.swift in Sources */,

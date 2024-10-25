@@ -64,9 +64,18 @@ class PlayerService: NSObject, ObservableObject {
         elapsedTimeTimer?.invalidate()
         audioPlayer?.stop()
         audioPlayer = nil
+        removeM4aAudio()
     }
     
-    func startTimer() {
+    private func removeM4aAudio() {
+        do {
+            try FileManager.default.removeItem(at: self.filePath)
+        } catch {
+            logger.log(error, level: .error)
+        }
+    }
+    
+    private func startTimer() {
         guard let timer = self.elapsedTimeTimer else { return }
         let queue = DispatchQueue.global(qos: .userInteractive)
         
