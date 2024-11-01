@@ -25,6 +25,9 @@ class ChatListViewModel: TDLibViewModel {
         super.updateHandler(update: update)
         DispatchQueue.main.async {
             switch update {
+                
+            case .updateChatRemovedFromList(let update):
+                self.removeChat(chatId: update.chatId)
             
             // Chat metadata update
             case .updateUserStatus(let update):
@@ -68,6 +71,14 @@ class ChatListViewModel: TDLibViewModel {
         // if state is connecting, request chats will load cached chats
         // if state is ready, request chats will load chats from server
         self.requestChats()
+    }
+    
+    func removeChat(chatId: Int64) {
+        DispatchQueue.main.async {
+            withAnimation {
+                self.chats.removeAll { c in c.td.id == chatId }
+            }
+        }
     }
     
     func requestChats() {
