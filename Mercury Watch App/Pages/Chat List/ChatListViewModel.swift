@@ -230,7 +230,7 @@ class ChatListViewModel: TDLibViewModel {
     func updateChatPosition(chatId: Int64, positions: [ChatPosition]) {
         
         let position = positions.first { p in
-            p.list == .chatListMain
+            p.list == currentFolder.chatList
         }
         
         let index = self.chats.firstIndex {
