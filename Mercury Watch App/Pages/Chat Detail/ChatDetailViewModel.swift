@@ -17,6 +17,7 @@ class ChatDetailViewModel: TDLibViewModel {
     @Published var showStickersView = false
     @Published var showOptionsView = false
     @Published var selectedMessage: Message?
+    @Published var chat: ChatCellModel
     
     var chatAction: ChatAction?
     var chatActionTimer: Timer?
@@ -36,7 +37,6 @@ class ChatDetailViewModel: TDLibViewModel {
         return self.chat.td.permissions.canSendOtherMessages
     }
     
-    let chat: ChatCellModel
     let sendService: SendMessageService
     
     init(chat: ChatCellModel, sendService: SendMessageService? = nil) {
@@ -63,6 +63,8 @@ class ChatDetailViewModel: TDLibViewModel {
     override func updateHandler(update: Update) {
         super.updateHandler(update: update)
         switch update {
+        case .updateUserStatus(let update):
+            self.updateUserStatus(userId: update.userId, status: update.status)
         case .updateNewMessage(let update):
             self.updateNewMessage(chatId: update.message.chatId, message: update.message)
         case .updateDeleteMessages(let update):
@@ -108,6 +110,22 @@ class ChatDetailViewModel: TDLibViewModel {
                     }
                     
                 }
+            }
+        }
+    }
+    
+    func updateUserStatus(userId: Int64, status: UserStatus) {
+
+        guard userId == self.chat.userId else { return }
+        
+        DispatchQueue.main.async {
+            switch status {
+            case .userStatusOnline(_):
+                self.chat.avatar.isOnline = true
+            case .userStatusOffline(_):
+                self.chat.avatar.isOnline = false
+            default:
+                break
             }
         }
     }
