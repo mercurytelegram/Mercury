@@ -15,7 +15,7 @@ struct LottieView: View {
     }
     
     var body: some View {
-        TimelineView(.periodic(from: .now, by: 1/20)) { _ in
+        TimelineView(.animation(minimumInterval: 1/20)) { _ in
             
             if let image = lottie.getImage() {
                 Image(uiImage: image)

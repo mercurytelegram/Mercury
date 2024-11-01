@@ -16,7 +16,8 @@ struct TgsStickerView: View {
             if let data {
                 LottieView(from: data)
             } else {
-                Spacer()
+                Text(sticker.emoji)
+                    .font(.largeTitle)
             }
         }
         .task {
