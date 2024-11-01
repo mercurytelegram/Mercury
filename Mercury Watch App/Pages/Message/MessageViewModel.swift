@@ -64,8 +64,20 @@ class MessageViewModel: TDLibViewModel {
             updateMessageInteractionInfo(update)
         case .updateChatReadOutbox(let update):
             updateChatReadOutbox(chatId: update.chatId, latestReadMessageId: update.lastReadOutboxMessageId)
+        case .updateMessageContentOpened(let update):
+            updateMessageContentOpened(update)
         default:
             break
+        }
+    }
+    
+    private func updateMessageContentOpened(_ update: UpdateMessageContentOpened) {
+        guard update.messageId == self.message.id else { return }
+        
+        DispatchQueue.main.async {
+            withAnimation {
+                self.message = self.message.setVoiceNoteListened()
+            }
         }
     }
     
@@ -74,7 +86,7 @@ class MessageViewModel: TDLibViewModel {
         
         DispatchQueue.main.async {
             withAnimation {
-                self.message = self.message.setinteractionInfo(update.interactionInfo)
+                self.message = self.message.copyWith(interactionInfo: update.interactionInfo)
             }
         }
     }
@@ -211,6 +223,19 @@ class MessageViewModel: TDLibViewModel {
                 withAnimation {
                     self.user = user
                 }
+            }
+        }
+    }
+    
+    func markContentAsOpened() {
+        Task.detached(priority: .userInitiated) {
+            do {
+                try await TDLibManager.shared.client?.openMessageContent(
+                    chatId: self.chat.td.id,
+                    messageId: self.message.id
+                )
+            } catch {
+                self.logger.log(error, level: .error)
             }
         }
     }

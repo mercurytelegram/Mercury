@@ -58,12 +58,12 @@ extension MessageContent {
         return AttributedString(stringMessage)
     }
 }
-    
+
 extension Message {
     var description: AttributedString {
         self.content.description
     }
-
+    
     var errorSending: Bool {
         
         switch self.sendingState {
@@ -75,53 +75,112 @@ extension Message {
         
     }
     
-    func setinteractionInfo(_ info: MessageInteractionInfo?) -> Message {
-        Message(
-            authorSignature: self.authorSignature,
-            autoDeleteIn: self.autoDeleteIn,
-            canBeDeletedForAllUsers: self.canBeDeletedForAllUsers,
-            canBeDeletedOnlyForSelf: self.canBeDeletedOnlyForSelf,
-            canBeEdited: self.canBeEdited,
-            canBeForwarded: self.canBeForwarded,
-            canBeRepliedInAnotherChat: self.canBeRepliedInAnotherChat,
-            canBeSaved: self.canBeSaved,
-            canGetAddedReactions: self.canGetAddedReactions,
-            canGetMediaTimestampLinks: self.canGetMediaTimestampLinks,
-            canGetMessageThread: self.canGetMessageThread,
-            canGetReadDate: self.canGetReadDate,
-            canGetStatistics: self.canGetStatistics,
-            canGetViewers: self.canGetViewers,
-            canReportReactions: self.canReportReactions,
-            chatId: self.chatId,
-            containsUnreadMention: self.containsUnreadMention,
-            content: self.content,
-            date: self.date,
-            editDate: self.editDate,
-            forwardInfo: self.forwardInfo,
-            hasTimestampedMedia: self.hasTimestampedMedia,
-            id: self.id,
-            importInfo: self.importInfo,
-            interactionInfo: info,
-            isChannelPost: self.isChannelPost,
-            isFromOffline: self.isFromOffline,
-            isOutgoing: self.isOutgoing,
-            isPinned: self.isPinned,
-            isTopicMessage: self.isTopicMessage,
-            mediaAlbumId: self.mediaAlbumId,
-            messageThreadId: self.messageThreadId,
-            replyMarkup: self.replyMarkup,
-            replyTo: self.replyTo,
-            restrictionReason: self.restrictionReason,
-            savedMessagesTopicId: self.savedMessagesTopicId,
-            schedulingState: self.schedulingState,
-            selfDestructIn: self.selfDestructIn,
-            selfDestructType: self.selfDestructType,
-            senderBoostCount: self.senderBoostCount,
-            senderBusinessBotUserId: self.senderBusinessBotUserId,
-            senderId: self.senderId,
-            sendingState: self.sendingState,
-            unreadReactions: self.unreadReactions,
-            viaBotUserId: self.viaBotUserId
+    func setVoiceNoteListened() -> Message {
+        
+        var newVoiceNote: MessageVoiceNote
+        if case .messageVoiceNote(let voiceNote) = content {
+            newVoiceNote = MessageVoiceNote(caption: voiceNote.caption, isListened: true, voiceNote: voiceNote.voiceNote)
+        } else {
+            return self
+        }
+        
+        let newContent = MessageContent.messageVoiceNote(newVoiceNote)
+        return self.copyWith(content: newContent)
+    }
+    
+    func copyWith(
+        authorSignature: String? = nil,
+        autoDeleteIn: Double? = nil,
+        canBeDeletedForAllUsers: Bool? = nil,
+        canBeDeletedOnlyForSelf: Bool? = nil,
+        canBeEdited: Bool? = nil,
+        canBeForwarded: Bool? = nil,
+        canBeRepliedInAnotherChat: Bool? = nil,
+        canBeSaved: Bool? = nil,
+        canGetAddedReactions: Bool? = nil,
+        canGetMediaTimestampLinks: Bool? = nil,
+        canGetMessageThread: Bool? = nil,
+        canGetReadDate: Bool? = nil,
+        canGetStatistics: Bool? = nil,
+        canGetViewers: Bool? = nil,
+        canReportReactions: Bool? = nil,
+        chatId: Int64? = nil,
+        containsUnreadMention: Bool? = nil,
+        content: MessageContent? = nil,
+        date: Int? = nil,
+        editDate: Int? = nil,
+        forwardInfo: MessageForwardInfo? = nil,
+        hasTimestampedMedia: Bool? = nil,
+        id: Int64? = nil,
+        importInfo: MessageImportInfo? = nil,
+        interactionInfo: MessageInteractionInfo? = nil,
+        isChannelPost: Bool? = nil,
+        isFromOffline: Bool? = nil,
+        isOutgoing: Bool? = nil,
+        isPinned: Bool? = nil,
+        isTopicMessage: Bool? = nil,
+        mediaAlbumId: TdInt64? = nil,
+        messageThreadId: Int64? = nil,
+        replyMarkup: ReplyMarkup? = nil,
+        replyTo: MessageReplyTo? = nil,
+        restrictionReason: String? = nil,
+        savedMessagesTopicId: Int64? = nil,
+        schedulingState: MessageSchedulingState? = nil,
+        selfDestructIn: Double? = nil,
+        selfDestructType: MessageSelfDestructType? = nil,
+        senderBoostCount: Int? = nil,
+        senderBusinessBotUserId: Int64? = nil,
+        senderId: MessageSender? = nil,
+        sendingState: TDLibKit.MessageSendingState? = nil,
+        unreadReactions: [UnreadReaction]? = nil,
+        viaBotUserId: Int64? = nil
+    ) -> Message {
+        return Message(
+            authorSignature: authorSignature ?? self.authorSignature,
+            autoDeleteIn: autoDeleteIn ?? self.autoDeleteIn,
+            canBeDeletedForAllUsers: canBeDeletedForAllUsers ?? self.canBeDeletedForAllUsers,
+            canBeDeletedOnlyForSelf: canBeDeletedOnlyForSelf ?? self.canBeDeletedOnlyForSelf,
+            canBeEdited: canBeEdited ?? self.canBeEdited,
+            canBeForwarded: canBeForwarded ?? self.canBeForwarded,
+            canBeRepliedInAnotherChat: canBeRepliedInAnotherChat ?? self.canBeRepliedInAnotherChat,
+            canBeSaved: canBeSaved ?? self.canBeSaved,
+            canGetAddedReactions: canGetAddedReactions ?? self.canGetAddedReactions,
+            canGetMediaTimestampLinks: canGetMediaTimestampLinks ?? self.canGetMediaTimestampLinks,
+            canGetMessageThread: canGetMessageThread ?? self.canGetMessageThread,
+            canGetReadDate: canGetReadDate ?? self.canGetReadDate,
+            canGetStatistics: canGetStatistics ?? self.canGetStatistics,
+            canGetViewers: canGetViewers ?? self.canGetViewers,
+            canReportReactions: canReportReactions ?? self.canReportReactions,
+            chatId: chatId ?? self.chatId,
+            containsUnreadMention: containsUnreadMention ?? self.containsUnreadMention,
+            content: content ?? self.content,
+            date: date ?? self.date,
+            editDate: editDate ?? self.editDate,
+            forwardInfo: forwardInfo ?? self.forwardInfo,
+            hasTimestampedMedia: hasTimestampedMedia ?? self.hasTimestampedMedia,
+            id: id ?? self.id,
+            importInfo: importInfo ?? self.importInfo,
+            interactionInfo: interactionInfo ?? self.interactionInfo,
+            isChannelPost: isChannelPost ?? self.isChannelPost,
+            isFromOffline: isFromOffline ?? self.isFromOffline,
+            isOutgoing: isOutgoing ?? self.isOutgoing,
+            isPinned: isPinned ?? self.isPinned,
+            isTopicMessage: isTopicMessage ?? self.isTopicMessage,
+            mediaAlbumId: mediaAlbumId ?? self.mediaAlbumId,
+            messageThreadId: messageThreadId ?? self.messageThreadId,
+            replyMarkup: replyMarkup ?? self.replyMarkup,
+            replyTo: replyTo ?? self.replyTo,
+            restrictionReason: restrictionReason ?? self.restrictionReason,
+            savedMessagesTopicId: savedMessagesTopicId ?? self.savedMessagesTopicId,
+            schedulingState: schedulingState ?? self.schedulingState,
+            selfDestructIn: selfDestructIn ?? self.selfDestructIn,
+            selfDestructType: selfDestructType ?? self.selfDestructType,
+            senderBoostCount: senderBoostCount ?? self.senderBoostCount,
+            senderBusinessBotUserId: senderBusinessBotUserId ?? self.senderBusinessBotUserId,
+            senderId: senderId ?? self.senderId,
+            sendingState: sendingState ?? self.sendingState,
+            unreadReactions: unreadReactions ?? self.unreadReactions,
+            viaBotUserId: viaBotUserId ?? self.viaBotUserId
         )
     }
     

@@ -11,11 +11,11 @@ import DSWaveformImageViews
 
 struct VoiceNoteContentView: View {
     
-    @StateObject var vm: VoiceNoteContentViewModel
+    @ObservedObject var vm: VoiceNoteContentViewModel
     @EnvironmentObject var messageVM: MessageViewModel
     
     init(message: MessageVoiceNote) {
-        self._vm = StateObject(wrappedValue: VoiceNoteContentViewModel(message: message))
+        self.vm = VoiceNoteContentViewModel(message: message)
     }
     
     var body: some View {
@@ -24,6 +24,7 @@ struct VoiceNoteContentView: View {
             
             Button(action: {
                 vm.play()
+                messageVM.markContentAsOpened()
             }, label: {
                 
                 ZStack {
@@ -63,10 +64,19 @@ struct VoiceNoteContentView: View {
                     .frame(height: 42, alignment: .leading)
                 }
                 
-                Text(elapsedTime)
-                    .font(.system(size: 15))
-                    .bold()
-                    .foregroundStyle(messageVM.replyForegroundColor)
+                HStack {
+                    Text(elapsedTime)
+                        .font(.system(size: 15))
+                        .bold()
+                    
+                    if !vm.message.isListened {
+                        Circle()
+                            .frame(width: 6, height: 6)
+                    }
+                    
+                }
+                .foregroundStyle(messageVM.replyForegroundColor)
+                
             }
         }
     }
