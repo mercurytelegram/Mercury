@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TDLibKit
+import Gzip
 
 
 class FileService {
@@ -64,5 +65,21 @@ class FileService {
         }
         
         return filePath
+    }
+    
+    static func getLottieJson(for tgsPath: URL) -> Data? {
+        let zipPath = tgsPath.deletingPathExtension().appendingPathExtension("zip")
+        
+        do {
+            // Change file extension
+            if !FileManager.default.fileExists(atPath: zipPath.path) {
+                try FileManager.default.copyItem(at: tgsPath, to: zipPath)
+            }
+            let sourceData = try Data(contentsOf: zipPath)
+            let lottieJSONData = try sourceData.gunzipped()
+            return lottieJSONData
+        } catch {
+            return nil
+        }
     }
 }

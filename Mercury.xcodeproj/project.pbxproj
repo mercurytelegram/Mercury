@@ -44,6 +44,12 @@
 		9B778D212C92D7760022B093 /* MockMessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */; };
 		9B8493E82C7623B700AC90E9 /* Extensions+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* Extensions+View.swift */; };
 		9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E92C76241400AC90E9 /* MockTDImage.swift */; };
+		9BAA75DA2CD4EDDA0007B4E2 /* LottieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAA75D92CD4EDDA0007B4E2 /* LottieService.swift */; };
+		9BAA75DD2CD4EE370007B4E2 /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */; };
+		9BAA75DF2CD4EF9C0007B4E2 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAA75DE2CD4EF9C0007B4E2 /* LottieView.swift */; };
+		9BAA75E12CD4F08A0007B4E2 /* sticker.tgs in Resources */ = {isa = PBXBuildFile; fileRef = 9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */; };
+		9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75E32CD4F1620007B4E2 /* Gzip */; };
+		9BAA75E72CD4F55E0007B4E2 /* TgsStickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAA75E62CD4F55E0007B4E2 /* TgsStickerView.swift */; };
 		9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */; };
 		9BAC54B82C00CCD90055F1EE /* Chat+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */; };
 		9BB4FEAF2BF3E3BB000785BA /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB4FEAE2BF3E3BB000785BA /* FileService.swift */; };
@@ -153,6 +159,10 @@
 		9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessageOptionsViewModel.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* Extensions+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+View.swift"; sourceTree = "<group>"; };
 		9B8493E92C76241400AC90E9 /* MockTDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTDImage.swift; sourceTree = "<group>"; };
+		9BAA75D92CD4EDDA0007B4E2 /* LottieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieService.swift; sourceTree = "<group>"; };
+		9BAA75DE2CD4EF9C0007B4E2 /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
+		9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */ = {isa = PBXFileReference; lastKnownFileType = file; path = sticker.tgs; sourceTree = "<group>"; };
+		9BAA75E62CD4F55E0007B4E2 /* TgsStickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TgsStickerView.swift; sourceTree = "<group>"; };
 		9BAC54B52C00C5C50055F1EE /* Message+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+Mock.swift"; sourceTree = "<group>"; };
 		9BAC54B72C00CCD90055F1EE /* Chat+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Chat+Mock.swift"; sourceTree = "<group>"; };
 		9BB4FEAE2BF3E3BB000785BA /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
@@ -199,9 +209,11 @@
 			files = (
 				A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */,
 				A07D48E12CC93D9900DC34EF /* DSWaveformImageViews in Frameworks */,
+				9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */,
 				A0524FAE2CC8EC4E0021D3FA /* DSWaveformImage in Frameworks */,
 				A0524FB02CC8EC4E0021D3FA /* DSWaveformImageViews in Frameworks */,
 				A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */,
+				9BAA75DD2CD4EE370007B4E2 /* SDWebImageLottieCoder in Frameworks */,
 				A09F310F2CC0487700F6ACC8 /* SwiftOGG in Frameworks */,
 				A06AE85C2CCAB6EE003282B2 /* DSWaveformImageViews in Frameworks */,
 				A07D48DF2CC93D9900DC34EF /* DSWaveformImage in Frameworks */,
@@ -261,6 +273,7 @@
 			children = (
 				A081AAD02C0638C4002A265C /* SendMessageService.swift */,
 				9BB4FEAE2BF3E3BB000785BA /* FileService.swift */,
+				9BAA75D92CD4EDDA0007B4E2 /* LottieService.swift */,
 				A027C3FE2C0C6EEB0056BF67 /* LoggerService.swift */,
 				A04388F92C3FE384007B83C0 /* PlayerService.swift */,
 				A04388F82C3FE383007B83C0 /* RecorderService.swift */,
@@ -273,6 +286,7 @@
 			children = (
 				9B3AD3512C397F7700CD4EF8 /* AlertView.swift */,
 				4A01E2042BF765D800EBC96D /* TdImageView.swift */,
+				9BAA75DE2CD4EF9C0007B4E2 /* LottieView.swift */,
 				4A5D784C2BEBA7C200D9D805 /* AvatarView.swift */,
 				9BB920E02C3D95320023C616 /* UserCellView.swift */,
 			);
@@ -382,6 +396,7 @@
 				9B039F452C667FCF00CB6BE4 /* LocationContentView.swift */,
 				9BFE1AAB2C82045300B3BBFC /* PillMessageView.swift */,
 				A06AE8602CCAB85C003282B2 /* WebpStickerView.swift */,
+				9BAA75E62CD4F55E0007B4E2 /* TgsStickerView.swift */,
 				A04388FE2C3FE394007B83C0 /* VoiceNote */,
 			);
 			path = Contents;
@@ -454,6 +469,7 @@
 		A07438F72BD10D2F00945CB5 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */,
 				A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -513,6 +529,8 @@
 				A06AE8592CCAB6EE003282B2 /* DSWaveformImage */,
 				A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */,
 				A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */,
+				9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */,
+				9BAA75E32CD4F1620007B4E2 /* Gzip */,
 			);
 			productName = "Mercury Watch App";
 			productReference = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */;
@@ -551,6 +569,8 @@
 				A09F310D2CC0487700F6ACC8 /* XCRemoteSwiftPackageReference "swift-ogg" */,
 				A06AE8582CCAB6EE003282B2 /* XCRemoteSwiftPackageReference "DSWaveformImage" */,
 				A06AE85D2CCAB812003282B2 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
+				9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */,
+				9BAA75E22CD4F1620007B4E2 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = A07438E72BD10D2D00945CB5 /* Products */;
 			projectDirPath = "";
@@ -574,6 +594,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BAA75E12CD4F08A0007B4E2 /* sticker.tgs in Resources */,
 				A07438F92BD10D2F00945CB5 /* Preview Assets.xcassets in Resources */,
 				A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */,
 			);
@@ -610,6 +631,7 @@
 				A026961D2BF3F4A700ACA12C /* ChatDetailViewModel.swift in Sources */,
 				4A5D784B2BEBA71200D9D805 /* ChatCellView.swift in Sources */,
 				9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */,
+				9BAA75DF2CD4EF9C0007B4E2 /* LottieView.swift in Sources */,
 				9BAC54B82C00CCD90055F1EE /* Chat+Mock.swift in Sources */,
 				A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */,
 				A06AE8612CCAB85C003282B2 /* WebpStickerView.swift in Sources */,
@@ -624,6 +646,7 @@
 				4AA1C7CD2BD7CF1600EB01BC /* InfoView.swift in Sources */,
 				9BB920E12C3D95320023C616 /* UserCellView.swift in Sources */,
 				4A01E2052BF765D800EBC96D /* TdImageView.swift in Sources */,
+				9BAA75DA2CD4EDDA0007B4E2 /* LottieService.swift in Sources */,
 				9BB920E92C3DA7360023C616 /* AccountDetailView.swift in Sources */,
 				9BB920E52C3D9CA70023C616 /* User+Mock.swift in Sources */,
 				9B2E1BE02C08739800B9B63D /* BubbleShape.swift in Sources */,
@@ -645,6 +668,7 @@
 				9B778D1E2C91F8B30022B093 /* MessageOptionsViewModel.swift in Sources */,
 				9B4451F82C45C5F900A6EBC2 /* MockSettingsViewModel.swift in Sources */,
 				9B3FC90A2BF3DF2A00CDE217 /* AvatarModel.swift in Sources */,
+				9BAA75E72CD4F55E0007B4E2 /* TgsStickerView.swift in Sources */,
 				A05C1AC52BECCF4B00724B6E /* Extensions+Message.swift in Sources */,
 				A04389002C3FE395007B83C0 /* VoiceNoteContentView.swift in Sources */,
 				4A4743F22BF796DF00264855 /* Extension+Color.swift in Sources */,
@@ -918,6 +942,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageLottieCoder?tab=readme-ov-file";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
+		9BAA75E22CD4F1620007B4E2 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/1024jp/GzipSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.0;
+			};
+		};
 		A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swiftgram/TDLibKit";
@@ -961,6 +1001,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */;
+			productName = SDWebImageLottieCoder;
+		};
+		9BAA75E32CD4F1620007B4E2 /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BAA75E22CD4F1620007B4E2 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
+		};
 		A0054EA52BF3E12F009F2CEB /* TDLibKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A0054EA42BF3E12F009F2CEB /* XCRemoteSwiftPackageReference "TDLibKit" */;

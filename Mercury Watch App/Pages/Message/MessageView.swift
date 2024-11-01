@@ -69,9 +69,17 @@ struct MessageView: View {
                 }
             case .messageSticker(let message):
                 MessageBubbleView(style: .hideBackground) {
-                    WebpStickerView(sticker: message.sticker)
-                        .frame(maxWidth: 100)
-                        .padding()
+                        switch message.sticker.format {
+                        case .stickerFormatWebp:
+                            WebpStickerView(sticker: message.sticker)
+                                .frame(maxWidth: 100)
+                                .padding()
+                        case .stickerFormatTgs:
+                            TgsStickerView(sticker: message.sticker)
+                        case .stickerFormatWebm:
+                            Spacer()
+                        }
+                    
                 }
             default:
                 MessageBubbleView {
