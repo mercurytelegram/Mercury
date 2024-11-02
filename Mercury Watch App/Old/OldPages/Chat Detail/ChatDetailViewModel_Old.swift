@@ -9,7 +9,7 @@ import Foundation
 import TDLibKit
 import SwiftUI
 
-class ChatDetailViewModel: TDLibViewModel {
+class ChatDetailViewModel_Old: TDLibViewModel {
     
     @Published var isLoadingInitialMessages = true
     @Published var messages: [Message] = []

@@ -8,7 +8,7 @@
 import TDLibKit
 import SwiftUI
 
-class MockChatDetailViewModel: ChatDetailViewModel {
+class MockChatDetailViewModel: ChatDetailViewModel_Old {
     
     init(messages: [Message] = [], chat: ChatCellModel = .from(.preview())) {
         super.init(chat: chat, sendService: MockSendMessageService(chat: chat.td))

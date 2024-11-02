@@ -11,7 +11,7 @@ import QRCode
 
 struct LoginView: View {
 
-    @EnvironmentObject var vm: LoginViewModel
+    @EnvironmentObject var vm: LoginViewModel_Old
     
     @State var showInfo = false
     @State var showFullscreenQR = false
@@ -97,5 +97,5 @@ struct LoginView: View {
 
 #Preview {
     LoginView()
-        .environmentObject(LoginViewModel())
+        .environmentObject(LoginViewModel_Old())
 }

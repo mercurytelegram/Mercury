@@ -8,7 +8,7 @@
 import TDLibKit
 import UIKit
 
-class MockSettingsViewModel: SettingsViewModel {
+class MockSettingsViewModel: SettingsViewModel_Old {
     
     override init() {
         super.init()

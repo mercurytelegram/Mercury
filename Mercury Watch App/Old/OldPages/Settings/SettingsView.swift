@@ -9,16 +9,16 @@ import SwiftUI
 import TDLibKit
 
 struct SettingsView: View {
-    @StateObject var settingsVM: SettingsViewModel
-    @StateObject var chatListVM: ChatListViewModel
+    @StateObject var settingsVM: SettingsViewModel_Old
+    @StateObject var chatListVM: ChatListViewModel_Old
     
     init(useMock: Bool = false){
         if useMock {
             self._settingsVM = StateObject(wrappedValue: MockSettingsViewModel())
             self._chatListVM = StateObject(wrappedValue: MockChatListViewModel())
         } else {
-            self._settingsVM = StateObject(wrappedValue: SettingsViewModel())
-            self._chatListVM = StateObject(wrappedValue: ChatListViewModel())
+            self._settingsVM = StateObject(wrappedValue: SettingsViewModel_Old())
+            self._chatListVM = StateObject(wrappedValue: ChatListViewModel_Old())
         }
     }
     
@@ -61,6 +61,6 @@ struct SettingsView: View {
 
 #Preview {
     return SettingsView(useMock: true)
-        .environmentObject(LoginViewModel())
+        .environmentObject(LoginViewModel_Old())
 }
 

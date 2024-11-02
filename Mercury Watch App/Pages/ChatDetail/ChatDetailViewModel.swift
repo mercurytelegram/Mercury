@@ -8,6 +8,6 @@
 import Foundation
 
 @Observable
-class LoginViewModel: TDLibViewModel {
+class ChatDetailViewModel: TDLibViewModel {
     
 }

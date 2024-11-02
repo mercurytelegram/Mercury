@@ -10,14 +10,14 @@ import Combine
 import TDLibKit
 
 struct ChatDetailView: View {
-    @StateObject var vm: ChatDetailViewModel
+    @StateObject var vm: ChatDetailViewModel_Old
     @State var image: Image?
     
     init(chat: ChatCellModel, useMock: Bool = false) {
         if useMock {
             self._vm = StateObject(wrappedValue: MockChatDetailViewModel(chat: chat))
         } else {
-            self._vm = StateObject(wrappedValue: ChatDetailViewModel(chat: chat))
+            self._vm = StateObject(wrappedValue: ChatDetailViewModel_Old(chat: chat))
         }
     }
     

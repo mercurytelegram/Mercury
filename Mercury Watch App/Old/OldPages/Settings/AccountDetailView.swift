@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct AccountDetailView: View {
-    @EnvironmentObject var loginVM: LoginViewModel
-    @ObservedObject var vm: SettingsViewModel
+    @EnvironmentObject var loginVM: LoginViewModel_Old
+    @ObservedObject var vm: SettingsViewModel_Old
     
     var body: some View {
         ScrollView {
@@ -89,5 +89,5 @@ struct AccountDetailView: View {
 
 #Preview {
     AccountDetailView(vm: MockSettingsViewModel())
-        .environmentObject(LoginViewModel())
+        .environmentObject(LoginViewModel_Old())
 }

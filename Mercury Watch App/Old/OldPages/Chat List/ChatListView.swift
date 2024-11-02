@@ -9,7 +9,7 @@ import SwiftUI
 import TDLibKit
 
 struct ChatListView: View {
-    @StateObject var vm: ChatListViewModel
+    @StateObject var vm: ChatListViewModel_Old
     
     var body: some View {
         

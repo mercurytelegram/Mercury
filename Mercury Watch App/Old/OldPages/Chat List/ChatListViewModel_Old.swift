@@ -10,7 +10,7 @@ import TDLibKit
 import Combine
 import SwiftUI
 
-class ChatListViewModel: TDLibViewModel {
+class ChatListViewModel_Old: TDLibViewModel {
     
     @Published var chats: [ChatCellModel] = []
     @Published var isLoading = false
@@ -283,8 +283,8 @@ class ChatListViewModel: TDLibViewModel {
         }
     }
     
-    func getChatVM(for chat: ChatCellModel) -> ChatDetailViewModel {
-        ChatDetailViewModel(chat: chat)
+    func getChatVM(for chat: ChatCellModel) -> ChatDetailViewModel_Old {
+        ChatDetailViewModel_Old(chat: chat)
     }
     
     func selectChatFolder(_ chat: ChatFolder) {

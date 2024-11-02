@@ -133,7 +133,7 @@ iOSInjectionProject/
 
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swift,macos
 
-Secrets.swift
+SecretService.swift
 Mercury.xcodeproj/project.xcworkspace/contents.xcworkspacedata
 Mercury.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
 Mercury.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved

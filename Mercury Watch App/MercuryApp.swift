@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct Mercury_Watch_AppApp: App {
     @Environment(\.isLuminanceReduced) var isLuminanceReduced
-    @StateObject var vm = LoginViewModel()
+    @StateObject var vm = LoginViewModel_Old()
     @WKApplicationDelegateAdaptor var appDelegate: AppDelegate
     
     var body: some Scene {
@@ -31,9 +31,9 @@ struct Mercury_Watch_AppApp: App {
         .environmentObject(vm)
         .onChange(of: isLuminanceReduced) {
             if isLuminanceReduced {
-                LoginViewModel.setOfflineStatus()
+                LoginViewModel_Old.setOfflineStatus()
             } else {
-                LoginViewModel.setOnlineStatus()
+                LoginViewModel_Old.setOnlineStatus()
             }
         }
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 import TDLibKit
 
-class MockChatListViewModel: ChatListViewModel {
+class MockChatListViewModel: ChatListViewModel_Old {
     override init() {
         super.init()
         

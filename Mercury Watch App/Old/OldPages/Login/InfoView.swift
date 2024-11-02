@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct InfoView: View {
-    @EnvironmentObject var vm: LoginViewModel
+    @EnvironmentObject var vm: LoginViewModel_Old
     
     var steps = [
         "Open Telegram on your phone",
