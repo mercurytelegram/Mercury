@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Mercury_Watch_AppApp: App {
+struct MercuryApp: App {
     @Environment(\.isLuminanceReduced) var isLuminanceReduced
     @StateObject var vm = LoginViewModel_Old()
     @WKApplicationDelegateAdaptor var appDelegate: AppDelegate

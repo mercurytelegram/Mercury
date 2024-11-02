@@ -11,3 +11,9 @@ import Foundation
 class HomeViewModel: TDLibViewModel {
     
 }
+
+// MARK: - Mock
+@Observable
+class HomeViewModelMock: HomeViewModel {
+    
+}

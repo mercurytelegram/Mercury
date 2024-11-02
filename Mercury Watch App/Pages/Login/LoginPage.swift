@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct LoginPage: View {
+    @State
+    @Mockable(mockInit: LoginViewModelMock.init)
+    var vm = LoginViewModel.init
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 

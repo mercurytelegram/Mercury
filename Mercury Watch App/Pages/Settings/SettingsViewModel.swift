@@ -11,3 +11,9 @@ import Foundation
 class SettingsViewModel: TDLibViewModel {
     
 }
+
+// MARK: - Mock
+@Observable
+class SettingsViewModelMock: TDLibViewModel {
+    
+}

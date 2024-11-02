@@ -11,3 +11,9 @@ import Foundation
 class ChatDetailViewModel: TDLibViewModel {
     
 }
+
+// MARK: - Mock
+@Observable
+class ChatDetailViewModelMock: TDLibViewModel {
+    
+}

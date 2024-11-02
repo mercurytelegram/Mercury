@@ -11,3 +11,9 @@ import Foundation
 class LoginViewModel: TDLibViewModel {
     
 }
+
+// MARK: - Mock
+@Observable
+class LoginViewModelMock: LoginViewModel {
+    
+}

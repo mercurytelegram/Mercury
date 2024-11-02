@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct ChatDetailPage: View {
+    @State
+    @Mockable(mockInit: ChatDetailViewModelMock.init)
+    var vm = ChatDetailViewModel.init
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 
