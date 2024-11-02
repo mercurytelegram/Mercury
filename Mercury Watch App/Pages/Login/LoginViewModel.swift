@@ -6,14 +6,257 @@
 //
 
 import Foundation
+import SwiftUI
+import TDLibKit
 
 @Observable
 class LoginViewModel: TDLibViewModel {
+    var showTutorialView: Bool = false
+    var showPasswordView: Bool = false
+    var showFullscreenQR: Bool = false
+    var isValidatingPassword: Bool = false
+    
+    var passwordModel: PasswordModel = .plain
+    var password: String = ""
+    var qrCodeLink: String? = nil
+    var statusMessage: String = "Connecting..."
+    
+    let tutorialSteps = [
+        "Open Telegram on your phone",
+        "Go to Settings → Devices → Link Desktop Device",
+        "Point your phone at the QR code to confirm login"
+    ]
+    
+    private var isClosing = false
+    private let tdlibPath = FileManager.default
+        .urls(for: .cachesDirectory, in: .userDomainMask)
+        .first?
+        .appendingPathComponent("tdlib", isDirectory: true)
+        .path
+    
+    func didPressDemoButton() {
+        AppState.shared.isMock = true
+    }
+    
+    func didPressInfoButton() {
+        showTutorialView = true
+    }
+    
+    func didPressQR() {
+        withAnimation(.bouncy) {
+            showFullscreenQR.toggle()
+        }
+    }
+    
+    func didChangeShowPasswordValue(oldValue: Bool, newValue: Bool) {
+        if newValue == false {
+            LoginViewModel.logout()
+        }
+    }
+    
+    // MARK: - TDLib
+    override func updateHandler(update: Update) {
+        super.updateHandler(update: update)
+        switch update {
+        case .updateAuthorizationState(let state):
+            self.manageUpdateAuthorizationState(state: state.authorizationState)
+        default:
+            break
+        }
+    }
+    
+    override func connectionStateUpdate(state: ConnectionState) {
+        guard state == .connectionStateReady else { return }
+        DispatchQueue.main.async {
+            self.statusMessage = "Login with QR code"
+        }
+    }
+    
+    func manageUpdateAuthorizationState(state: AuthorizationState) {
+        
+        DispatchQueue.main.async {
+            AppState.shared.isAuthenticated = state == .authorizationStateReady
+        }
+        
+        switch state {
+        case .authorizationStateWaitTdlibParameters:
+            setTdlibParameters()
+            break
+        case .authorizationStateWaitPhoneNumber:
+            self.getQrcodeLink()
+            break
+        case .authorizationStateWaitOtherDeviceConfirmation(let info):
+            DispatchQueue.main.async {
+                self.qrCodeLink = info.link
+            }
+            break
+        case .authorizationStateWaitPassword(_):
+            DispatchQueue.main.async {
+                self.qrCodeLink = nil
+                self.showPasswordView = true
+            }
+            break
+        case .authorizationStateLoggingOut:
+            if !isClosing { TDLibManager.shared.close() }
+            break
+        case .authorizationStateClosing:
+            self.isClosing = true
+            DispatchQueue.main.async {
+                self.isValidatingPassword = false
+                self.showPasswordView = false
+                self.qrCodeLink = nil
+                self.statusMessage = "Connecting..."
+                self.password = ""
+                AppState.shared.isAuthenticated = nil
+            }
+            break
+        case .authorizationStateClosed:
+            try? FileManager.default.removeItem(atPath: tdlibPath!)
+            TDLibManager.shared.createClient()
+            DispatchQueue.main.async {
+                self.isClosing = false
+            }
+            break
+        default:
+            self.logger.log("Unmanaged state \(state)")
+            break
+        }
+    }
+    
+    func getQrcodeLink() {
+        Task {
+            do {
+                let result = try await TDLibManager.shared.client?.requestQrCodeAuthentication(otherUserIds: [])
+                self.logger.log(result)
+                
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func validatePassword() {
+        
+        isValidatingPassword = true
+        passwordModel = .plain
+        
+        Task {
+            do {
+                let result = try await TDLibManager.shared.client?.checkAuthenticationPassword(password: password)
+                self.logger.log(result)
+                
+                await MainActor.run {
+                    passwordModel = .plain
+                }
+                
+            } catch {
+                self.logger.log(error, level: .error)
+                guard let error = error as? TDLibKit.Error else { return }
+                
+                if error.message == "PASSWORD_HASH_INVALID" {
+                    await MainActor.run {
+                        self.password = ""
+                        passwordModel = .error
+                    }
+                }
+            }
+            
+            await MainActor.run {
+                self.isValidatingPassword = false
+            }
+            
+        }
+    }
+    
+    func setTdlibParameters() {
+        Task {
+            do {
+                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+                let device = WKInterfaceDevice.current()
+                let deviceModel = device.name
+                let systemVersion = "\(device.systemName) \(device.systemVersion)"
+                
+                let result = try await TDLibManager.shared.client?.setTdlibParameters(
+                    apiHash: SecretService.apiHash,
+                    apiId: SecretService.apiId,
+                    applicationVersion: appVersion,
+                    databaseDirectory: tdlibPath,
+                    databaseEncryptionKey: nil,
+                    deviceModel: deviceModel,
+                    filesDirectory: nil,
+                    systemLanguageCode: "en-US",
+                    systemVersion: systemVersion,
+                    useChatInfoDatabase: true,
+                    useFileDatabase: true,
+                    useMessageDatabase: true,
+                    useSecretChats: false,
+                    useTestDc: false
+                )
+                
+                #if DEBUG
+                try await TDLibManager.shared.client?.setLogVerbosityLevel(newVerbosityLevel: 1)
+                #else
+                try await TDLibManager.shared.client?.setLogVerbosityLevel(newVerbosityLevel: 0)
+                #endif
+                
+                self.logger.log(result)
+        
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    static func logout() {
+        
+        let logger = LoggerService(LoginViewModel.self)
+        
+        if AppState.shared.isMock {
+            AppState.shared.isMock = false
+            return
+        }
+        
+        guard let client = TDLibManager.shared.client else { return }
+        
+        Task {
+            do {
+                let result = try await client.logOut()
+                logger.log(result)
+                
+                TDLibManager.shared.close()
+            } catch {
+                logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    static func setOnlineStatus(online: Bool = true) {
+        Task {
+            let logger = LoggerService(LoginViewModel.self)
+            do {
+                let result = try await TDLibManager.shared.client?.setOption(
+                    name: "online",
+                    value: .optionValueBoolean(.init(value: online))
+                )
+                logger.log(result)
+            } catch {
+                logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    static func setOfflineStatus() {
+        setOnlineStatus(online: false)
+    }
     
 }
 
 // MARK: - Mock
 @Observable
 class LoginViewModelMock: LoginViewModel {
+    override init() {
+        super.init()
+        qrCodeLink = "Hello World"
+    }
     
 }

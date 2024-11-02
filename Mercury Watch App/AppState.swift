@@ -8,8 +8,8 @@
 import Foundation
 
 @Observable
-@MainActor
 class AppState {
     static var shared = AppState()
-    var isMock = false
+    var isMock: Bool = false
+    var isAuthenticated: Bool? = false
 }

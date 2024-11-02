@@ -12,7 +12,7 @@
 		4A5D784B2BEBA71200D9D805 /* ChatCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D784A2BEBA71200D9D805 /* ChatCellView.swift */; };
 		4A5D784D2BEBA7C200D9D805 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5D784C2BEBA7C200D9D805 /* AvatarView.swift */; };
 		4A919FCF2BD7C3C800F78F03 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A919FCE2BD7C3C800F78F03 /* LoginView.swift */; };
-		4A919FD12BD7C40600F78F03 /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A919FD02BD7C40600F78F03 /* PasswordView.swift */; };
+		4A919FD12BD7C40600F78F03 /* PasswordView_old.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A919FD02BD7C40600F78F03 /* PasswordView_old.swift */; };
 		4AA1C7CD2BD7CF1600EB01BC /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AA1C7CC2BD7CF1600EB01BC /* InfoView.swift */; };
 		4AE620192C09C36800722512 /* MockChatDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE620182C09C36800722512 /* MockChatDetailViewModel.swift */; };
 		4AE6201B2C09C43500722512 /* MockMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */; };
@@ -26,6 +26,10 @@
 		9B05331B2CCBAD9C00B9032B /* MockUserCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B05331A2CCBAD9C00B9032B /* MockUserCellViewModel.swift */; };
 		9B0B6CB52CD64DB800BB6A94 /* Mockable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0B6CB42CD64DB800BB6A94 /* Mockable.swift */; };
 		9B0B6CB72CD64F6100BB6A94 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0B6CB62CD64F6100BB6A94 /* AppState.swift */; };
+		9B0B6CBC2CD679A600BB6A94 /* StepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0B6CBB2CD679A600BB6A94 /* StepView.swift */; };
+		9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */; };
+		9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */; };
+		9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */; };
 		9B0F6AB92C01F0AE00568319 /* MockChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0F6AB82C01F0AE00568319 /* MockChatListViewModel.swift */; };
 		9B2805CC2C4671C500F7DF72 /* Extensions+TDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CB2C4671C500F7DF72 /* Extensions+TDImage.swift */; };
 		9B2805D02C4687DC00F7DF72 /* SendingLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CF2C4687DC00F7DF72 /* SendingLoaderView.swift */; };
@@ -142,7 +146,7 @@
 		4A5D784A2BEBA71200D9D805 /* ChatCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellView.swift; sourceTree = "<group>"; };
 		4A5D784C2BEBA7C200D9D805 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		4A919FCE2BD7C3C800F78F03 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		4A919FD02BD7C40600F78F03 /* PasswordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
+		4A919FD02BD7C40600F78F03 /* PasswordView_old.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordView_old.swift; sourceTree = "<group>"; };
 		4AA1C7CC2BD7CF1600EB01BC /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		4AE620182C09C36800722512 /* MockChatDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockChatDetailViewModel.swift; sourceTree = "<group>"; };
 		4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessageViewModel.swift; sourceTree = "<group>"; };
@@ -156,6 +160,10 @@
 		9B05331A2CCBAD9C00B9032B /* MockUserCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserCellViewModel.swift; sourceTree = "<group>"; };
 		9B0B6CB42CD64DB800BB6A94 /* Mockable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mockable.swift; sourceTree = "<group>"; };
 		9B0B6CB62CD64F6100BB6A94 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		9B0B6CBB2CD679A600BB6A94 /* StepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepView.swift; sourceTree = "<group>"; };
+		9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
+		9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
+		9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreviewTrait+Mock.swift"; sourceTree = "<group>"; };
 		9B0F6AB82C01F0AE00568319 /* MockChatListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockChatListViewModel.swift; sourceTree = "<group>"; };
 		9B2805CB2C4671C500F7DF72 /* Extensions+TDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+TDImage.swift"; sourceTree = "<group>"; };
 		9B2805CF2C4687DC00F7DF72 /* SendingLoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingLoaderView.swift; sourceTree = "<group>"; };
@@ -275,7 +283,7 @@
 				A0CF53192BDFA57A00BA394B /* LoginViewModel_Old.swift */,
 				4A919FCE2BD7C3C800F78F03 /* LoginView.swift */,
 				4AA1C7CC2BD7CF1600EB01BC /* InfoView.swift */,
-				4A919FD02BD7C40600F78F03 /* PasswordView.swift */,
+				4A919FD02BD7C40600F78F03 /* PasswordView_old.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -330,6 +338,24 @@
 				9B0533182CCBAD6500B9032B /* UserCellViewModel.swift */,
 			);
 			path = UserCell;
+			sourceTree = "<group>";
+		};
+		9B0B6CBA2CD6799800BB6A94 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				9B0B6CBB2CD679A600BB6A94 /* StepView.swift */,
+				9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */,
+				9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */,
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
+		9B0E23502CD69FA600ED69D6 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		9B2805D12C4687E000F7DF72 /* Components */ = {
@@ -537,6 +563,7 @@
 		A080D88E2CD64A7C00920564 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				9B0E23502CD69FA600ED69D6 /* Extensions */,
 				A080D88D2CD64A7C00920564 /* Services */,
 				9B0B6CB42CD64DB800BB6A94 /* Mockable.swift */,
 			);
@@ -576,7 +603,7 @@
 		A080D89D2CD64B1700920564 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				A080D8AC2CD64B5F00920564 /* Subviews */,
+				9B0B6CBA2CD6799800BB6A94 /* Subviews */,
 				A080D89B2CD64B1700920564 /* LoginPage.swift */,
 				A080D89C2CD64B1700920564 /* LoginViewModel.swift */,
 			);
@@ -603,13 +630,6 @@
 				A080D8942CD64B1700920564 /* ChatDetail */,
 			);
 			path = Pages;
-			sourceTree = "<group>";
-		};
-		A080D8AC2CD64B5F00920564 /* Subviews */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Subviews;
 			sourceTree = "<group>";
 		};
 		A080D8AD2CD64B6300920564 /* Subviews */ = {
@@ -772,7 +792,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A919FD12BD7C40600F78F03 /* PasswordView.swift in Sources */,
+				9B0B6CBC2CD679A600BB6A94 /* StepView.swift in Sources */,
+				4A919FD12BD7C40600F78F03 /* PasswordView_old.swift in Sources */,
 				9B05331B2CCBAD9C00B9032B /* MockUserCellViewModel.swift in Sources */,
 				4AF90D692BEE65BA00435355 /* Extensions+Date.swift in Sources */,
 				A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */,
@@ -784,6 +805,7 @@
 				9B3AD3522C397F7700CD4EF8 /* AlertView.swift in Sources */,
 				9B778D1C2C91CEBB0022B093 /* MessageOptionsView.swift in Sources */,
 				9B3FC90D2BF3DF8400CDE217 /* ChatDetailView.swift in Sources */,
+				9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */,
 				9BAC54B62C00C5C50055F1EE /* Message+Mock.swift in Sources */,
 				9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */,
 				A05C1A012BEB74B700724B6E /* ChatListView.swift in Sources */,
@@ -806,6 +828,7 @@
 				9BB920E32C3D9B8B0023C616 /* SettingsViewModel_Old.swift in Sources */,
 				9B2E1BE12C08739800B9B63D /* MessageView.swift in Sources */,
 				4AE6201D2C09C4AA00722512 /* MockSendMessageService.swift in Sources */,
+				9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */,
 				9B2805CC2C4671C500F7DF72 /* Extensions+TDImage.swift in Sources */,
 				4A919FCF2BD7C3C800F78F03 /* LoginView.swift in Sources */,
 				A081AAD32C071C82002A265C /* Extensions+ChatAction.swift in Sources */,
@@ -827,6 +850,7 @@
 				A04389052C3FE3B2007B83C0 /* AudioMessageView.swift in Sources */,
 				9B039F482C68176800CB6BE4 /* ReactionsView.swift in Sources */,
 				9B0B6CB72CD64F6100BB6A94 /* AppState.swift in Sources */,
+				9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */,
 				A04389062C3FE3B2007B83C0 /* AudioMessageViewModel.swift in Sources */,
 				A080D8A22CD64B1700920564 /* ChatDetailPage.swift in Sources */,
 				A080D8A32CD64B1700920564 /* LoginViewModel.swift in Sources */,

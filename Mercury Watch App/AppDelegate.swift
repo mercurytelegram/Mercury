@@ -19,11 +19,11 @@ class AppDelegate: NSObject, WKApplicationDelegate {
     }
     
     func applicationDidBecomeActive() {
-        LoginViewModel_Old.setOnlineStatus()
+        LoginViewModel.setOnlineStatus()
     }
     
     func applicationDidEnterBackground() {
-        LoginViewModel_Old.setOfflineStatus()
+        LoginViewModel.setOfflineStatus()
     }
     
     private func cleanTmpFolder() {

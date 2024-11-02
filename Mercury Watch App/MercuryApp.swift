@@ -10,31 +10,29 @@ import SwiftUI
 @main
 struct MercuryApp: App {
     @Environment(\.isLuminanceReduced) var isLuminanceReduced
-    @StateObject var vm = LoginViewModel_Old()
     @WKApplicationDelegateAdaptor var appDelegate: AppDelegate
     
     var body: some Scene {
         WindowGroup {
             
-            if let auth = vm.authenticated {
-                if auth || vm.useMock {
-                    SettingsView(useMock: vm.useMock)
+            // TODO: Change logic when isAuthenticated is nil
+            if let auth = AppState.shared.isAuthenticated {
+                if auth || AppState.shared.isMock {
+                    Text("Autenticated")
                 } else {
-                    LoginView()
+                    LoginPage()
                 }
             } else {
                 ProgressView()
             }
-                
-            
         }
-        .environmentObject(vm)
         .onChange(of: isLuminanceReduced) {
             if isLuminanceReduced {
-                LoginViewModel_Old.setOfflineStatus()
+                LoginViewModel.setOfflineStatus()
             } else {
-                LoginViewModel_Old.setOnlineStatus()
+                LoginViewModel.setOnlineStatus()
             }
         }
+        
     }
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PasswordView: View {
+struct PasswordView_Old: View {
     @Binding var password: String
     let showError: Bool
     var onCommit : () -> ()
@@ -46,10 +46,10 @@ struct PasswordView: View {
     }
 }
 
-#Preview {
-    PasswordView(password: .constant(""), showError: false, onCommit: {})
-}
-
-#Preview("With Error") {
-    PasswordView(password: .constant(""), showError: true, onCommit: {})
-}
+//#Preview {
+//    PasswordView(password: .constant(""), showError: false, onCommit: {})
+//}
+//
+//#Preview("With Error") {
+//    PasswordView(password: .constant(""), showError: true, onCommit: {})
+//}

@@ -43,7 +43,7 @@ struct LoginView: View {
                 if vm.isValidatingPassword {
                     ProgressView()
                 } else {
-                    PasswordView(password: $vm.password, showError: vm.passwordValidationFailed) {
+                    PasswordView_Old(password: $vm.password, showError: vm.passwordValidationFailed) {
                         vm.validatePassword()
                     }
                 }

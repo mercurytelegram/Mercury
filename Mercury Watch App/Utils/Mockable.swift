@@ -17,9 +17,8 @@ import SwiftUI
 /// real implementation with a mock for testing purposes, without needing to modify
 /// the wrapped property's code.
 ///
-/// - Note: This property wrapper should be used only on the main actor, as it uses the ``AppState``
-@MainActor
 @propertyWrapper
+@dynamicMemberLookup
 public class Mockable<T> {
     
     /// The actual value to be used in non-mock scenarios, initialized on demand.
@@ -62,14 +61,33 @@ public class Mockable<T> {
     
     /// Returns either the main or mock value based on the application state.
     public var wrappedValue: T {
-        if AppState.shared.isMock == false {
-            if let value = value { return value }
-            value = valueInit()
-            return value!
+        get {
+            if AppState.shared.isMock == false {
+                if let value = value { return value }
+                value = valueInit()
+                return value!
+            }
+            
+            if let mock = mock { return mock }
+            self.mock = mockInit()
+            return mock!
         }
         
-        if let mock = mock { return mock }
-        self.mock = mockInit()
-        return mock!
+        set {
+            if AppState.shared.isMock == false {
+                value = newValue
+            } else {
+                mock = newValue
+            }
+        }
+    }
+    
+    public subscript<U>(dynamicMember keyPath: KeyPath<T, U>) -> U {
+        wrappedValue[keyPath: keyPath]
+    }
+    
+    public subscript<U>(dynamicMember keyPath: WritableKeyPath<T, U>) -> U {
+        get { wrappedValue[keyPath: keyPath] }
+        set { wrappedValue[keyPath: keyPath] = newValue }
     }
 }

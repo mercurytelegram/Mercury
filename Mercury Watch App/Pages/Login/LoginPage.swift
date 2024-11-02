@@ -13,10 +13,95 @@ struct LoginPage: View {
     var vm = LoginViewModel.init
     
     var body: some View {
-        Text("Hello, World!")
+        NavigationStack {
+            VStack {
+                QR()
+                Text(vm.statusMessage)
+                    .padding(.top)
+                    .padding(.bottom, vm.showFullscreenQR ? 0 : -20)
+            }
+            .containerBackground(
+                .blue.gradient,
+                for: .navigation
+            )
+            .navigationTitle {
+                Text("Mercury")
+                    .foregroundStyle(vm.showFullscreenQR ? .white : .blue)
+                    .opacity(vm.showFullscreenQR ? 0 : 1)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(
+                        "Info",
+                        systemImage: "info",
+                        action: vm.didPressInfoButton
+                    )
+                    .opacity(vm.showFullscreenQR ? 0 : 1)
+                }
+            }
+            .sheet(
+                isPresented: $vm.showTutorialView,
+                content: tutorialView
+            )
+            .sheet(isPresented: $vm.showPasswordView) {
+                passwordView()
+            }
+        }
+        .onChange(
+            of: vm.showPasswordView,
+            vm.didChangeShowPasswordValue
+        )
     }
+    
+    @ViewBuilder
+    func QR() -> some View {
+        QRCodeView(text: vm.qrCodeLink) {
+            ProgressView()
+        }
+        .aspectRatio(
+            vm.showFullscreenQR ? 0.75 : 1,
+            contentMode: vm.showFullscreenQR ? .fill : .fit
+        )
+        .ignoresSafeArea(edges: vm.showFullscreenQR ? .all : .bottom)
+        .padding(.top)
+        .onTapGesture(perform: vm.didPressQR)
+    }
+    
+    @ViewBuilder
+    func tutorialView() -> some View {
+        ScrollView {
+            StepView(steps: vm.tutorialSteps)
+            Divider()
+            Text("If you can't scan the QR code:")
+                .foregroundStyle(.secondary)
+                .padding()
+            Button("Demo", action: vm.didPressDemoButton)
+        }
+        .navigationTitle("Info")
+        .scenePadding(.horizontal)
+    }
+    
+    @ViewBuilder
+    func passwordView() -> some View {
+        PasswordView(
+            password: $vm.password,
+            model: vm.passwordModel,
+            onSubmit: vm.validatePassword
+        )
+        .overlay {
+            if vm.isValidatingPassword {
+                ZStack {
+                    Rectangle()
+                        .foregroundStyle(.thinMaterial)
+                        .ignoresSafeArea(edges: .all)
+                    ProgressView()
+                }
+            }
+        }
+    }
+    
 }
 
-#Preview {
+#Preview(traits: .mock()) {
     LoginPage()
 }
