@@ -18,11 +18,15 @@ class MockSettingsViewModel: SettingsViewModel {
     override func getUser() {}
     
     override func profileTDImage() -> TDImage {
-        TDImageMock("lisa")
+        TDImageMock("astro")
     }
     
     override func profileThimbnail() -> UIImage {
-        return UIImage(named: "lisa") ?? UIImage()
+        return UIImage(named: "astro") ?? UIImage()
+    }
+    
+    override var userCellViewModel: UserCellViewModel {
+        MockUserCellViewModel(user: self.user)
     }
     
 }

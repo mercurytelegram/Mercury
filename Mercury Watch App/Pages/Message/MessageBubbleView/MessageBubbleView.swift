@@ -189,7 +189,7 @@ struct MessageBubbleView<Content> : View where Content : View {
 #Preview("FullScreen") {
     
     return MessageBubbleView(style: .fullScreen) {
-        Image("craig")
+        Image("astro")
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(height: 150)
@@ -210,7 +210,7 @@ struct MessageBubbleView<Content> : View where Content : View {
     return MessageBubbleView(
         style: .fullScreen,
         caption: "This is a caption") {
-            Image("craig")
+            Image("astro")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 100)

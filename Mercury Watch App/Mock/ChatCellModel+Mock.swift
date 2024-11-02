@@ -18,7 +18,8 @@ extension ChatCellModel {
         showUnreadMention: Bool = false,
         showUnreadReaction: Bool = false,
         isOnline: Bool = false,
-        color: Color = .blue
+        color: Color = .blue,
+        imageName: String? = nil
     ) -> ChatCellModel {
         
         var chatModel = ChatCellModel.from(.preview(
@@ -46,6 +47,9 @@ extension ChatCellModel {
         chatModel.avatar.isOnline = isOnline
         chatModel.avatar.color = color
         
+        if let imageName {
+            chatModel.avatar.tdImage = TDImageMock(imageName)
+        }
         return chatModel
     }
 }

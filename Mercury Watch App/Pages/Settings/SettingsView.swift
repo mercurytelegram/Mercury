@@ -28,7 +28,7 @@ struct SettingsView: View {
                 NavigationLink {
                     AccountDetailView(vm: settingsVM)
                 } label: {
-                    UserCellView(user: settingsVM.user)
+                    UserCellView(vm: settingsVM.userCellViewModel)
                 }
                 
                 

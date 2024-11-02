@@ -15,30 +15,17 @@ class MockChatDetailViewModel: ChatDetailViewModel {
         isLoadingInitialMessages = false
         
         switch chat.td.title {
-        case "iOS Devs":
-            self.messages = [
-                .preview(
-                    content: .text("SwiftUI or UIKit?")
-                ),
-                .preview(
-                    content: .text("SwiftUI!! 🤩"),
-                    isOutgoing: true
-                ),
-                .preview(
-                    content: .text("Who's excited for WWDC? 😁")
-                )
-            ]
-        case "Craig":
+        case "Alessandro":
             self.messages = [
                 .preview(
                     content: .text("Ready?"),
                     isOutgoing: true
                 ),
                 .preview(
-                    content: .text("Let's rock! 🎸")
+                    content: .text("How's the view from space? 🚀✨")
                 )
             ]
-        case "Lisa":
+        case "Marco":
             self.messages = [
                 .preview(
                     content: .text("Where're you??"),
@@ -48,12 +35,33 @@ class MockChatDetailViewModel: ChatDetailViewModel {
                     content: .text("I'm on the roof! ☀️")
                 )
             ]
+        case "Mission Control":
+            self.messages = [
+                .preview(
+                    content: .text("SwiftUI or UIKit?")
+                ),
+                .preview(
+                    content: .text("SwiftUI!! 🤩"),
+                    isOutgoing: true
+                ),
+                .preview(
+                    content: .text("We have a problem!")
+                )
+            ]
         default:
             break
         }
         
     }
     
+    func messageViewModel(for message: Message) -> MessageViewModel {
+        MessageViewModelMock(message: message, name: "Name", titleColor: .blue, showSender: true)
+    }
+    
     override func requestInitialMessage() {}
     override func requestMoreMessages(limit: Int = 30) async {}
+    
+    override var canSendVoiceNotes: Bool { true }
+    override var canSendText: Bool { true }
+    override var canSendStickers: Bool { true }
 }

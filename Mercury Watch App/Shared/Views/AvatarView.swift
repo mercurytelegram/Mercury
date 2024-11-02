@@ -71,7 +71,7 @@ struct AvatarView: View {
 
 
 #if DEBUG
-let avatarImageModel = AvatarModel(isOnline: true)
+let avatarImageModel = AvatarModel(tdImage: TDImageMock("alessandro"), isOnline: true)
 let avatarLettersModel = AvatarModel(letters: "AA", isOnline: true)
 
 #Preview("Big Image") {

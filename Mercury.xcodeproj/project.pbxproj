@@ -22,6 +22,9 @@
 		4AF90D692BEE65BA00435355 /* Extensions+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF90D682BEE65BA00435355 /* Extensions+Date.swift */; };
 		9B039F462C667FCF00CB6BE4 /* LocationContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B039F452C667FCF00CB6BE4 /* LocationContentView.swift */; };
 		9B039F482C68176800CB6BE4 /* ReactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B039F472C68176800CB6BE4 /* ReactionsView.swift */; };
+		9B0533162CCBAB6E00B9032B /* File+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0533152CCBAB6E00B9032B /* File+Mock.swift */; };
+		9B0533192CCBAD6500B9032B /* UserCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0533182CCBAD6500B9032B /* UserCellViewModel.swift */; };
+		9B05331B2CCBAD9C00B9032B /* MockUserCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B05331A2CCBAD9C00B9032B /* MockUserCellViewModel.swift */; };
 		9B0F6AB92C01F0AE00568319 /* MockChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0F6AB82C01F0AE00568319 /* MockChatListViewModel.swift */; };
 		9B2805CC2C4671C500F7DF72 /* Extensions+TDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CB2C4671C500F7DF72 /* Extensions+TDImage.swift */; };
 		9B2805D02C4687DC00F7DF72 /* SendingLoaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CF2C4687DC00F7DF72 /* SendingLoaderView.swift */; };
@@ -137,6 +140,9 @@
 		4AF90D682BEE65BA00435355 /* Extensions+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Date.swift"; sourceTree = "<group>"; };
 		9B039F452C667FCF00CB6BE4 /* LocationContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationContentView.swift; sourceTree = "<group>"; };
 		9B039F472C68176800CB6BE4 /* ReactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactionsView.swift; sourceTree = "<group>"; };
+		9B0533152CCBAB6E00B9032B /* File+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "File+Mock.swift"; sourceTree = "<group>"; };
+		9B0533182CCBAD6500B9032B /* UserCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCellViewModel.swift; sourceTree = "<group>"; };
+		9B05331A2CCBAD9C00B9032B /* MockUserCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserCellViewModel.swift; sourceTree = "<group>"; };
 		9B0F6AB82C01F0AE00568319 /* MockChatListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockChatListViewModel.swift; sourceTree = "<group>"; };
 		9B2805CB2C4671C500F7DF72 /* Extensions+TDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+TDImage.swift"; sourceTree = "<group>"; };
 		9B2805CF2C4687DC00F7DF72 /* SendingLoaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingLoaderView.swift; sourceTree = "<group>"; };
@@ -288,9 +294,18 @@
 				4A01E2042BF765D800EBC96D /* TdImageView.swift */,
 				9BAA75DE2CD4EF9C0007B4E2 /* LottieView.swift */,
 				4A5D784C2BEBA7C200D9D805 /* AvatarView.swift */,
-				9BB920E02C3D95320023C616 /* UserCellView.swift */,
+				9B0533172CCBAD4B00B9032B /* UserCell */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		9B0533172CCBAD4B00B9032B /* UserCell */ = {
+			isa = PBXGroup;
+			children = (
+				9BB920E02C3D95320023C616 /* UserCellView.swift */,
+				9B0533182CCBAD6500B9032B /* UserCellViewModel.swift */,
+			);
+			path = UserCell;
 			sourceTree = "<group>";
 		};
 		9B2805D12C4687E000F7DF72 /* Components */ = {
@@ -367,6 +382,7 @@
 				4AE6201A2C09C43500722512 /* MockMessageViewModel.swift */,
 				4AE6201C2C09C4AA00722512 /* MockSendMessageService.swift */,
 				9B4451F72C45C5F900A6EBC2 /* MockSettingsViewModel.swift */,
+				9B05331A2CCBAD9C00B9032B /* MockUserCellViewModel.swift */,
 				9B8493E92C76241400AC90E9 /* MockTDImage.swift */,
 			);
 			path = Mock;
@@ -608,6 +624,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A919FD12BD7C40600F78F03 /* PasswordView.swift in Sources */,
+				9B05331B2CCBAD9C00B9032B /* MockUserCellViewModel.swift in Sources */,
 				4AF90D692BEE65BA00435355 /* Extensions+Date.swift in Sources */,
 				A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */,
 				A081AAD72C072536002A265C /* Extensions+MessageSender.swift in Sources */,
@@ -659,6 +676,7 @@
 				9B039F482C68176800CB6BE4 /* ReactionsView.swift in Sources */,
 				A04389062C3FE3B2007B83C0 /* AudioMessageViewModel.swift in Sources */,
 				4AE620222C09C6CF00722512 /* Extensions+FormattedText.swift in Sources */,
+				9B0533192CCBAD6500B9032B /* UserCellViewModel.swift in Sources */,
 				9BFE1AAC2C82045300B3BBFC /* PillMessageView.swift in Sources */,
 				4A5D784D2BEBA7C200D9D805 /* AvatarView.swift in Sources */,
 				A04388FA2C3FE384007B83C0 /* RecorderService.swift in Sources */,

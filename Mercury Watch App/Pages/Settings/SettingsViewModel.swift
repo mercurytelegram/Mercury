@@ -36,4 +36,8 @@ class SettingsViewModel: ObservableObject {
         guard let data = user?.profilePhoto?.minithumbnail?.data else { return UIImage() }
         return UIImage(data: data) ?? UIImage()
     }
+    
+    var userCellViewModel: UserCellViewModel {
+        .init(user: self.user)
+    }
 }

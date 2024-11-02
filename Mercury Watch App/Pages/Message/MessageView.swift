@@ -110,7 +110,7 @@ struct MessageView: View {
 #Preview("Group Photo Change") {
     VStack {
         PillMessageView(description: "changed group photo")
-        TdImageView(tdImage: TDImageMock("craig"))
+        TdImageView(tdImage: TDImageMock("astro"))
             .frame(width: 60, height: 60)
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
