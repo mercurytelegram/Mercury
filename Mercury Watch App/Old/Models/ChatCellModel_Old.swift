@@ -8,18 +8,18 @@
 import SwiftUI
 import TDLibKit
 
-extension [ChatCellModel] {
-    func sorted() -> [ChatCellModel] {
+extension [ChatCellModel_Old] {
+    func sorted() -> [ChatCellModel_Old] {
         return self.sorted(by: chatSorting)
     }
     
-    private func chatSorting(elem1: ChatCellModel, elem2: ChatCellModel) -> Bool {
+    private func chatSorting(elem1: ChatCellModel_Old, elem2: ChatCellModel_Old) -> Bool {
         // Soting also by id does not update correctly the group chat's position
         return elem1.position > elem2.position // && elem1.td.id > elem2.td.id
     }
 }
 
-struct ChatCellModel {
+struct ChatCellModel_Old {
     
     /// TDLibKit ``TDLibKit/Chat`` object
     var td: Chat
@@ -27,7 +27,7 @@ struct ChatCellModel {
     var showUnreadReaction: Bool
     var time: String
     var message: AttributedString?
-    var avatar: AvatarModel
+    var avatar: AvatarModel_Old
     var userId: Int64? // nil if is chat group
     var unreadCount: Int
     var position: Int64
@@ -53,7 +53,7 @@ struct ChatCellModel {
         showUnreadReaction ? .red : .blue
     }
     
-    static func from(_ chat: Chat) -> ChatCellModel {
+    static func from(_ chat: Chat) -> ChatCellModel_Old {
         
         let date = Date(fromUnixTimestamp: chat.lastMessage?.date ?? 0)
         
@@ -68,13 +68,13 @@ struct ChatCellModel {
             letters = "\(chat.title.prefix(1))"
         }
         
-        return ChatCellModel(
+        return ChatCellModel_Old(
             td: chat,
             showUnreadMention: chat.unreadMentionCount != 0,
             showUnreadReaction: chat.unreadReactionCount != 0,
             time: date.stringDescription,
             message: chat.lastMessage?.description,
-            avatar: AvatarModel(tdImage: chat.photo, letters: letters),
+            avatar: AvatarModel_Old(tdImage: chat.photo, letters: letters),
             userId: userID,
             unreadCount: 0,
             position: 0,

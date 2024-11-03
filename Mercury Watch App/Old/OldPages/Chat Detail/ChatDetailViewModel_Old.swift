@@ -17,7 +17,7 @@ class ChatDetailViewModel_Old: TDLibViewModel {
     @Published var showStickersView = false
     @Published var showOptionsView = false
     @Published var selectedMessage: Message?
-    @Published var chat: ChatCellModel
+    @Published var chat: ChatCellModel_Old
     
     var chatAction: ChatAction?
     var chatActionTimer: Timer?
@@ -39,7 +39,7 @@ class ChatDetailViewModel_Old: TDLibViewModel {
     
     let sendService: SendMessageService
     
-    init(chat: ChatCellModel, sendService: SendMessageService? = nil) {
+    init(chat: ChatCellModel_Old, sendService: SendMessageService? = nil) {
         self.chat = chat
         self.sendService = sendService ?? SendMessageService(chat: chat.td)
         super.init()

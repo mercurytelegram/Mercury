@@ -13,7 +13,7 @@ struct ChatDetailView: View {
     @StateObject var vm: ChatDetailViewModel_Old
     @State var image: Image?
     
-    init(chat: ChatCellModel, useMock: Bool = false) {
+    init(chat: ChatCellModel_Old, useMock: Bool = false) {
         if useMock {
             self._vm = StateObject(wrappedValue: MockChatDetailViewModel(chat: chat))
         } else {
@@ -74,7 +74,7 @@ struct ChatDetailView: View {
             .defaultScrollAnchor(.bottom)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    AvatarView(model: vm.chat.avatar)
+                    AvatarView_Old(model: vm.chat.avatar)
                         .onTapGesture {}
                 }
                 ToolbarItemGroup(placement: .bottomBar) {

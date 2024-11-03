@@ -33,7 +33,7 @@ class UserCellViewModel {
         user == nil ? .placeholder : []
     }
     
-    var avatarModel: AvatarModel {
-        return AvatarModel(tdImage: user?.profilePhoto, letters: nameLetters)
+    var avatarModel: AvatarModel_Old {
+        return AvatarModel_Old(tdImage: user?.profilePhoto, letters: nameLetters)
     }
 }

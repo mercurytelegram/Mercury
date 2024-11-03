@@ -17,7 +17,7 @@ struct AudioMessageView: View {
     @Binding var isPresented: Bool
     var onSend: (URL, Double) -> Void
     
-    init(isPresented: Binding<Bool>, action: Binding<ChatAction?>, chat: ChatCellModel, onSend: @escaping (URL, Double) -> Void ) {
+    init(isPresented: Binding<Bool>, action: Binding<ChatAction?>, chat: ChatCellModel_Old, onSend: @escaping (URL, Double) -> Void ) {
         self.onSend = onSend
         self._vm = StateObject(wrappedValue: AudioMessageViewModel(chat: chat, action: action))
         self._isPresented = isPresented

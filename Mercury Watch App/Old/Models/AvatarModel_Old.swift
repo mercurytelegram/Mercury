@@ -8,7 +8,7 @@
 import SwiftUI
 import TDLibKit
 
-struct AvatarModel {
+struct AvatarModel_Old {
     var tdImage: TDImage?
     var letters: String = ""
     var color: Color = .blue

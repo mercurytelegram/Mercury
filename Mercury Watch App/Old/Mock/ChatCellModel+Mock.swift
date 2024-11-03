@@ -8,7 +8,7 @@
 import TDLibKit
 import SwiftUI
 
-extension ChatCellModel {
+extension ChatCellModel_Old {
 
     static func preview(
         title: String = "Craig Federighi",
@@ -20,9 +20,9 @@ extension ChatCellModel {
         isOnline: Bool = false,
         color: Color = .blue,
         imageName: String? = nil
-    ) -> ChatCellModel {
+    ) -> ChatCellModel_Old {
         
-        var chatModel = ChatCellModel.from(.preview(
+        var chatModel = ChatCellModel_Old.from(.preview(
             title: title,
             lastMessage: .preview(),
             type: sender == nil ? .privatePreview() : .groupPreview(),

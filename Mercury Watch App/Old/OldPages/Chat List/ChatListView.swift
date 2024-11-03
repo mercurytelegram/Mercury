@@ -21,7 +21,7 @@ struct ChatListView: View {
                 NavigationLink {
                     ChatDetailView(chat: chat, useMock: vm.isMock)
                 } label: {
-                    ChatCellView(model: chat)
+                    ChatCellView_Old(model: chat)
                 }
             }
             .listStyle(.carousel)

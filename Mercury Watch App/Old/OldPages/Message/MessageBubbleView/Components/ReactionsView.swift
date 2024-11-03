@@ -59,7 +59,7 @@ struct ReactionsView: View {
     func avatarsView() -> some View {
         HStack(spacing: 0) {
             ForEach(images.indices, id: \.self) { index in
-                AvatarView(image: images[index])
+                AvatarView_Old(image: images[index])
                     .frame(width: 20, height: 20)
                     .if(index != 0) { view in
                             view.mask {

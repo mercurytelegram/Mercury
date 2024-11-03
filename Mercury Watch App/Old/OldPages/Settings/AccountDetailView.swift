@@ -33,7 +33,7 @@ struct AccountDetailView: View {
                 .opacity(0.8)
             
             VStack {
-                AvatarView(model: AvatarModel(tdImage: vm.profileTDImage()))
+                AvatarView_Old(model: AvatarModel_Old(tdImage: vm.profileTDImage()))
                     .frame(width: 50, height: 50)
                 Text(vm.user?.fullName ?? "")
                     .fontDesign(.rounded)

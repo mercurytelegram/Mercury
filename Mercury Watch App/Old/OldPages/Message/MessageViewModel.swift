@@ -11,13 +11,13 @@ import AVFAudio
 
 class MessageViewModel: TDLibViewModel {
     
-    var chat: ChatCellModel
+    var chat: ChatCellModel_Old
     
     @Published var message: Message
     @Published var user: User?
     @Published var state: MessageSendingState? = nil
     
-    init(message: Message, chat: ChatCellModel) {
+    init(message: Message, chat: ChatCellModel_Old) {
         self.message = message
         self.chat = chat
         

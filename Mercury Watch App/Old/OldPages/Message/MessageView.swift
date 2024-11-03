@@ -16,7 +16,7 @@ struct MessageView: View {
         self._vm = StateObject(wrappedValue: vm)
     }
     
-    init(message: Message, chat: ChatCellModel) {
+    init(message: Message, chat: ChatCellModel_Old) {
         self._vm = StateObject(wrappedValue: MessageViewModel(message: message, chat: chat))
     }
     

@@ -9,14 +9,14 @@ import SwiftUI
 import TDLibKit
 
 
-struct ChatCellView: View {
+struct ChatCellView_Old: View {
     @State private var showMuteAlert = false
-    var model: ChatCellModel
+    var model: ChatCellModel_Old
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                AvatarView(model: model.avatar)
+                AvatarView_Old(model: model.avatar)
                     .frame(width: 50, height: 50)
                 VStack(alignment: .leading) {
                     Text(model.td.title)
@@ -95,27 +95,27 @@ struct ChatCellView: View {
 #if DEBUG
 #Preview("Unread") {
     List {
-        ChatCellView(model: .preview())
-        ChatCellView(model: .preview(unreadCount: 3))
-        ChatCellView(model: .preview(unreadCount: 30))
-        ChatCellView(model: .preview(unreadCount: 300))
-        ChatCellView(model: .preview(showUnreadMention: true))
-        ChatCellView(model: .preview(showUnreadReaction: true))
+        ChatCellView_Old(model: .preview())
+        ChatCellView_Old(model: .preview(unreadCount: 3))
+        ChatCellView_Old(model: .preview(unreadCount: 30))
+        ChatCellView_Old(model: .preview(unreadCount: 300))
+        ChatCellView_Old(model: .preview(showUnreadMention: true))
+        ChatCellView_Old(model: .preview(showUnreadReaction: true))
     }
     .listStyle(.carousel)
 }
 
 #Preview("Message") {
     List {
-        ChatCellView(model: .preview(message: "Lorem ipsum dolor sit amet, consectetur"))
-        ChatCellView(model: .preview(message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus efficitur."))
+        ChatCellView_Old(model: .preview(message: "Lorem ipsum dolor sit amet, consectetur"))
+        ChatCellView_Old(model: .preview(message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis rhoncus efficitur."))
     }
     .listStyle(.carousel)
 }
 
 #Preview("Test") {
     let number = 1
-    return ChatCellView(model: .preview(unreadCount: 1)).unreadNumber
+    return ChatCellView_Old(model: .preview(unreadCount: 1)).unreadNumber
 }
 
 #endif

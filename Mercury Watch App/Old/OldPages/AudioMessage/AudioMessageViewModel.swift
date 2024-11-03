@@ -43,10 +43,10 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     private var playerCancellable: AnyCancellable? = nil
     
     let filePath: URL
-    private let chat: ChatCellModel
+    private let chat: ChatCellModel_Old
     private let logger = LoggerService(AudioMessageViewModel.self)
     
-    init(chat: ChatCellModel, action: Binding<ChatAction?>) {
+    init(chat: ChatCellModel_Old, action: Binding<ChatAction?>) {
         
         // Recording file path
         let recName = "\(UUID().uuidString).m4a"

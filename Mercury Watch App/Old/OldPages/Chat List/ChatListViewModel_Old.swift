@@ -12,7 +12,7 @@ import SwiftUI
 
 class ChatListViewModel_Old: TDLibViewModel {
     
-    @Published var chats: [ChatCellModel] = []
+    @Published var chats: [ChatCellModel_Old] = []
     @Published var isLoading = false
     @Published var showSettings = false
     @Published var showNewMessage = false
@@ -283,7 +283,7 @@ class ChatListViewModel_Old: TDLibViewModel {
         }
     }
     
-    func getChatVM(for chat: ChatCellModel) -> ChatDetailViewModel_Old {
+    func getChatVM(for chat: ChatCellModel_Old) -> ChatDetailViewModel_Old {
         ChatDetailViewModel_Old(chat: chat)
     }
     

@@ -18,7 +18,7 @@ class MockChatListViewModel: ChatListViewModel_Old {
         self.folders.insert(ChatFolder(title: "Space 🔭🛰️", chatList: .chatListFolder(.init(chatFolderId: 0))), at: 1)
     }
     
-    let previewChats: [ChatCellModel] = [
+    let previewChats: [ChatCellModel_Old] = [
         .preview(
             title: "Alessandro",
             message: "How's the view from space? 🚀✨",
@@ -41,7 +41,7 @@ class MockChatListViewModel: ChatListViewModel_Old {
         ),
     ]
     
-    let previewArchivedChats: [ChatCellModel] = [
+    let previewArchivedChats: [ChatCellModel_Old] = [
         .preview(
             title: "iOS Devs",
             sender: "Alessandro",

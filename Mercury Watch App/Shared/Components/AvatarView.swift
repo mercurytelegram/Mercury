@@ -1,13 +1,11 @@
 //
 //  AvatarView.swift
-//  Mercury Watch App
+//  Mercury
 //
-//  Created by Alessandro Alberti on 08/05/24.
+//  Created by Marco Tammaro on 03/11/24.
 //
 
 import SwiftUI
-import TDLibKit
-
 
 struct AvatarView: View {
     var model: AvatarModel
@@ -52,7 +50,8 @@ struct AvatarView: View {
         }
     }
     
-    @ViewBuilder func circle(_ size: CGFloat) -> some View {
+    @ViewBuilder
+    func circle(_ size: CGFloat) -> some View {
         if let image = model.tdImage {
             TdImageView(tdImage: image)
                 .clipShape(Circle())
@@ -69,30 +68,48 @@ struct AvatarView: View {
     }
 }
 
+struct AvatarModel {
+    var tdImage: TDImage?
+    var letters: String = ""
+    var color: Color = .blue
+    var isOnline: Bool = false
+    
+    /// The id releated to the TDImage, nil if the avatar represent a group chat
+    var userId: Int64? = nil
+}
 
-#if DEBUG
-let avatarImageModel = AvatarModel(tdImage: TDImageMock("alessandro"), isOnline: true)
-let avatarLettersModel = AvatarModel(letters: "AA", isOnline: true)
+extension AvatarModel {
+    static var marco: AvatarModel {
+        AvatarModel(
+            tdImage: TDImageMock("marco")
+        )
+    }
+    
+    static var alessandro: AvatarModel {
+        AvatarModel(
+            tdImage: TDImageMock("alessandro")
+        )
+    }
+}
+
 
 #Preview("Big Image") {
-    AvatarView(model: avatarImageModel)
+    AvatarView(model: .alessandro)
         .frame(width: 150, height: 150)
 }
 
 #Preview("Small Image") {
-    AvatarView(model: avatarImageModel)
+    AvatarView(model: .marco)
         .frame(width: 50, height: 50)
 }
 
 #Preview("Big Letters") {
-    AvatarView(model: avatarLettersModel)
+    AvatarView(model: .init(letters: "AA"))
         .frame(width: 150, height: 150)
 }
 
 
 #Preview("Small Letters") {
-    AvatarView(model: avatarLettersModel)
+    AvatarView(model: .init(letters: "MT"))
         .frame(width: 50, height: 50)
 }
-
-#endif

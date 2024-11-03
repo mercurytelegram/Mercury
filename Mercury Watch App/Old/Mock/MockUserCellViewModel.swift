@@ -19,7 +19,7 @@ class MockUserCellViewModel: UserCellViewModel {
         super.init(user: user)
     }
     
-    override var avatarModel: AvatarModel {
-        return AvatarModel(tdImage: TDImageMock(imageName))
+    override var avatarModel: AvatarModel_Old {
+        return AvatarModel_Old(tdImage: TDImageMock(imageName))
     }
 }
