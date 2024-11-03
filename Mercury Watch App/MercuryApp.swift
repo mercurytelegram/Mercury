@@ -15,16 +15,15 @@ struct MercuryApp: App {
     var body: some Scene {
         WindowGroup {
             
-            // TODO: Change logic when isAuthenticated is nil
-            if let auth = AppState.shared.isAuthenticated {
-                if auth || AppState.shared.isMock {
-                    Text("Autenticated")
-                } else {
-                    LoginPage()
-                }
+            let isMock = AppState.shared.isMock
+            let isAuthenticated = AppState.shared.isAuthenticated ?? false
+            
+            if isMock || isAuthenticated {
+                HomePage()
             } else {
-                ProgressView()
+                LoginPage()
             }
+            
         }
         .onChange(of: isLuminanceReduced) {
             if isLuminanceReduced {

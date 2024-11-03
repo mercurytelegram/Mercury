@@ -51,6 +51,11 @@ struct LoginPage: View {
             of: vm.showPasswordView,
             vm.didChangeShowPasswordValue
         )
+        .overlay {
+            if AppState.shared.isAuthenticated == nil {
+                loader()
+            }
+        }
     }
     
     @ViewBuilder
@@ -90,13 +95,18 @@ struct LoginPage: View {
         )
         .overlay {
             if vm.isValidatingPassword {
-                ZStack {
-                    Rectangle()
-                        .foregroundStyle(.thinMaterial)
-                        .ignoresSafeArea(edges: .all)
-                    ProgressView()
-                }
+                loader()
             }
+        }
+    }
+    
+    @ViewBuilder
+    func loader() -> some View {
+        ZStack {
+            Rectangle()
+                .foregroundStyle(.thinMaterial)
+                .ignoresSafeArea(edges: .all)
+            ProgressView()
         }
     }
     

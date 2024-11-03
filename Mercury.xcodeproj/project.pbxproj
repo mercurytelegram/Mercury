@@ -102,6 +102,7 @@
 		A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89B2CD64B1700920564 /* LoginPage.swift */; };
 		A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8962CD64B1700920564 /* ChatListViewModel.swift */; };
 		A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8992CD64B1700920564 /* HomeViewModel.swift */; };
+		A080D8B22CD778F700920564 /* UserDefaulsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8B12CD778EF00920564 /* UserDefaulsService.swift */; };
 		A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD02C0638C4002A265C /* SendMessageService.swift */; };
 		A081AAD32C071C82002A265C /* Extensions+ChatAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD22C071C82002A265C /* Extensions+ChatAction.swift */; };
 		A081AAD52C0721C2002A265C /* Extensions+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD42C0721C2002A265C /* Extensions+Chat.swift */; };
@@ -227,6 +228,7 @@
 		A080D89C2CD64B1700920564 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A080D89E2CD64B1700920564 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		A080D89F2CD64B1700920564 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		A080D8B12CD778EF00920564 /* UserDefaulsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaulsService.swift; sourceTree = "<group>"; };
 		A081AAD02C0638C4002A265C /* SendMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageService.swift; sourceTree = "<group>"; };
 		A081AAD22C071C82002A265C /* Extensions+ChatAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+ChatAction.swift"; sourceTree = "<group>"; };
 		A081AAD42C0721C2002A265C /* Extensions+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extensions+Chat.swift"; sourceTree = "<group>"; };
@@ -554,6 +556,7 @@
 		A080D88D2CD64A7C00920564 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A080D8B12CD778EF00920564 /* UserDefaulsService.swift */,
 				A080D88B2CD64A7C00920564 /* SecretService.swift */,
 				A080D88C2CD64A7C00920564 /* SecretService-sample.swift */,
 			);
@@ -875,6 +878,7 @@
 				9B3FC90A2BF3DF2A00CDE217 /* AvatarModel.swift in Sources */,
 				9BAA75E72CD4F55E0007B4E2 /* TgsStickerView.swift in Sources */,
 				A05C1AC52BECCF4B00724B6E /* Extensions+Message.swift in Sources */,
+				A080D8B22CD778F700920564 /* UserDefaulsService.swift in Sources */,
 				A04389002C3FE395007B83C0 /* VoiceNoteContentView.swift in Sources */,
 				4A4743F22BF796DF00264855 /* Extension+Color.swift in Sources */,
 				9B4451FA2C45C63D00A6EBC2 /* Extensions+User.swift in Sources */,

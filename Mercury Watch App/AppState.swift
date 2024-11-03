@@ -11,5 +11,5 @@ import Foundation
 class AppState {
     static var shared = AppState()
     var isMock: Bool = false
-    var isAuthenticated: Bool? = false
+    var isAuthenticated: Bool? = UserDefaulsService.isAuthenticated
 }

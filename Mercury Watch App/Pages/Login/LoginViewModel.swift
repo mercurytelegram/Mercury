@@ -27,13 +27,6 @@ class LoginViewModel: TDLibViewModel {
         "Point your phone at the QR code to confirm login"
     ]
     
-    private var isClosing = false
-    private let tdlibPath = FileManager.default
-        .urls(for: .cachesDirectory, in: .userDomainMask)
-        .first?
-        .appendingPathComponent("tdlib", isDirectory: true)
-        .path
-    
     func didPressDemoButton() {
         AppState.shared.isMock = true
     }
@@ -74,14 +67,7 @@ class LoginViewModel: TDLibViewModel {
     
     func manageUpdateAuthorizationState(state: AuthorizationState) {
         
-        DispatchQueue.main.async {
-            AppState.shared.isAuthenticated = state == .authorizationStateReady
-        }
-        
         switch state {
-        case .authorizationStateWaitTdlibParameters:
-            setTdlibParameters()
-            break
         case .authorizationStateWaitPhoneNumber:
             self.getQrcodeLink()
             break
@@ -94,27 +80,6 @@ class LoginViewModel: TDLibViewModel {
             DispatchQueue.main.async {
                 self.qrCodeLink = nil
                 self.showPasswordView = true
-            }
-            break
-        case .authorizationStateLoggingOut:
-            if !isClosing { TDLibManager.shared.close() }
-            break
-        case .authorizationStateClosing:
-            self.isClosing = true
-            DispatchQueue.main.async {
-                self.isValidatingPassword = false
-                self.showPasswordView = false
-                self.qrCodeLink = nil
-                self.statusMessage = "Connecting..."
-                self.password = ""
-                AppState.shared.isAuthenticated = nil
-            }
-            break
-        case .authorizationStateClosed:
-            try? FileManager.default.removeItem(atPath: tdlibPath!)
-            TDLibManager.shared.createClient()
-            DispatchQueue.main.async {
-                self.isClosing = false
             }
             break
         default:
@@ -165,45 +130,6 @@ class LoginViewModel: TDLibViewModel {
                 self.isValidatingPassword = false
             }
             
-        }
-    }
-    
-    func setTdlibParameters() {
-        Task {
-            do {
-                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                let device = WKInterfaceDevice.current()
-                let deviceModel = device.name
-                let systemVersion = "\(device.systemName) \(device.systemVersion)"
-                
-                let result = try await TDLibManager.shared.client?.setTdlibParameters(
-                    apiHash: SecretService.apiHash,
-                    apiId: SecretService.apiId,
-                    applicationVersion: appVersion,
-                    databaseDirectory: tdlibPath,
-                    databaseEncryptionKey: nil,
-                    deviceModel: deviceModel,
-                    filesDirectory: nil,
-                    systemLanguageCode: "en-US",
-                    systemVersion: systemVersion,
-                    useChatInfoDatabase: true,
-                    useFileDatabase: true,
-                    useMessageDatabase: true,
-                    useSecretChats: false,
-                    useTestDc: false
-                )
-                
-                #if DEBUG
-                try await TDLibManager.shared.client?.setLogVerbosityLevel(newVerbosityLevel: 1)
-                #else
-                try await TDLibManager.shared.client?.setLogVerbosityLevel(newVerbosityLevel: 0)
-                #endif
-                
-                self.logger.log(result)
-        
-            } catch {
-                self.logger.log(error, level: .error)
-            }
         }
     }
     
