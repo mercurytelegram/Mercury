@@ -1,5 +1,5 @@
 //
-//  Extensions+FormattedText.swift
+//  FormattedText+.swift
 //  Mercury Watch App
 //
 //  Created by Alessandro Alberti on 31/05/24.

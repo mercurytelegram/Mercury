@@ -1,5 +1,5 @@
 //
-//  Extensions+TDImage.swift
+//  TDImage+.swift
 //  Mercury Watch App
 //
 //  Created by Alessandro Alberti on 16/07/24.

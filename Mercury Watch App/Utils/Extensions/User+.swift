@@ -1,5 +1,5 @@
 //
-//  Extensions+User.swift
+//  User+.swift
 //  Mercury Watch App
 //
 //  Created by Alessandro Alberti on 15/07/24.

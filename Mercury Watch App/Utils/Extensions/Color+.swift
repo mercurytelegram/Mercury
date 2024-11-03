@@ -1,5 +1,5 @@
 //
-//  Extension+Color.swift
+//  Color+.swift
 //  Mercury Watch App
 //
 //  Created by Alessandro Alberti on 17/05/24.
