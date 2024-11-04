@@ -12,15 +12,11 @@ import SwiftUI
 @Observable
 class ChatListViewModel: TDLibViewModel {
     
-    let folder: ChatFolder = .main
-    
-    // TODO: pass folder from page
-//    init(folder: ChatFolder) {
-//        self.folder = folder
-//    }
+    var folder: ChatFolder? {
+        didSet { self.initChatList() }
+    }
     
     var chats: [ChatCellModel] = []
-    
     var isLoading: Bool = false
     var showNewMessage: Bool = false
     
@@ -28,15 +24,6 @@ class ChatListViewModel: TDLibViewModel {
     
     func didPressOnNewMessage() {
         self.showNewMessage = true
-    }
-    
-    override func connectionStateUpdate(state: ConnectionState) {
-        guard state == .connectionStateReady || state == .connectionStateConnecting
-        else { return }
-        
-        // if state is connecting, request chats will load cached chats
-        // if state is ready, request chats will load chats from server
-        self.initChatList()
     }
     
     override func updateHandler(update: Update) {
@@ -76,7 +63,7 @@ class ChatListViewModel: TDLibViewModel {
         }
     }
     
-    private func initChatList() {
+    fileprivate func initChatList() {
         
         Task.detached(priority: .high) {
             
@@ -101,10 +88,13 @@ class ChatListViewModel: TDLibViewModel {
         
         var chatsData = [Chat]()
         
+        guard let chatList = folder?.chatList
+        else { return [] }
+        
         do {
             
             let result = try await TDLibManager.shared.client?.getChats(
-                chatList: folder.chatList,
+                chatList: chatList,
                 limit: limit
             )
             
@@ -138,7 +128,7 @@ class ChatListViewModel: TDLibViewModel {
         
         let letters: String = "\(chat.title.prefix(1))"
         let avatar = AvatarModel(tdImage: chat.photo, letters: letters, userId: userId)
-        let position = chat.positions.first(where: { $0.list == folder.chatList })?.order.rawValue
+        let position = chat.positions.first(where: { $0.list == folder?.chatList })?.order.rawValue
         
         var messageStyle: ChatCellModel.MessageStyle? = nil
         if let message = chat.lastMessage?.description {
@@ -293,7 +283,7 @@ extension ChatListViewModel {
                     self.chats[index].messageStyle = .message(desc)
                     self.chats[index].time = date.stringDescription
                     
-                    if let position = chat.positions.first(where: { $0.list == folder.chatList }) {
+                    if let position = chat.positions.first(where: { $0.list == folder?.chatList }) {
                         let positonUpdate = UpdateChatPosition(chatId: update.chatId, position: position)
                         self.updateChatPosition(positonUpdate)
                     }
@@ -389,11 +379,26 @@ class ChatListViewModelMock: ChatListViewModel {
         super.init()
         
         self.chats = [
-            .init(id: 0, title: "Alessandro", time: "09:41", avatar: .alessandro),
-            .init(id: 1, title: "Marco", time: "09:41", avatar: .marco),
+            .init(
+                id: 0,
+                title: "Alessandro",
+                time: "10:09",
+                avatar: .alessandro,
+                messageStyle: .message("Lorem ipsum dolor sit amet."),
+                unreadBadgeStyle: .message(count: 3)
+            ),
+            .init(
+                id: 1,
+                title: "Marco",
+                time: "09:41",
+                avatar: .marco,
+                messageStyle: .action("is typing"),
+                unreadBadgeStyle: .reaction
+            ),
         ]
     }
     
     override func connectionStateUpdate(state: ConnectionState) {}
     override func updateHandler(update: Update) {}
+    override func initChatList() {}
 }

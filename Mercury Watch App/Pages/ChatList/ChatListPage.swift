@@ -14,7 +14,7 @@ struct ChatListPage: View {
     var vm = ChatListViewModel.init
     
     init(folder: ChatFolder) {
-        // TODO: retrive folder and initialize VM with it
+        vm.folder = folder
     }
     
     var body: some View {
@@ -26,7 +26,7 @@ struct ChatListPage: View {
             List(vm.chats) { chat in
                 NavigationLink {
                     // TODO: connect to detail once detail page will be completed
-//                    ChatDetailView(chat: chat, useMock: vm.isMock)
+//                    ChatDetailView(chat: chat)
                 } label: {
                     ChatCellView(model: chat) {
                         vm.didPressMute(on: chat)
@@ -34,7 +34,7 @@ struct ChatListPage: View {
                 }
             }
             .listStyle(.carousel)
-            .navigationTitle(vm.folder.title)
+            .navigationTitle(vm.folder?.title ?? "")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("New Chat", systemImage: "square.and.pencil") {
@@ -50,5 +50,7 @@ struct ChatListPage: View {
 }
 
 #Preview(traits: .mock()) {
-    ChatListPage(folder: .main)
+    NavigationStack {
+        ChatListPage(folder: .main)
+    }
 }

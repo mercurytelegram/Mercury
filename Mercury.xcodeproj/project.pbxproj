@@ -294,13 +294,6 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
-		4AE620202C09C66700722512 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		4AE620232C09C72600722512 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -495,7 +488,6 @@
 		A05C19FF2BEB748500724B6E /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				4AE620202C09C66700722512 /* Extensions */,
 				4AE620232C09C72600722512 /* Services */,
 				4AE620242C09C99100722512 /* Views */,
 			);
