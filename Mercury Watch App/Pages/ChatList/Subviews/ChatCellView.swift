@@ -18,9 +18,9 @@ struct ChatCellView: View {
                 AvatarView(model: model.avatar)
                     .frame(width: 50, height: 50)
                 VStack(alignment: .leading) {
-                    Text(model.title)
-                        .font(.headline)
-                        .lineLimit(2)
+                    
+                    title()
+                        
                     HStack {
                         
                         if model.unreadBadgeStyle != nil {
@@ -44,6 +44,19 @@ struct ChatCellView: View {
             allowsFullSwipe: false,
             content: muteButton
         )
+    }
+    
+    @ViewBuilder
+    func title() -> some View {
+        Group {
+            Text(model.title)
+                .font(.headline)
+            +
+            Text(Image(systemName: "speaker.slash.fill"))
+                .font(.caption)
+                .foregroundColor(model.isMuted ? .secondary : .clear)
+        }
+        .lineLimit(2)
     }
     
     @ViewBuilder
@@ -108,10 +121,10 @@ struct ChatCellView: View {
     
     @ViewBuilder
     func muteButton() -> some View {
-        Button {
-            onPressMuteButton()
-        } label: {
-            Label("Mute", systemImage: "speaker.slash.fill")
+        Button(action: onPressMuteButton) {
+            model.isMuted
+                ? Label("Unmute", systemImage: "speaker.wave.3.fill")
+                : Label("Mute", systemImage: "speaker.slash.fill")
         }
         .tint(.orange)
     }
@@ -124,6 +137,7 @@ struct ChatCellModel: Identifiable {
     var title: String
     var time: String
     var avatar: AvatarModel
+    var isMuted: Bool
     
     var messageStyle: MessageStyle?
     var unreadBadgeStyle: UnreadStyle?
@@ -145,6 +159,7 @@ struct ChatCellModel: Identifiable {
         title: "Alessandro",
         time: "09:41",
         avatar: .alessandro,
+        isMuted: false,
         messageStyle: nil,
         unreadBadgeStyle: nil
     )
@@ -157,6 +172,7 @@ struct ChatCellModel: Identifiable {
         title: "Alessandro",
         time: "09:41",
         avatar: .alessandro,
+        isMuted: false,
         messageStyle: .message("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
         unreadBadgeStyle: nil
     )
@@ -169,6 +185,7 @@ struct ChatCellModel: Identifiable {
         title: "Alessandro",
         time: "09:41",
         avatar: .alessandro,
+        isMuted: false,
         messageStyle: .action("is typing"),
         unreadBadgeStyle: nil
     )
@@ -182,6 +199,7 @@ struct ChatCellModel: Identifiable {
         title: "Marco",
         time: "09:41",
         avatar: .marco,
+        isMuted: false,
         messageStyle: .message("Lorem ipsum dolor sit amet."),
         unreadBadgeStyle: .message(count: 3)
     )
@@ -194,6 +212,7 @@ struct ChatCellModel: Identifiable {
         title: "Marco",
         time: "09:41",
         avatar: .marco,
+        isMuted: false,
         messageStyle: .message("Lorem ipsum dolor sit amet."),
         unreadBadgeStyle: .mention
     )
@@ -206,8 +225,21 @@ struct ChatCellModel: Identifiable {
         title: "Marco",
         time: "09:41",
         avatar: .marco,
+        isMuted: false,
         messageStyle: .message("Lorem ipsum dolor sit amet."),
         unreadBadgeStyle: .reaction
+    )
+    
+    ChatCellView(model: model) {}
+}
+
+#Preview("Muted") {
+    let model = ChatCellModel(
+        title: "A very long chat title",
+        time: "09:41",
+        avatar: .marco,
+        isMuted: true,
+        messageStyle: .message("Lorem ipsum dolor sit amet.")
     )
     
     ChatCellView(model: model) {}

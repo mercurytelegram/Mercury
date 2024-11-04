@@ -18,32 +18,33 @@ struct ChatListPage: View {
     }
     
     var body: some View {
-        
-        if vm.isLoading {
-            ProgressView()
-        } else {
-            
-            List(vm.chats) { chat in
-                NavigationLink {
-                    // TODO: connect to detail once detail page will be completed
-//                    ChatDetailView(chat: chat)
-                } label: {
-                    ChatCellView(model: chat) {
-                        vm.didPressMute(on: chat)
+        NavigationStack {
+            if vm.isLoading {
+                ProgressView()
+            } else {
+                
+                List(vm.chats) { chat in
+                    NavigationLink {
+                        // TODO: connect to detail once detail page will be completed
+    //                    ChatDetailView(chat: chat)
+                    } label: {
+                        ChatCellView(model: chat) {
+                            vm.didPressMute(on: chat)
+                        }
                     }
                 }
-            }
-            .listStyle(.carousel)
-            .navigationTitle(vm.folder?.title ?? "")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("New Chat", systemImage: "square.and.pencil") {
-                        vm.didPressOnNewMessage()
+                .listStyle(.carousel)
+                .navigationTitle(vm.folder?.title ?? "")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("New Chat", systemImage: "square.and.pencil") {
+                            vm.didPressOnNewMessage()
+                        }
                     }
                 }
-            }
-            .sheet(isPresented: $vm.showNewMessage) {
-                AlertView.inDevelopment("new messages are")
+                .sheet(isPresented: $vm.showNewMessage) {
+                    AlertView.inDevelopment("new messages are")
+                }
             }
         }
     }

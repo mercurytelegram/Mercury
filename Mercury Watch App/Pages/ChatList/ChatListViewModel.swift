@@ -20,7 +20,10 @@ class ChatListViewModel: TDLibViewModel {
     var isLoading: Bool = false
     var showNewMessage: Bool = false
     
-    func didPressMute(on chat: ChatCellModel) {}
+    func didPressMute(on chat: ChatCellModel) {
+        guard let id = chat.id else { return }
+        muteChat(id)
+    }
     
     func didPressOnNewMessage() {
         self.showNewMessage = true
@@ -42,6 +45,8 @@ class ChatListViewModel: TDLibViewModel {
                 self.updateChatLastMessage(update)
             case .updateChatPosition(let update):
                 self.updateChatPosition(update)
+            case .updateChatNotificationSettings(let update):
+                self.updateChatNotificationSettings(update)
 
             // Chat Counters update
             case .updateChatReadInbox(let update):
@@ -129,6 +134,7 @@ class ChatListViewModel: TDLibViewModel {
         let letters: String = "\(chat.title.prefix(1))"
         let avatar = AvatarModel(tdImage: chat.photo, letters: letters, userId: userId)
         let position = chat.positions.first(where: { $0.list == folder?.chatList })?.order.rawValue
+        let isMuted = chat.notificationSettings.muteFor != 0
         
         var messageStyle: ChatCellModel.MessageStyle? = nil
         if let message = chat.lastMessage?.description {
@@ -150,6 +156,7 @@ class ChatListViewModel: TDLibViewModel {
             title: chat.title,
             time: date.stringDescription,
             avatar: avatar,
+            isMuted: isMuted,
             messageStyle: messageStyle,
             unreadBadgeStyle: unreadBadgeStyle
         )
@@ -163,11 +170,50 @@ class ChatListViewModel: TDLibViewModel {
         return p1 > p2 // && elem1.id > elem2.id
     }
     
+    private func muteChat(_ chatId: Int64) {
+        Task {
+            do {
+                
+                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
+                else { return }
+                
+                let currentNotificationSettings = chat.notificationSettings
+                let currentIsMuted = currentNotificationSettings.muteFor != 0
+                
+                let oneHourInSecs = 60 * 60
+                let newNotificationSettings = currentNotificationSettings.copyWith(
+                    muteFor: currentIsMuted ? 0 : oneHourInSecs
+                )
+                
+                try await TDLibManager.shared.client?.setChatNotificationSettings(
+                    chatId: chat.id,
+                    notificationSettings: newNotificationSettings
+                )
+                
+                await MainActor.run {
+                    let index = self.chats.firstIndex { c in c.id == chatId }
+                    guard let index, index != -1 else { return }
+                    
+                    withAnimation {
+                        self.chats[index].isMuted = !currentIsMuted
+                    }
+                }
+                
+                self.logger.log("Notification settings updated")
+                
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+            
+        }
+
+    }
 }
 
 //MARK: - Updates handler
 extension ChatListViewModel {
     
+    @MainActor
     private func updateChatRemovedFromList(_ update: UpdateChatRemovedFromList) {
         let chatId = update.chatId
         withAnimation {
@@ -205,7 +251,7 @@ extension ChatListViewModel {
         guard self.chats.contains(where: { $0.id == chatId })
         else { return }
         
-        Task {
+        Task.detached {
             do {
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
                 else { return }
@@ -257,7 +303,7 @@ extension ChatListViewModel {
         
         guard let message else { return }
         
-        Task {
+        Task.detached {
             
             do {
                 
@@ -283,7 +329,7 @@ extension ChatListViewModel {
                     self.chats[index].messageStyle = .message(desc)
                     self.chats[index].time = date.stringDescription
                     
-                    if let position = chat.positions.first(where: { $0.list == folder?.chatList }) {
+                    if let position = chat.positions.first(where: { $0.list == self.folder?.chatList }) {
                         let positonUpdate = UpdateChatPosition(chatId: update.chatId, position: position)
                         self.updateChatPosition(positonUpdate)
                     }
@@ -369,6 +415,18 @@ extension ChatListViewModel {
         }
     }
     
+    @MainActor
+    private func updateChatNotificationSettings(_ update: UpdateChatNotificationSettings) {
+        let chatId = update.chatId
+        let isMuted = update.notificationSettings.muteFor != 0
+        
+        let index = self.chats.firstIndex { c in c.id == chatId }
+        guard let index, index != -1 else { return }
+        
+        withAnimation {
+            self.chats[index].isMuted = isMuted
+        }
+    }
 }
 
 
@@ -384,6 +442,7 @@ class ChatListViewModelMock: ChatListViewModel {
                 title: "Alessandro",
                 time: "10:09",
                 avatar: .alessandro,
+                isMuted: false,
                 messageStyle: .message("Lorem ipsum dolor sit amet."),
                 unreadBadgeStyle: .message(count: 3)
             ),
@@ -392,6 +451,7 @@ class ChatListViewModelMock: ChatListViewModel {
                 title: "Marco",
                 time: "09:41",
                 avatar: .marco,
+                isMuted: false,
                 messageStyle: .action("is typing"),
                 unreadBadgeStyle: .reaction
             ),

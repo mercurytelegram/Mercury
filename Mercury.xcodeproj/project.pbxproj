@@ -105,6 +105,7 @@
 		A080D8B22CD778F700920564 /* UserDefaulsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8B12CD778EF00920564 /* UserDefaulsService.swift */; };
 		A080D8B82CD7843000920564 /* ChatCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8B72CD7842A00920564 /* ChatCellView.swift */; };
 		A080D8BF2CD78CED00920564 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8BE2CD78CED00920564 /* AvatarView.swift */; };
+		A080D8C42CD9666C00920564 /* ChatNotificationSettings+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */; };
 		A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD02C0638C4002A265C /* SendMessageService.swift */; };
 		A081AAD32C071C82002A265C /* ChatAction+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD22C071C82002A265C /* ChatAction+.swift */; };
 		A081AAD52C0721C2002A265C /* Chat+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD42C0721C2002A265C /* Chat+.swift */; };
@@ -233,6 +234,7 @@
 		A080D8B12CD778EF00920564 /* UserDefaulsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaulsService.swift; sourceTree = "<group>"; };
 		A080D8B72CD7842A00920564 /* ChatCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellView.swift; sourceTree = "<group>"; };
 		A080D8BE2CD78CED00920564 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
+		A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatNotificationSettings+.swift"; sourceTree = "<group>"; };
 		A081AAD02C0638C4002A265C /* SendMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageService.swift; sourceTree = "<group>"; };
 		A081AAD22C071C82002A265C /* ChatAction+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatAction+.swift"; sourceTree = "<group>"; };
 		A081AAD42C0721C2002A265C /* Chat+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Chat+.swift"; sourceTree = "<group>"; };
@@ -349,6 +351,7 @@
 				A081AAD62C072536002A265C /* MessageSender+.swift */,
 				A081AAD42C0721C2002A265C /* Chat+.swift */,
 				A081AAD22C071C82002A265C /* ChatAction+.swift */,
+				A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */,
 				4A4743F12BF796DF00264855 /* Color+.swift */,
 				9B4451F92C45C63D00A6EBC2 /* User+.swift */,
 				9B2805CB2C4671C500F7DF72 /* TDImage+.swift */,
@@ -876,6 +879,7 @@
 				A04389052C3FE3B2007B83C0 /* AudioMessageView.swift in Sources */,
 				9B039F482C68176800CB6BE4 /* ReactionsView.swift in Sources */,
 				9B0B6CB72CD64F6100BB6A94 /* AppState.swift in Sources */,
+				A080D8C42CD9666C00920564 /* ChatNotificationSettings+.swift in Sources */,
 				9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */,
 				A04389062C3FE3B2007B83C0 /* AudioMessageViewModel.swift in Sources */,
 				A080D8A22CD64B1700920564 /* ChatDetailPage.swift in Sources */,
