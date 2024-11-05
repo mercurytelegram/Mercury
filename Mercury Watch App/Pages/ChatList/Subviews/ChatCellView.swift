@@ -18,15 +18,11 @@ struct ChatCellView: View {
                 AvatarView(model: model.avatar)
                     .frame(width: 50, height: 50)
                 VStack(alignment: .leading) {
-                    
                     title()
-                        
                     HStack {
-                        
                         if model.unreadBadgeStyle != nil {
                             unreadBadge()
                         }
-                        
                         Text(model.time)
                             .font(.caption)
                             .foregroundStyle(.tertiary)
@@ -48,13 +44,18 @@ struct ChatCellView: View {
     
     @ViewBuilder
     func title() -> some View {
+        
+        let isMutedText = model.isMuted
+        ? Text(Image(systemName: "speaker.slash.fill"))
+        : Text("")
+        
         Group {
             Text(model.title)
                 .font(.headline)
             +
-            Text(Image(systemName: "speaker.slash.fill"))
+            isMutedText
                 .font(.caption)
-                .foregroundColor(model.isMuted ? .secondary : .clear)
+                .foregroundColor(.secondary)
         }
         .lineLimit(2)
     }

@@ -180,9 +180,17 @@ class ChatListViewModel: TDLibViewModel {
                 let currentNotificationSettings = chat.notificationSettings
                 let currentIsMuted = currentNotificationSettings.muteFor != 0
                 
-                let oneHourInSecs = 60 * 60
+                let oneHour = 60 * 60
+                let oneDay = 24 * oneHour
+                let oneYear = oneDay * 365
+                
+                /// A value of 0 mens unmute
+                let unmute = 0
+                /// A values above 366 days means mute forever
+                let foreverMute = oneYear + (oneDay * 2)
+                
                 let newNotificationSettings = currentNotificationSettings.copyWith(
-                    muteFor: currentIsMuted ? 0 : oneHourInSecs
+                    muteFor: currentIsMuted ? unmute : foreverMute
                 )
                 
                 try await TDLibManager.shared.client?.setChatNotificationSettings(
