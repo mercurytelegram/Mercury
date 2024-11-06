@@ -9,8 +9,8 @@ import SwiftUI
 import MapKit
 import TDLibKit
 
-struct LocationContentView: View {
-    @EnvironmentObject var vm: MessageViewModel
+struct LocationContentView_Old: View {
+    @EnvironmentObject var vm: MessageViewModel_Old
     var title: String
     var coordinate: CLLocationCoordinate2D
     var color: Color?
@@ -70,18 +70,18 @@ struct LocationContentView: View {
 }
 
 #Preview {
-    LocationContentView(coordinate: CLLocationCoordinate2DMake(
+    LocationContentView_Old(coordinate: CLLocationCoordinate2DMake(
         37.33187132756376, -122.02965972794414))
-    .environmentObject(MessageViewModelMock() as MessageViewModel)
+    .environmentObject(MessageViewModelMock() as MessageViewModel_Old)
 }
 
 #Preview {
-    LocationContentView(
+    LocationContentView_Old(
         title: "",
         coordinate: CLLocationCoordinate2DMake(
         37.33187132756376, -122.02965972794414),
         color: .white,
         markerSymbol: ""
     )
-    .environmentObject(MessageViewModelMock() as MessageViewModel)
+    .environmentObject(MessageViewModelMock() as MessageViewModel_Old)
 }

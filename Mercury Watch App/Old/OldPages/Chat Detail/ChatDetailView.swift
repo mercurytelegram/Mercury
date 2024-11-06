@@ -41,7 +41,7 @@ struct ChatDetailView: View {
                     .padding()
                  
                     ForEach(vm.messages) { message in
-                        MessageView(message: message, chat: vm.chat)
+                        MessageView_Old(message: message, chat: vm.chat)
                             .id(message.id)
                             .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
                                 content

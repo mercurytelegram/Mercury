@@ -8,12 +8,12 @@
 import TDLibKit
 import SwiftUI
 
-class MessageViewModelMock: MessageViewModel {
+class MessageViewModelMock: MessageViewModel_Old {
     private var _userFullName: String
     private var _titleColor: Color
     private var _showSender: Bool
     
-    init(message: Message = .preview(), name: String = "placeholder", titleColor: Color = .blue, showSender: Bool = false, state: MessageSendingState? = nil) {
+    init(message: Message = .preview(), name: String = "placeholder", titleColor: Color = .blue, showSender: Bool = false, state: MessageSendingState_Old? = nil) {
         _userFullName = name
         _titleColor = titleColor
         _showSender = showSender

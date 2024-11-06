@@ -9,10 +9,10 @@ import SwiftUI
 import TDLibKit
 import DSWaveformImageViews
 
-struct VoiceNoteContentView: View {
+struct VoiceNoteContentView_Old: View {
     
     @ObservedObject var vm: VoiceNoteContentViewModel
-    @EnvironmentObject var messageVM: MessageViewModel
+    @EnvironmentObject var messageVM: MessageViewModel_Old
     
     init(message: MessageVoiceNote) {
         self.vm = VoiceNoteContentViewModel(message: message)

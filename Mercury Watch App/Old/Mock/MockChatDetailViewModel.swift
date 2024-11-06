@@ -54,7 +54,7 @@ class MockChatDetailViewModel: ChatDetailViewModel_Old {
         
     }
     
-    func messageViewModel(for message: Message) -> MessageViewModel {
+    func messageViewModel(for message: Message) -> MessageViewModel_Old {
         MessageViewModelMock(message: message, name: "Name", titleColor: .blue, showSender: true)
     }
     

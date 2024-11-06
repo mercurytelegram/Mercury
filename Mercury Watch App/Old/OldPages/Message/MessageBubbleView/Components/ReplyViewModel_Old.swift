@@ -8,7 +8,7 @@
 import SwiftUI
 import TDLibKit
 
-class ReplyViewModel: ObservableObject {
+class ReplyViewModel_Old: ObservableObject {
     @Published var color: Color = .blue
     @Published var title: String = "Title"
     @Published var text: AttributedString = "Message"

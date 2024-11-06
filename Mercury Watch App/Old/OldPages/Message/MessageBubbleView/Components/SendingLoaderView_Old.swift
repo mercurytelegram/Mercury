@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct SendingLoaderView: View {
+struct SendingLoaderView_Old: View {
     @State private var animating = false
     
     var body: some View {
@@ -24,5 +24,5 @@ struct SendingLoaderView: View {
 }
 
 #Preview {
-    SendingLoaderView()
+    SendingLoaderView_Old()
 }

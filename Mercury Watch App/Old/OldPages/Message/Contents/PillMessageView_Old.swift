@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct PillMessageView: View {
-    @EnvironmentObject var vm: MessageViewModel
+struct PillMessageView_Old: View {
+    @EnvironmentObject var vm: MessageViewModel_Old
     var description: String
     
     var user: String {
@@ -30,22 +30,22 @@ struct PillMessageView: View {
 
 #Preview {
     ScrollView {
-        PillMessageView(description: "pinned a message")
+        PillMessageView_Old(description: "pinned a message")
             .environmentObject(
                 MessageViewModelMock(
                     name: "Craig Federighi",
                     showSender: true
-                ) as MessageViewModel
+                ) as MessageViewModel_Old
             )
         Group {
-            PillMessageView(description: "pinned a message")
-            PillMessageView(description: "changed the group name to \"test\"")
+            PillMessageView_Old(description: "pinned a message")
+            PillMessageView_Old(description: "changed the group name to \"test\"")
         }
         .environmentObject(
             MessageViewModelMock(
                 message: .preview(
                     isOutgoing: true)
-            ) as MessageViewModel
+            ) as MessageViewModel_Old
         )
         
             

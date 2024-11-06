@@ -9,7 +9,7 @@ import SwiftUI
 import TDLibKit
 
 struct ReactionsView: View {
-    var reaction: Reaction
+    var reaction: ReactionModel
     var blurredBg: Bool = false
     @State private var images: [TDImage] = []
     
@@ -99,7 +99,7 @@ struct ReactionsView: View {
     }
 }
 
-struct Reaction: Hashable {
+struct ReactionModel: Hashable {
     let emoji: String
     let count: Int
     let isSelected: Bool
@@ -108,9 +108,9 @@ struct Reaction: Hashable {
 
 #Preview {
     VStack {
-        ReactionsView(reaction: Reaction(emoji: "🔥", count: 3, isSelected: true))
-        ReactionsView(reaction: Reaction(emoji: "❤️", count: 1, isSelected: false))
-        ReactionsView(reaction: Reaction(emoji: "👍", count: 4, isSelected: false))
+        ReactionsView(reaction: ReactionModel(emoji: "🔥", count: 3, isSelected: true))
+        ReactionsView(reaction: ReactionModel(emoji: "❤️", count: 1, isSelected: false))
+        ReactionsView(reaction: ReactionModel(emoji: "👍", count: 4, isSelected: false))
     }
     .scaleEffect(1.5)
 }

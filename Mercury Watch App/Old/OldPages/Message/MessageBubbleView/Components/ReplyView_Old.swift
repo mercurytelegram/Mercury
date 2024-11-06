@@ -8,11 +8,11 @@
 import SwiftUI
 import TDLibKit
 
-struct ReplyView: View {
-    @StateObject private var vm: ReplyViewModel
+struct ReplyView_Old: View {
+    @StateObject private var vm: ReplyViewModel_Old
     
     init(message: Message) {
-        self._vm = StateObject(wrappedValue: ReplyViewModel(message: message))
+        self._vm = StateObject(wrappedValue: ReplyViewModel_Old(message: message))
     }
     
     var body: some View {
@@ -41,10 +41,10 @@ struct ReplyView: View {
 
 #Preview {
     VStack {
-        ReplyView(message:
+        ReplyView_Old(message:
                 .preview(isOutgoing: false)
         )
-        ReplyView(message:
+        ReplyView_Old(message:
                 .preview(isOutgoing: true)
         )
     }

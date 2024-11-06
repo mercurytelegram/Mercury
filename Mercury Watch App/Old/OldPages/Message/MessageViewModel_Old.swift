@@ -9,13 +9,13 @@ import SwiftUI
 import TDLibKit
 import AVFAudio
 
-class MessageViewModel: TDLibViewModel {
+class MessageViewModel_Old: TDLibViewModel {
     
     var chat: ChatCellModel_Old
     
     @Published var message: Message
     @Published var user: User?
-    @Published var state: MessageSendingState? = nil
+    @Published var state: MessageSendingState_Old? = nil
     
     init(message: Message, chat: ChatCellModel_Old) {
         self.message = message
@@ -29,7 +29,7 @@ class MessageViewModel: TDLibViewModel {
     
     private func setMessageStatus(lastReadMessageId: Int64) {
         
-        var newState: MessageSendingState? = .delivered
+        var newState: MessageSendingState_Old? = .delivered
 
         if !self.message.isOutgoing {
             // The state will not appear on ingoing messages
@@ -178,14 +178,14 @@ class MessageViewModel: TDLibViewModel {
         .white.opacity(0.2)
     }
     
-    var reactions: [Reaction] {
+    var reactions: [Reaction_Old] {
         guard let reactions = message.interactionInfo?.reactions?.reactions else { return [] }
         return reactions.map { reaction in
             var emoji = "?"
             if case .reactionTypeEmoji(let type) = reaction.type {
                 emoji = type.emoji
             }
-            return Reaction(
+            return Reaction_Old(
                 emoji: emoji,
                 count: reaction.totalCount,
                 isSelected: reaction.isChosen,
@@ -242,6 +242,6 @@ class MessageViewModel: TDLibViewModel {
     
 }
 
-enum MessageSendingState {
+enum MessageSendingState_Old {
     case sending, delivered, seen, failed
 }
