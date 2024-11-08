@@ -11,7 +11,7 @@ import AVFoundation
 import Combine
 import TDLibKit
 
-class AudioMessageViewModel: NSObject, ObservableObject {
+class AudioMessageViewModel_Old: NSObject, ObservableObject {
     
     /*
      
@@ -44,7 +44,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     
     let filePath: URL
     private let chat: ChatCellModel_Old
-    private let logger = LoggerService(AudioMessageViewModel.self)
+    private let logger = LoggerService(AudioMessageViewModel_Old.self)
     
     init(chat: ChatCellModel_Old, action: Binding<ChatAction?>) {
         
@@ -137,7 +137,7 @@ class AudioMessageViewModel: NSObject, ObservableObject {
     
 }
 
-extension AudioMessageViewModel: AVAudioPlayerDelegate {
+extension AudioMessageViewModel_Old: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
             self.player?.stopPlayingAudio()

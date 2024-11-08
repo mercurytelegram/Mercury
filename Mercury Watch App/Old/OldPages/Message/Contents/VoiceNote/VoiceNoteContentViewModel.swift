@@ -14,7 +14,7 @@ class VoiceNoteContentViewModel: NSObject, ObservableObject {
     
     let message: MessageVoiceNote
     var player: PlayerService?
-    private let logger = LoggerService(AudioMessageViewModel.self)
+    private let logger = LoggerService(AudioMessageViewModel_Old.self)
     
     @Published var loading: Bool = false
     @Published var playing: Bool = false

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MockMessageOptionsViewModel: MessageOptionsViewModel {
+class MockMessageOptionsViewModel: MessageOptionsViewModel_Old {
     init() {
         super.init(messageId: 0, chatId: 0)
     }

@@ -64,6 +64,15 @@ extension Message {
         self.content.description
     }
     
+    var senderID: Int64 {
+        switch senderId {
+        case .messageSenderUser(let messageSenderUser):
+            messageSenderUser.userId
+        case .messageSenderChat(let messageSenderChat):
+           messageSenderChat.chatId
+        }
+    }
+    
     var errorSending: Bool {
         
         switch self.sendingState {

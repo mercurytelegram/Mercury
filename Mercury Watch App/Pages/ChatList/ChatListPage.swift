@@ -24,14 +24,14 @@ struct ChatListPage: View {
             } else {
                 
                 List(vm.chats) { chat in
-                    NavigationLink {
-                        // TODO: connect to detail once detail page will be completed
-    //                    ChatDetailView(chat: chat)
-                    } label: {
+                    NavigationLink(value: chat) {
                         ChatCellView(model: chat) {
                             vm.didPressMute(on: chat)
                         }
                     }
+                }
+                .navigationDestination(for: ChatCellModel.self) { chat in
+                    ChatDetailPage(chatId: chat.id)
                 }
                 .listStyle(.carousel)
                 .navigationTitle(vm.folder?.title ?? "")

@@ -8,11 +8,11 @@
 import SwiftUI
 import TDLibKit
 import MapKit
+import TDLibKit
 
 struct MessageView: View {
    
     let model: MessageModel
-    let onDoublePress: () -> Void
    
     var body: some View {
             
@@ -82,7 +82,9 @@ struct MessageView: View {
     }
 }
 
-struct MessageModel {
+struct MessageModel: Identifiable {
+    
+    var id: Int64
     
     var sender: String?
     var senderColor: Color
@@ -104,12 +106,12 @@ struct MessageModel {
     
     var content: MessageContent
     enum MessageContent {
-        case text(String)
+        case text(AttributedString)
         case pill(String)
         case location(model: LocationModel)
         case voiceNote(model: VoiceNoteModel, onPress: () -> Void)
         
-        case photo(image: URL, caption: String?)
+        case photo(image: File, caption: String?)
         case video(imageURL: URL, caption: String?)
         case sticker
     }

@@ -8,14 +8,14 @@
 import SwiftUI
 import TDLibKit
 
-class MessageOptionsViewModel: ObservableObject {
+class MessageOptionsViewModel_Old: ObservableObject {
     @Published var emojis: [String] = []
     @Published var selectedEmoji: String?
     
     var messageId: Int64
     var chatId: Int64
     
-    let logger = LoggerService(MessageOptionsViewModel.self)
+    let logger = LoggerService(MessageOptionsViewModel_Old.self)
     let columns = [
         GridItem(.adaptive(minimum: 40))
     ]

@@ -121,7 +121,7 @@ struct ChatDetailView: View {
 
         }
         .sheet(isPresented: $vm.showAudioMessageView) {
-            AudioMessageView(isPresented: $vm.showAudioMessageView, action: $vm.chatAction, chat: vm.chat) { filePath, duration in
+            AudioMessageView_Old(isPresented: $vm.showAudioMessageView, action: $vm.chatAction, chat: vm.chat) { filePath, duration in
                 vm.sendService.sendVoiceNote(filePath, Int(duration))
             }
         }
@@ -129,7 +129,7 @@ struct ChatDetailView: View {
             AlertView.inDevelopment("stickers are")
         }
         .sheet(isPresented: $vm.showOptionsView) {
-            MessageOptionsView(isPresented: $vm.showOptionsView, message: vm.selectedMessage ?? .preview(), chat: vm.chat.td)
+            MessageOptionsView_Old(isPresented: $vm.showOptionsView, message: vm.selectedMessage ?? .preview(), chat: vm.chat.td)
         }
     }
     

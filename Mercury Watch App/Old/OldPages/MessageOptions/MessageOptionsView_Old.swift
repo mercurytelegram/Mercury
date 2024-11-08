@@ -8,9 +8,9 @@
 import SwiftUI
 import TDLibKit
 
-struct MessageOptionsView: View {
+struct MessageOptionsView_Old: View {
     @Binding var isPresented: Bool
-    @StateObject var vm: MessageOptionsViewModel
+    @StateObject var vm: MessageOptionsViewModel_Old
     
     init(isPresented: Binding<Bool>, message: Message, chat: Chat, useMock: Bool = false) {
         self._isPresented = isPresented
@@ -18,7 +18,7 @@ struct MessageOptionsView: View {
             self._vm = StateObject(wrappedValue: MockMessageOptionsViewModel())
         } else {
                 self._vm = StateObject(
-                    wrappedValue: MessageOptionsViewModel(
+                    wrappedValue: MessageOptionsViewModel_Old(
                         messageId: message.id,
                         chatId: chat.id
                     ))
@@ -59,7 +59,7 @@ struct MessageOptionsView: View {
         .foregroundStyle(.blue.opacity(0.8))
         .ignoresSafeArea()
         .sheet(isPresented: .constant(true), content: {
-            MessageOptionsView(isPresented: .constant(true), message: .preview(), chat: .preview(), useMock: true)
+            MessageOptionsView_Old(isPresented: .constant(true), message: .preview(), chat: .preview(), useMock: true)
         })
 }
     

@@ -132,6 +132,7 @@ struct ChatCellView: View {
 }
 
 struct ChatCellModel: Identifiable {
+    
     var id: Int64?
     var position: Int64?
     
@@ -152,6 +153,17 @@ struct ChatCellModel: Identifiable {
         case mention
         case reaction
         case message(count: Int)
+    }
+    
+}
+
+extension ChatCellModel: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        return hasher.combine(id)
+    }
+
+    static func == (lhs: ChatCellModel, rhs: ChatCellModel) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 
