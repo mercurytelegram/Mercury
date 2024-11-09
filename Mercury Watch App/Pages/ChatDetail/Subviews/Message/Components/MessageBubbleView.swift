@@ -43,7 +43,7 @@ struct MessageBubbleView<Content> : View where Content : View {
             case .plain, .clearBackground:
                 VStack(alignment: .leading) {
                     
-                    if model.sender != nil {
+                    if !model.isSenderHidden {
                         senderView()
                     }
                     

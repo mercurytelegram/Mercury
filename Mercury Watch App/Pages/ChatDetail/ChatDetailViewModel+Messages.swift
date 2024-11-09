@@ -63,7 +63,7 @@ extension ChatDetailViewModel {
         
         let time = Date(fromUnixTimestamp: message.date).formatted(.dateTime.hour().minute())
         let senderColor = Color(fromUserId: message.senderID)
-        let senderName = await self.senderNameFrom(message.senderId)
+        let senderName = await self.senderNameFrom(message)
         let reactionsData = message.interactionInfo?.reactions?.reactions ?? []
         let reactions = reactionsModelFrom(reactionsData)
         let reply = await replyModelFrom(message.replyTo, isOutgoing: message.isOutgoing)
@@ -73,6 +73,7 @@ extension ChatDetailViewModel {
             id: message.id,
             sender: senderName,
             senderColor: senderColor,
+            isSenderHidden: senderName.isEmpty,
             time: time,
             isOutgoing: message.isOutgoing,
             reactions: reactions,
@@ -103,8 +104,13 @@ extension ChatDetailViewModel {
         }
     }
     
-    func senderNameFrom(_ sender: MessageSender) async -> String {
-        switch sender {
+    func senderNameFrom(_ message: Message) async -> String {
+        guard !message.isOutgoing else { return "" }
+        
+        let chat = try? await TDLibManager.shared.client?.getChat(chatId: message.chatId)
+        guard (chat?.isGroup ?? true) else { return "" }
+        
+        switch message.senderId {
         case .messageSenderUser(let user):
             return (try? await TDLibManager.shared.client?.getUser(userId: user.userId))?.fullName ?? ""
         case .messageSenderChat(let chat):
@@ -113,6 +119,8 @@ extension ChatDetailViewModel {
     }
     
     func stateStyleFrom(_ message: Message) async -> MessageModel.StateStyle? {
+        if !message.isOutgoing { return nil }
+        
         let chat = try? await TDLibManager.shared.client?.getChat(chatId: message.chatId)
         
         var state: MessageModel.StateStyle? = nil
@@ -157,7 +165,7 @@ extension ChatDetailViewModel {
             
             return ReplyModel(
                 color: isOutgoing ? .white : Color(fromUserId: replyMsg.senderID),
-                title: await self.senderNameFrom(replyMsg.senderId),
+                title: await self.senderNameFrom(replyMsg),
                 text: replyMsg.description
             )
             

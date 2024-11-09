@@ -88,6 +88,7 @@ struct MessageModel: Identifiable {
     
     var sender: String?
     var senderColor: Color
+    var isSenderHidden: Bool = false
     
     var time: String
     var isOutgoing: Bool
