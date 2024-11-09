@@ -64,17 +64,21 @@ struct ChatDetailPage: View {
             .onDisappear(perform: vm.onCloseChat)
             
         }
+        .sheet(isPresented: $vm.showChatInfoView) {
+            AlertView.inDevelopment("chat info is")
+        }
+        .sheet(isPresented: $vm.showStickersView) {
+            AlertView.inDevelopment("stickers are")
+        }
 //        .sheet(isPresented: $vm.showAudioMessageView) {
 //            AudioMessageView(isPresented: $vm.showAudioMessageView, action: $vm.chatAction, chat: vm.chat) { filePath, duration in
 //                vm.sendService.sendVoiceNote(filePath, Int(duration))
 //            }
 //        }
-//        .sheet(isPresented: $vm.showStickersView) {
-//            AlertView.inDevelopment("stickers are")
-//        }
 //        .sheet(isPresented: $vm.showOptionsView) {
 //            MessageOptionsView(isPresented: $vm.showOptionsView, message: vm.selectedMessage ?? .preview(), chat: vm.chat.td)
 //        }
+        
     }
     
     @ViewBuilder

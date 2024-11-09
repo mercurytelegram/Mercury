@@ -25,6 +25,7 @@ class ChatDetailViewModel: TDLibViewModel {
     var showAudioMessageView: Bool = false
     var showStickersView: Bool = false
     var showOptionsView: Bool = false
+    var showChatInfoView: Bool = false
     
     var canSendVoiceNotes: Bool?
     var canSendText: Bool?

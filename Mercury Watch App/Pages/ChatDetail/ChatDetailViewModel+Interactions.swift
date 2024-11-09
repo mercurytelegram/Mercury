@@ -25,7 +25,7 @@ extension ChatDetailViewModel {
     }
     
     func onPressAvatar() {
-        
+        self.showChatInfoView = true
     }
     
     func onPressTextInsert() {
