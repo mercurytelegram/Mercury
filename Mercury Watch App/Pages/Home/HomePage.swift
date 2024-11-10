@@ -8,14 +8,44 @@
 import SwiftUI
 
 struct HomePage: View {
+    
     @State
     @Mockable(mockInit: HomeViewModelMock.init)
     var vm = HomeViewModel.init
     
     var body: some View {
-        Text("Hello, World!")
+        NavigationStack(path: $vm.navStack) {
+            List {
+//                NavigationLink {
+//                    AccountDetailView(vm: settingsVM)
+//                } label: {
+//                    UserCellView(vm: settingsVM.userCellViewModel)
+//                }
+                
+                Section {
+                    ForEach(vm.folders, id: \.self) { folder in
+                        NavigationLink(value: folder) {
+                            Label {
+                                Text(folder.title)
+                            } icon: {
+                                Image(systemName: folder.iconName)
+                                    .font(.caption)
+                                    .foregroundStyle(folder.color)
+                            }
+                        }
+                        .listItemTint(folder.color)
+                    }
+                }
+                
+            }
+            .navigationTitle("Mercury")
+            .navigationDestination(for: ChatFolder.self) { folder in
+                return ChatListPage(folder: folder)
+            }
+        }
     }
 }
+
 
 #Preview {
     HomePage()

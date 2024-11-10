@@ -549,6 +549,13 @@
 			path = VoiceNoteRecord;
 			sourceTree = "<group>";
 		};
+		A04ABE8D2CE117BB00641BC1 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
 		A05C19FE2BEB744C00724B6E /* Chat List */ = {
 			isa = PBXGroup;
 			children = (
@@ -675,7 +682,7 @@
 		A080D89A2CD64B1700920564 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				A080D8AD2CD64B6300920564 /* Subviews */,
+				A04ABE8D2CE117BB00641BC1 /* Subviews */,
 				A080D8982CD64B1700920564 /* HomePage.swift */,
 				A080D8992CD64B1700920564 /* HomeViewModel.swift */,
 			);
@@ -712,13 +719,6 @@
 				A080D8942CD64B1700920564 /* ChatDetail */,
 			);
 			path = Pages;
-			sourceTree = "<group>";
-		};
-		A080D8AD2CD64B6300920564 /* Subviews */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Subviews;
 			sourceTree = "<group>";
 		};
 		A080D8AE2CD64B6400920564 /* Subviews */ = {
