@@ -34,8 +34,7 @@ struct MessageView: View {
                 MessageBubbleView(model: self.model) {
                     VoiceNoteView(
                         model: voiceModel,
-                        isOutgoing: self.model.isOutgoing,
-                        onPress: onPress
+                        isOutgoing: self.model.isOutgoing
                     )
                 }
             
