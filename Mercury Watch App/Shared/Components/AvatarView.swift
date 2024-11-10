@@ -68,7 +68,7 @@ struct AvatarView: View {
     }
 }
 
-struct AvatarModel {
+struct AvatarModel: Equatable {
     var tdImage: TDImage?
     var letters: String = ""
     var color: Color = .blue
@@ -76,6 +76,14 @@ struct AvatarModel {
     
     /// The id releated to the TDImage, nil if the avatar represent a group chat
     var userId: Int64? = nil
+    
+    static func == (lhs: AvatarModel, rhs: AvatarModel) -> Bool {
+        return lhs.letters == rhs.letters &&
+        lhs.color == rhs.color &&
+        lhs.isOnline == rhs.isOnline &&
+        lhs.userId == rhs.userId
+        //TODO: && lhs.tdImage. == rhs.tdImage
+    }
 }
 
 extension AvatarModel {

@@ -119,6 +119,7 @@ extension ChatDetailViewModel {
     }
     
     func stateStyleFrom(_ message: Message) async -> MessageModel.StateStyle? {
+
         if !message.isOutgoing { return nil }
         
         let chat = try? await TDLibManager.shared.client?.getChat(chatId: message.chatId)

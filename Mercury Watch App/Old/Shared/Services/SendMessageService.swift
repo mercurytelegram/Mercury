@@ -25,7 +25,7 @@ class SendMessageService {
         let message: InputMessageText = .init(clearDraft: true, linkPreviewOptions: nil, text: formattedText)
         let messageContent: InputMessageContent = .inputMessageText(message)
         
-        Task {
+        Task.detached {
             do {
                 let result = try await TDLibManager.shared.client?.sendMessage(
                     chatId: self.chat.id,
@@ -44,7 +44,7 @@ class SendMessageService {
     
     func sendVoiceNote(_ filePath: URL, _ duration: Int) {
         
-        Task {
+        Task.detached {
             do {
                 
                 var audioFilePath = filePath
@@ -87,7 +87,41 @@ class SendMessageService {
                 self.logger.log(error, level: .error)
             }
         }
-        
     }
     
+    func sendReaction(_ emoji: String, chatId: Int64, messageId: Int64) {
+        
+        Task.detached {
+            do {
+                
+                let emoji = ReactionTypeEmoji(emoji: emoji)
+                let reaction: ReactionType = .reactionTypeEmoji(emoji)
+                
+                let result = try await TDLibManager.shared.client?.addMessageReaction(
+                    chatId: chatId,
+                    isBig: false,
+                    messageId: messageId,
+                    reactionType: reaction,
+                    updateRecentReactions: false
+                )
+                
+                self.logger.log(result)
+                
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+}
+
+class SendMessageServiceMock: SendMessageService {
+    
+    init() {
+        super.init(chat: .preview())
+    }
+    
+    override func sendTextMessage(_ text: String) {}
+    override func sendVoiceNote(_ filePath: URL, _ duration: Int) {}
+    override func sendReaction(_ emoji: String, chatId: Int64, messageId: Int64) {}
 }

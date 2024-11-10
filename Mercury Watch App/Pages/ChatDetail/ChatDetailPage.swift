@@ -10,11 +10,14 @@ import SwiftUI
 struct ChatDetailPage: View {
     
     @State
-    @Mockable(mockInit: ChatDetailViewModel.init)
-    var vm = ChatDetailViewModel.init
+    @Mockable
+    var vm: ChatDetailViewModel
     
-    init(chatId: Int64?) {
-        vm.chatId = chatId
+    init(chatId: Int64) {
+        _vm = Mockable.state(
+            value: { ChatDetailViewModel(chatId: chatId) },
+            mock: { ChatDetailViewModelMock() }
+        )
     }
     
     var body: some View {
@@ -70,14 +73,27 @@ struct ChatDetailPage: View {
         .sheet(isPresented: $vm.showStickersView) {
             AlertView.inDevelopment("stickers are")
         }
-//        .sheet(isPresented: $vm.showAudioMessageView) {
-//            AudioMessageView(isPresented: $vm.showAudioMessageView, action: $vm.chatAction, chat: vm.chat) { filePath, duration in
-//                vm.sendService.sendVoiceNote(filePath, Int(duration))
-//            }
-//        }
-//        .sheet(isPresented: $vm.showOptionsView) {
-//            MessageOptionsView(isPresented: $vm.showOptionsView, message: vm.selectedMessage ?? .preview(), chat: vm.chat.td)
-//        }
+        .sheet(isPresented: $vm.showAudioMessageView) {
+            if let sendService = vm.sendService {
+                VoiceNoteRecordSubpage(
+                    isPresented: $vm.showAudioMessageView,
+                    action: $vm.chatAction,
+                    sendService: sendService
+                )
+            }
+        }
+        .sheet(isPresented: $vm.showOptionsView) {
+            if let messageId = vm.selectedMessage?.id, let sendService = vm.sendService {
+                MessageOptionsSubpage(
+                    isPresented: $vm.showOptionsView,
+                    model: .init(
+                        chatId: vm.chatId,
+                        messageId: messageId,
+                        sendService: sendService
+                    )
+                )
+            }
+        }
         
     }
     

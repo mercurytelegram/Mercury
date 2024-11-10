@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import AVFoundation
 
-class RecorderService: NSObject, ObservableObject {
+class RecorderService_Old: NSObject, ObservableObject {
     
     static let updateInterval: Double = 0.01
     @Published var waveformSamples: [Float] = []
@@ -17,7 +17,7 @@ class RecorderService: NSObject, ObservableObject {
     
     private var audioRecorder: AVAudioRecorder?
     private var recFilePath: URL
-    private let logger = LoggerService(RecorderService.self)
+    private let logger = LoggerService(RecorderService_Old.self)
     var waveformTimer: Timer?
     
     init(recFilePath: URL) {
@@ -27,7 +27,7 @@ class RecorderService: NSObject, ObservableObject {
         super.init()
         
         waveformTimer = Timer.scheduledTimer(
-            withTimeInterval: RecorderService.updateInterval,
+            withTimeInterval: RecorderService_Old.updateInterval,
             repeats: true,
             block: { [weak self] _ in
                 self?.updateWaveform()
@@ -100,7 +100,7 @@ class RecorderService: NSObject, ObservableObject {
         let scaledNormalizedValue = (normalizedValue * (normalizationTo.max - normalizationTo.min)) + normalizationTo.min
         
         self.waveformSamples.append(scaledNormalizedValue)
-        self.elapsedTime += RecorderService.updateInterval
+        self.elapsedTime += RecorderService_Old.updateInterval
         
     }
     

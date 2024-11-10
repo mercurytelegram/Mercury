@@ -11,7 +11,8 @@ import AVFoundation
 import Combine
 import TDLibKit
 
-class AudioMessageViewModel_Old: NSObject, ObservableObject {
+@Observable
+class VoiceNoteRecordViewModel: NSObject {
     
     /*
      
@@ -26,49 +27,38 @@ class AudioMessageViewModel_Old: NSObject, ObservableObject {
      state that consist in the sheet dismissal
      
      */
+    
     enum RecordingState {
         case recStarted, recStopped, playStarted, playPaused, sending
     }
     
-    @Published var state: RecordingState = .recStarted
-    @Published var hightlightIndex: Int?
-    @Published var isLoadingPlayerWaveform: Bool = false
+    var state: RecordingState = .recStarted
+    var hightlightIndex: Int?
+    var isLoadingPlayerWaveform: Bool = false
     
-    @Binding var action: ChatAction?
+    var recorder: RecorderService
+    var player: PlayerService?
     
-    @Published var recorder: RecorderService_Old
-    @Published var player: PlayerService_Old?
+    let sendService: SendMessageService
+    let action: Binding<ChatAction?>
     
-    private var recorderCancellable: AnyCancellable? = nil
-    private var playerCancellable: AnyCancellable? = nil
-    
-    let filePath: URL
-    private let chat: ChatCellModel_Old
+    var filePath: URL
     private let logger = LoggerService(AudioMessageViewModel_Old.self)
     
-    init(chat: ChatCellModel_Old, action: Binding<ChatAction?>) {
+    init(action: Binding<ChatAction?>, sendService: SendMessageService) {
+        self.sendService = sendService
         
         // Recording file path
         let recName = "\(UUID().uuidString).m4a"
         let tmpFolder = FileManager.default.tmpFolder
+        let filePath = tmpFolder.appendingPathComponent(recName)
         
-        self.filePath = tmpFolder.appendingPathComponent(recName)
-        self.recorder = RecorderService_Old(recFilePath: filePath)
-        self.chat = chat
+        self.filePath = filePath
+        self.recorder = RecorderService(recFilePath: filePath)
         self.state = .recStarted
-        self._action = action
+        self.action = action
         
         super.init()
-        
-        recorderCancellable = recorder.objectWillChange.sink { [weak self] (_) in
-            self?.objectWillChange.send()
-        }
-        
-    }
-    
-    deinit {
-        recorderCancellable?.cancel()
-        playerCancellable?.cancel()
     }
     
     /// Returns true if has recording permission, false otherwise
@@ -83,13 +73,13 @@ class AudioMessageViewModel_Old: NSObject, ObservableObject {
     }
     
     func onDisappear() {
-        action = nil
+        action.wrappedValue = nil
     }
     
     func didPressMainAction() {
         switch state {
         case .recStarted:
-            action = nil
+            action.wrappedValue = nil
             recorder.stopRecordingAudio()
             createPlayer()
             
@@ -106,27 +96,28 @@ class AudioMessageViewModel_Old: NSObject, ObservableObject {
         }
     }
     
-    func didPressSendButton() -> Bool {
+    func didPressSendButton() {
         
-        guard state != .sending else { return false }
+        guard state != .sending else { return }
         
-        action = .chatActionUploadingVoiceNote(.init(progress: 0))
+        action.wrappedValue = .chatActionUploadingVoiceNote(.init(progress: 0))
         if state == .recStarted {
             recorder.stopRecordingAudio()
         }
         
         state = .sending
-        return true
+        
+        sendService.sendVoiceNote(
+            filePath,
+            Int(recorder.elapsedTime)
+        )
     }
     
     private func createPlayer() {
         DispatchQueue.main.async {
             do {
                 self.isLoadingPlayerWaveform = true
-                self.player = try PlayerService_Old(audioFilePath: self.filePath, delegate: self)
-                self.playerCancellable = self.player!.objectWillChange.sink { [weak self] (_) in
-                    self?.objectWillChange.send()
-                }
+                self.player = try PlayerService(audioFilePath: self.filePath, delegate: self)
                 self.isLoadingPlayerWaveform = false
             } catch {
                 self.logger.log(error, level: .error)
@@ -137,11 +128,20 @@ class AudioMessageViewModel_Old: NSObject, ObservableObject {
     
 }
 
-extension AudioMessageViewModel_Old: AVAudioPlayerDelegate {
+extension VoiceNoteRecordViewModel: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
             self.player?.stopPlayingAudio()
             self.state = .playPaused
         }
+    }
+}
+
+class VoiceNoteRecordViewModelMock: VoiceNoteRecordViewModel {
+    init() {
+        super.init(
+            action: .constant(nil),
+            sendService: SendMessageServiceMock()
+        )
     }
 }

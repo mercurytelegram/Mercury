@@ -68,12 +68,20 @@
 		A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0054EA52BF3E12F009F2CEB /* TDLibKit */; };
 		A026961D2BF3F4A700ACA12C /* ChatDetailViewModel_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = A026961C2BF3F4A700ACA12C /* ChatDetailViewModel_Old.swift */; };
 		A027C3FF2C0C6EEB0056BF67 /* LoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A027C3FE2C0C6EEB0056BF67 /* LoggerService.swift */; };
-		A04388FA2C3FE384007B83C0 /* RecorderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04388F82C3FE383007B83C0 /* RecorderService.swift */; };
-		A04388FB2C3FE384007B83C0 /* PlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04388F92C3FE384007B83C0 /* PlayerService.swift */; };
+		A04388FA2C3FE384007B83C0 /* RecorderService_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04388F82C3FE383007B83C0 /* RecorderService_Old.swift */; };
+		A04388FB2C3FE384007B83C0 /* PlayerService_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04388F92C3FE384007B83C0 /* PlayerService_Old.swift */; };
 		A04389002C3FE395007B83C0 /* VoiceNoteContentView_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04388FC2C3FE394007B83C0 /* VoiceNoteContentView_Old.swift */; };
 		A04389012C3FE395007B83C0 /* VoiceNoteContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04388FD2C3FE394007B83C0 /* VoiceNoteContentViewModel.swift */; };
 		A04389052C3FE3B2007B83C0 /* AudioMessageView_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04389022C3FE3B2007B83C0 /* AudioMessageView_Old.swift */; };
 		A04389062C3FE3B2007B83C0 /* AudioMessageViewModel_Old.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04389032C3FE3B2007B83C0 /* AudioMessageViewModel_Old.swift */; };
+		A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */; };
+		A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE512CE00F1600641BC1 /* MessageOptionsViewModel.swift */; };
+		A04ABE5A2CE015F800641BC1 /* VoiceNoteRecordSubpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE572CE015F800641BC1 /* VoiceNoteRecordSubpage.swift */; };
+		A04ABE5B2CE015F800641BC1 /* VoiceNoteRecordViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE582CE015F800641BC1 /* VoiceNoteRecordViewModel.swift */; };
+		A04ABE5E2CE01F7300641BC1 /* PlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE5C2CE01F7300641BC1 /* PlayerService.swift */; };
+		A04ABE5F2CE01F7300641BC1 /* RecorderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE5D2CE01F7300641BC1 /* RecorderService.swift */; };
+		A04ABE8A2CE0B99900641BC1 /* ChatListViewModel+Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE892CE0B99900641BC1 /* ChatListViewModel+Updates.swift */; };
+		A04ABE8C2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE8B2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift */; };
 		A0524FAE2CC8EC4E0021D3FA /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A0524FAD2CC8EC4E0021D3FA /* DSWaveformImage */; };
 		A0524FB02CC8EC4E0021D3FA /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A0524FAF2CC8EC4E0021D3FA /* DSWaveformImageViews */; };
 		A05C1A012BEB74B700724B6E /* ChatListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05C1A002BEB74B700724B6E /* ChatListView.swift */; };
@@ -217,12 +225,20 @@
 		9BFE1AAB2C82045300B3BBFC /* PillMessageView_Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillMessageView_Old.swift; sourceTree = "<group>"; };
 		A026961C2BF3F4A700ACA12C /* ChatDetailViewModel_Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailViewModel_Old.swift; sourceTree = "<group>"; };
 		A027C3FE2C0C6EEB0056BF67 /* LoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerService.swift; sourceTree = "<group>"; };
-		A04388F82C3FE383007B83C0 /* RecorderService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecorderService.swift; sourceTree = "<group>"; };
-		A04388F92C3FE384007B83C0 /* PlayerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerService.swift; sourceTree = "<group>"; };
+		A04388F82C3FE383007B83C0 /* RecorderService_Old.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecorderService_Old.swift; sourceTree = "<group>"; };
+		A04388F92C3FE384007B83C0 /* PlayerService_Old.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerService_Old.swift; sourceTree = "<group>"; };
 		A04388FC2C3FE394007B83C0 /* VoiceNoteContentView_Old.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceNoteContentView_Old.swift; sourceTree = "<group>"; };
 		A04388FD2C3FE394007B83C0 /* VoiceNoteContentViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoiceNoteContentViewModel.swift; sourceTree = "<group>"; };
 		A04389022C3FE3B2007B83C0 /* AudioMessageView_Old.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMessageView_Old.swift; sourceTree = "<group>"; };
 		A04389032C3FE3B2007B83C0 /* AudioMessageViewModel_Old.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioMessageViewModel_Old.swift; sourceTree = "<group>"; };
+		A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptionsSubpage.swift; sourceTree = "<group>"; };
+		A04ABE512CE00F1600641BC1 /* MessageOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptionsViewModel.swift; sourceTree = "<group>"; };
+		A04ABE572CE015F800641BC1 /* VoiceNoteRecordSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceNoteRecordSubpage.swift; sourceTree = "<group>"; };
+		A04ABE582CE015F800641BC1 /* VoiceNoteRecordViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceNoteRecordViewModel.swift; sourceTree = "<group>"; };
+		A04ABE5C2CE01F7300641BC1 /* PlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerService.swift; sourceTree = "<group>"; };
+		A04ABE5D2CE01F7300641BC1 /* RecorderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderService.swift; sourceTree = "<group>"; };
+		A04ABE892CE0B99900641BC1 /* ChatListViewModel+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Updates.swift"; sourceTree = "<group>"; };
+		A04ABE8B2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Chats.swift"; sourceTree = "<group>"; };
 		A05C1A002BEB74B700724B6E /* ChatListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListView.swift; sourceTree = "<group>"; };
 		A05C1A022BEB74C200724B6E /* ChatListViewModel_Old.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatListViewModel_Old.swift; sourceTree = "<group>"; };
 		A05C1AC42BECCF4B00724B6E /* Message+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+.swift"; sourceTree = "<group>"; };
@@ -331,8 +347,8 @@
 				9BB4FEAE2BF3E3BB000785BA /* FileService.swift */,
 				9BAA75D92CD4EDDA0007B4E2 /* LottieService.swift */,
 				A027C3FE2C0C6EEB0056BF67 /* LoggerService.swift */,
-				A04388F92C3FE384007B83C0 /* PlayerService.swift */,
-				A04388F82C3FE383007B83C0 /* RecorderService.swift */,
+				A04388F92C3FE384007B83C0 /* PlayerService_Old.swift */,
+				A04388F82C3FE383007B83C0 /* RecorderService_Old.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -506,6 +522,33 @@
 			path = AudioMessage;
 			sourceTree = "<group>";
 		};
+		A04ABE4E2CE00EFD00641BC1 /* Subpages */ = {
+			isa = PBXGroup;
+			children = (
+				A04ABE592CE015F800641BC1 /* VoiceNoteRecord */,
+				A04ABE522CE00F1600641BC1 /* MessageOptions */,
+			);
+			path = Subpages;
+			sourceTree = "<group>";
+		};
+		A04ABE522CE00F1600641BC1 /* MessageOptions */ = {
+			isa = PBXGroup;
+			children = (
+				A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */,
+				A04ABE512CE00F1600641BC1 /* MessageOptionsViewModel.swift */,
+			);
+			path = MessageOptions;
+			sourceTree = "<group>";
+		};
+		A04ABE592CE015F800641BC1 /* VoiceNoteRecord */ = {
+			isa = PBXGroup;
+			children = (
+				A04ABE572CE015F800641BC1 /* VoiceNoteRecordSubpage.swift */,
+				A04ABE582CE015F800641BC1 /* VoiceNoteRecordViewModel.swift */,
+			);
+			path = VoiceNoteRecord;
+			sourceTree = "<group>";
+		};
 		A05C19FE2BEB744C00724B6E /* Chat List */ = {
 			isa = PBXGroup;
 			children = (
@@ -584,6 +627,8 @@
 		A080D88D2CD64A7C00920564 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A04ABE5C2CE01F7300641BC1 /* PlayerService.swift */,
+				A04ABE5D2CE01F7300641BC1 /* RecorderService.swift */,
 				A080D8B12CD778EF00920564 /* UserDefaulsService.swift */,
 				A080D88B2CD64A7C00920564 /* SecretService.swift */,
 				A080D88C2CD64A7C00920564 /* SecretService-sample.swift */,
@@ -605,6 +650,7 @@
 			isa = PBXGroup;
 			children = (
 				A080D8B02CD64B6600920564 /* Subviews */,
+				A04ABE4E2CE00EFD00641BC1 /* Subpages */,
 				A080D8922CD64B1700920564 /* ChatDetailPage.swift */,
 				A080D8932CD64B1700920564 /* ChatDetailViewModel.swift */,
 				A080D8F12CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift */,
@@ -620,6 +666,8 @@
 				A080D8AF2CD64B6500920564 /* Subviews */,
 				A080D8952CD64B1700920564 /* ChatListPage.swift */,
 				A080D8962CD64B1700920564 /* ChatListViewModel.swift */,
+				A04ABE8B2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift */,
+				A04ABE892CE0B99900641BC1 /* ChatListViewModel+Updates.swift */,
 			);
 			path = ChatList;
 			sourceTree = "<group>";
@@ -889,8 +937,11 @@
 			files = (
 				9B0B6CBC2CD679A600BB6A94 /* StepView.swift in Sources */,
 				A080D8E22CDC0B1800920564 /* VoiceNoteView.swift in Sources */,
+				A04ABE5A2CE015F800641BC1 /* VoiceNoteRecordSubpage.swift in Sources */,
+				A04ABE5B2CE015F800641BC1 /* VoiceNoteRecordViewModel.swift in Sources */,
 				4A919FD12BD7C40600F78F03 /* PasswordView_old.swift in Sources */,
 				9B05331B2CCBAD9C00B9032B /* MockUserCellViewModel.swift in Sources */,
+				A04ABE8C2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift in Sources */,
 				4AF90D692BEE65BA00435355 /* Date+.swift in Sources */,
 				A081AAD12C0638C4002A265C /* SendMessageService.swift in Sources */,
 				A081AAD72C072536002A265C /* MessageSender+.swift in Sources */,
@@ -910,7 +961,7 @@
 				A05C1A012BEB74B700724B6E /* ChatListView.swift in Sources */,
 				A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */,
 				9B2E1BDF2C08739800B9B63D /* MessageViewModel_Old.swift in Sources */,
-				A04388FB2C3FE384007B83C0 /* PlayerService.swift in Sources */,
+				A04388FB2C3FE384007B83C0 /* PlayerService_Old.swift in Sources */,
 				9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */,
 				9B6038002C8CD5790051074C /* ReplyViewModel_Old.swift in Sources */,
 				9B6037FE2C8C41280051074C /* ReplyView_Old.swift in Sources */,
@@ -924,6 +975,8 @@
 				A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */,
 				A06AE8612CCAB85C003282B2 /* WebpStickerView.swift in Sources */,
 				A04389012C3FE395007B83C0 /* VoiceNoteContentViewModel.swift in Sources */,
+				A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */,
+				A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */,
 				A027C3FF2C0C6EEB0056BF67 /* LoggerService.swift in Sources */,
 				A080D8D02CDA942F00920564 /* BubbleShape_Old.swift in Sources */,
 				9BB920E32C3D9B8B0023C616 /* SettingsViewModel_Old.swift in Sources */,
@@ -948,8 +1001,11 @@
 				9B0F6AB92C01F0AE00568319 /* MockChatListViewModel.swift in Sources */,
 				A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */,
 				A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */,
+				A04ABE5E2CE01F7300641BC1 /* PlayerService.swift in Sources */,
+				A04ABE5F2CE01F7300641BC1 /* RecorderService.swift in Sources */,
 				A0CF531A2BDFA57A00BA394B /* LoginViewModel_Old.swift in Sources */,
 				A04389052C3FE3B2007B83C0 /* AudioMessageView_Old.swift in Sources */,
+				A04ABE8A2CE0B99900641BC1 /* ChatListViewModel+Updates.swift in Sources */,
 				9B0B6CB72CD64F6100BB6A94 /* AppState.swift in Sources */,
 				A080D8C42CD9666C00920564 /* ChatNotificationSettings+.swift in Sources */,
 				9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */,
@@ -974,7 +1030,7 @@
 				9BFE1AAC2C82045300B3BBFC /* PillMessageView_Old.swift in Sources */,
 				9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */,
 				4A5D784D2BEBA7C200D9D805 /* AvatarView_Old.swift in Sources */,
-				A04388FA2C3FE384007B83C0 /* RecorderService.swift in Sources */,
+				A04388FA2C3FE384007B83C0 /* RecorderService_Old.swift in Sources */,
 				4AE6201F2C09C4E900722512 /* ChatCellModel+Mock.swift in Sources */,
 				A0DF848A2CCB9A7500CC101E /* FileManager+.swift in Sources */,
 				A080D8F22CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift in Sources */,

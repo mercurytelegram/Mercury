@@ -12,13 +12,18 @@ import SwiftUI
 @Observable
 class ChatListViewModel: TDLibViewModel {
     
-    var folder: ChatFolder? {
-        didSet { self.initChatList() }
-    }
+    var folder: ChatFolder
     
     var chats: [ChatCellModel] = []
     var isLoading: Bool = false
     var showNewMessage: Bool = false
+    
+    init(folder: ChatFolder) {
+        self.folder = folder
+        super.init()
+        
+        self.initChatList()
+    }
     
     func didPressMute(on chat: ChatCellModel) {
         guard let id = chat.id else { return }
@@ -68,7 +73,7 @@ class ChatListViewModel: TDLibViewModel {
         }
     }
     
-    fileprivate func initChatList() {
+    func initChatList() {
         
         Task.detached(priority: .high) {
             
@@ -89,89 +94,8 @@ class ChatListViewModel: TDLibViewModel {
         }
     }
     
-    private func loadChats(limit: Int = 10) async -> [Chat] {
-        
-        var chatsData = [Chat]()
-        
-        guard let chatList = folder?.chatList
-        else { return [] }
-        
-        do {
-            
-            let result = try await TDLibManager.shared.client?.getChats(
-                chatList: chatList,
-                limit: limit
-            )
-            
-            guard let result else { return [] }
-            
-            for id in result.chatIds {
-                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: id)
-                else { continue }
-                
-                chatsData.append(chat)
-            }
-            
-            self.logger.log(result)
-            
-        } catch {
-            self.logger.log(error, level: .error)
-        }
-        
-        return chatsData
-        
-    }
-    
-    private func chatCellModelFrom(_ chat: Chat) -> ChatCellModel {
-        
-        let date = Date(fromUnixTimestamp: chat.lastMessage?.date ?? 0)
-        
-        var userId: Int64? = nil
-        if case .chatTypePrivate(let data) = chat.type {
-            userId = data.userId
-        }
-        
-        let letters: String = "\(chat.title.prefix(1))"
-        let avatar = AvatarModel(tdImage: chat.photo, letters: letters, userId: userId)
-        let position = chat.positions.first(where: { $0.list == folder?.chatList })?.order.rawValue
-        let isMuted = chat.notificationSettings.muteFor != 0
-        
-        var messageStyle: ChatCellModel.MessageStyle? = nil
-        if let message = chat.lastMessage?.description {
-            messageStyle = .message(message)
-        }
-        
-        var unreadBadgeStyle: ChatCellModel.UnreadStyle? = nil
-        if chat.unreadMentionCount != 0 {
-            unreadBadgeStyle = .mention
-        } else if chat.unreadReactionCount != 0 {
-            unreadBadgeStyle = .reaction
-        } else if chat.unreadCount != 0 {
-            unreadBadgeStyle = .message(count: chat.unreadCount)
-        }
-        
-        return ChatCellModel(
-            id: chat.id,
-            position: position,
-            title: chat.title,
-            time: date.stringDescription,
-            avatar: avatar,
-            isMuted: isMuted,
-            messageStyle: messageStyle,
-            unreadBadgeStyle: unreadBadgeStyle
-        )
-    }
- 
-    private func chatSortingLogic(elem1: ChatCellModel, elem2: ChatCellModel) -> Bool {
-        guard let p1 = elem1.position, let p2 = elem2.position
-        else { return true }
-        
-        // Sorting also by id does not update correctly the group chat's position
-        return p1 > p2 // && elem1.id > elem2.id
-    }
-    
     private func muteChat(_ chatId: Int64) {
-        Task {
+        Task.detached {
             do {
                 
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
@@ -218,231 +142,11 @@ class ChatListViewModel: TDLibViewModel {
     }
 }
 
-//MARK: - Updates handler
-extension ChatListViewModel {
-    
-    @MainActor
-    private func updateChatRemovedFromList(_ update: UpdateChatRemovedFromList) {
-        let chatId = update.chatId
-        withAnimation {
-            self.chats.removeAll { c in c.id == chatId }
-        }
-    }
-    
-    @MainActor
-    private func updateUserStatus(_ update: UpdateUserStatus) {
-        let userId = update.userId
-        let status = update.status
-        
-        let index = self.chats.firstIndex { c in c.avatar.userId == userId }
-        guard let index, index != -1 else { return }
-        
-        withAnimation {
-            switch status {
-            case .userStatusOnline(_):
-                self.chats[index].avatar.isOnline = true
-            case .userStatusOffline(_):
-                self.chats[index].avatar.isOnline = false
-            default:
-                break
-            }
-        }
-    }
-    
-    private func updateChatAction(_ update: UpdateChatAction) {
-        
-        let chatId: Int64 = update.chatId
-        let sender: MessageSender = update.senderId
-        let action: ChatAction = update.action
-        
-        // If the chat does not belongs to the current folder, return
-        guard self.chats.contains(where: { $0.id == chatId })
-        else { return }
-        
-        Task.detached {
-            do {
-                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
-                else { return }
-                
-                var messageStyle: ChatCellModel.MessageStyle? = nil
-                
-                // Check if action is available
-                if let action = action.description {
-                    
-                    var action = action
-                    if chat.isGroup,
-                       let username = await sender.username(),
-                       let name = username.split(separator: " ").first {
-                        let attributedName = AttributedString(name)
-                        let attributedAction = AttributedString(" is ") + action
-                        action = attributedName + attributedAction
-                    }
-                    
-                    messageStyle = .action(action)
-                }
-                
-                // Otherwise, if available, use lastMessage as fallback
-                if messageStyle == nil, let lastMessage = chat.lastMessage?.description {
-                    messageStyle = .message(lastMessage)
-                }
-                
-                await MainActor.run { [messageStyle] in
-                    let index = self.chats.firstIndex { c in c.id == chatId }
-                    guard let index, index != -1 else { return }
-                    
-                    withAnimation {
-                        self.chats[index].messageStyle = messageStyle
-                    }
-                }
-                
-            } catch {
-                self.logger.log(error, level: .error)
-            }
-        }
-    }
-    
-    private func updateChatLastMessage(_ update: UpdateChatLastMessage) {
-        let chatId = update.chatId
-        let message = update.lastMessage
-        
-        // If the chat does not belongs to the current folder, return
-        guard self.chats.contains(where: { $0.id == chatId })
-        else { return }
-        
-        guard let message else { return }
-        
-        Task.detached {
-            
-            do {
-                
-                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
-                else { return }
-                
-                // Update message time
-                let date = Date(timeIntervalSince1970: TimeInterval(message.date))
-                
-                // Update message content
-                var desc = message.description
-                if chat.isGroup,
-                   let username = await message.senderId.username() {
-                    var attributedUsername = AttributedString(username + ": ")
-                    attributedUsername.foregroundColor = .white
-                    desc = attributedUsername + message.description
-                }
-                
-                await MainActor.run { [desc] in
-                    let index = self.chats.firstIndex { c in c.id == chatId }
-                    guard let index, index != -1 else { return }
-                    
-                    self.chats[index].messageStyle = .message(desc)
-                    self.chats[index].time = date.stringDescription
-                    
-                    if let position = chat.positions.first(where: { $0.list == self.folder?.chatList }) {
-                        let positonUpdate = UpdateChatPosition(chatId: update.chatId, position: position)
-                        self.updateChatPosition(positonUpdate)
-                    }
-                }
-                
-            } catch {
-                self.logger.log(error, level: .error)
-            }
-            
-        }
-    }
-    
-    @MainActor
-    private func updateChatPosition(_ update: UpdateChatPosition) {
-        let chatId = update.chatId
-        let position = update.position
-        
-        let index = self.chats.firstIndex { c in c.id == chatId }
-        guard let index, index != -1 else { return }
-        
-        withAnimation {
-            if position.order == 0 {
-                self.chats.remove(at: index)
-            } else {
-                self.chats[index].position = position.order.rawValue
-                self.chats = self.chats.sorted(by: chatSortingLogic)
-            }
-        }
-    }
-    
-    @MainActor
-    private func updateCounters(
-        chatId: Int64,
-        reactionCount: Int? = nil,
-        mentionCount: Int? = nil,
-        unreadCount: Int? = nil
-    ) {
-        
-        let index = self.chats.firstIndex { c in c.id == chatId }
-        guard let index, index != -1 else { return }
-        
-        var badgeStyle: ChatCellModel.UnreadStyle? = nil
-        if let reactionCount, reactionCount != 0 {
-            badgeStyle = .reaction
-        }
-        else if let mentionCount, mentionCount != 0 {
-            badgeStyle = .mention
-        }
-        else if let unreadCount, unreadCount != 0 {
-            badgeStyle = .message(count: unreadCount)
-        }
-        
-        if let badgeStyle {
-            withAnimation {
-                self.chats[index].unreadBadgeStyle = badgeStyle
-            }
-            return
-        }
-        
-        // If no badge counter is provided, get the latest unreadCount
-        Task {
-            
-            do {
-                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
-                else { return }
-                
-                let index = self.chats.firstIndex { c in c.id == chatId }
-                guard let index, index != -1 else { return }
-                
-                await MainActor.run {
-                    withAnimation {
-                        if chat.unreadCount == 0 {
-                            self.chats[index].unreadBadgeStyle = nil
-                        } else {
-                            self.chats[index].unreadBadgeStyle = .message(count: chat.unreadCount)
-                        }
-                    }
-                }
-                
-            } catch {
-                self.logger.log(error, level: .error)
-            }
-        }
-    }
-    
-    @MainActor
-    private func updateChatNotificationSettings(_ update: UpdateChatNotificationSettings) {
-        let chatId = update.chatId
-        let isMuted = update.notificationSettings.muteFor != 0
-        
-        let index = self.chats.firstIndex { c in c.id == chatId }
-        guard let index, index != -1 else { return }
-        
-        withAnimation {
-            self.chats[index].isMuted = isMuted
-        }
-    }
-}
-
-
 // MARK: - Mock
 @Observable
 class ChatListViewModelMock: ChatListViewModel {
-    override init() {
-        super.init()
+    init() {
+        super.init(folder: .main)
         
         self.chats = [
             .init(

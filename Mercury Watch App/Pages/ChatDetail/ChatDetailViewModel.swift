@@ -14,9 +14,7 @@ class ChatDetailViewModel: TDLibViewModel {
     
     enum InsertAt { case first, last, index(_ value: Int)}
     
-    var chatId: Int64? {
-        didSet { initialize() }
-    }
+    var chatId: Int64
     
     var chatName: String?
     var isLoadingInitialMessages: Bool = false
@@ -41,7 +39,9 @@ class ChatDetailViewModel: TDLibViewModel {
     var chatAction: ChatAction?
     var chatActionTimer: Timer?
     
-    fileprivate func initialize() {
+    init(chatId: Int64) {
+        self.chatId = chatId
+        super.init()
         
         self.chatActionTimer = Timer.scheduledTimer(
             withTimeInterval: 1,
@@ -52,6 +52,15 @@ class ChatDetailViewModel: TDLibViewModel {
             }
         )
         
+        self.loadChatData()
+    }
+    
+    deinit {
+        chatActionTimer?.invalidate()
+        chatActionTimer = nil
+    }
+    
+    func loadChatData() {
         Task.detached(priority: .high) {
             do {
              
@@ -59,6 +68,7 @@ class ChatDetailViewModel: TDLibViewModel {
                 else { return }
                 
                 await MainActor.run {
+                    self.sendService = SendMessageService(chat: chat)
                     self.chatName = chat.title
                     self.canSendVoiceNotes = chat.permissions.canSendVoiceNotes
                     self.canSendText = chat.permissions.canSendBasicMessages
@@ -67,10 +77,7 @@ class ChatDetailViewModel: TDLibViewModel {
                     
                     let letters: String = "\(chat.title.prefix(1))"
                     self.avatar = AvatarModel(tdImage: chat.photo, letters: letters)
-                    
                 }
-                
-                self.sendService = self.sendService ?? SendMessageService(chat: chat)
                 
                 let newMessages = await self.requestMessages(firstBatch: true)
                 await MainActor.run {
@@ -83,11 +90,6 @@ class ChatDetailViewModel: TDLibViewModel {
                 self.logger.log(error, level: .error)
             }
         }
-    }
-    
-    deinit {
-        chatActionTimer?.invalidate()
-        chatActionTimer = nil
     }
     
     override func updateHandler(update: Update) {
@@ -153,5 +155,9 @@ class ChatDetailViewModel: TDLibViewModel {
 // MARK: - Mock
 @Observable
 class ChatDetailViewModelMock: ChatDetailViewModel {
-    override func initialize() {}
+    init() {
+        super.init(chatId: 0)
+    }
+    
+    override func loadChatData(){}
 }

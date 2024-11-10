@@ -163,7 +163,43 @@ extension ChatCellModel: Hashable {
     }
 
     static func == (lhs: ChatCellModel, rhs: ChatCellModel) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.id == rhs.id &&
+                lhs.position == rhs.position &&
+                lhs.title == rhs.title &&
+                lhs.time == rhs.time &&
+                lhs.avatar == rhs.avatar &&
+                lhs.isMuted == rhs.isMuted &&
+                lhs.messageStyle == rhs.messageStyle &&
+                lhs.unreadBadgeStyle == rhs.unreadBadgeStyle
+    }
+    
+}
+
+extension ChatCellModel.MessageStyle: Equatable {
+    static func == (lhs: ChatCellModel.MessageStyle, rhs: ChatCellModel.MessageStyle) -> Bool {
+        switch (lhs, rhs) {
+        case (.message(let text1), .message(let text2)):
+            return text1 == text2
+        case (.action(let action1), .action(let action2)):
+            return action1 == action2
+        default:
+            return false
+        }
+    }
+}
+
+extension ChatCellModel.UnreadStyle: Equatable {
+    static func == (lhs: ChatCellModel.UnreadStyle, rhs: ChatCellModel.UnreadStyle) -> Bool {
+        switch (lhs, rhs) {
+        case (.mention, .mention):
+            return true
+        case (.reaction, .reaction):
+            return true
+        case (.message(let count1), .message(let count2)):
+            return count1 == count2
+        default:
+            return false
+        }
     }
 }
 

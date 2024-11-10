@@ -10,14 +10,14 @@ import SwiftUI
 import AVFoundation
 import SwiftOGG
 
-class PlayerService: NSObject, ObservableObject {
+class PlayerService_Old: NSObject, ObservableObject {
     
     static let updateInterval: Double = 0.20
     
     @Published var elapsedTime: TimeInterval = .zero
     
     private var audioPlayer: AVAudioPlayer?
-    private let logger = LoggerService(PlayerService.self)
+    private let logger = LoggerService(PlayerService_Old.self)
     var elapsedTimeTimer: Timer?
     var filePath: URL
     
@@ -52,7 +52,7 @@ class PlayerService: NSObject, ObservableObject {
         audioPlayer?.prepareToPlay()
         
         elapsedTimeTimer = Timer.scheduledTimer(
-            withTimeInterval: PlayerService.updateInterval,
+            withTimeInterval: PlayerService_Old.updateInterval,
             repeats: true,
             block: { [weak self] _ in
                 self?.updateElapsedTime()
@@ -87,7 +87,7 @@ class PlayerService: NSObject, ObservableObject {
     
     func updateElapsedTime() {
         if audioPlayer?.isPlaying ?? false {
-            self.elapsedTime += PlayerService.updateInterval
+            self.elapsedTime += PlayerService_Old.updateInterval
         }
     }
     

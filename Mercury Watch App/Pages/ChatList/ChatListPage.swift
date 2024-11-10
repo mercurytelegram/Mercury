@@ -10,11 +10,14 @@ import SwiftUI
 struct ChatListPage: View {
     
     @State
-    @Mockable(mockInit: ChatListViewModelMock.init)
-    var vm = ChatListViewModel.init
+    @Mockable
+    var vm: ChatListViewModel
     
     init(folder: ChatFolder) {
-        vm.folder = folder
+        _vm = Mockable.state(
+            value: { ChatListViewModel(folder: folder) },
+            mock: { ChatListViewModelMock() }
+        )
     }
     
     var body: some View {
@@ -31,10 +34,12 @@ struct ChatListPage: View {
                     }
                 }
                 .navigationDestination(for: ChatCellModel.self) { chat in
-                    ChatDetailPage(chatId: chat.id)
+                    if let id = chat.id {
+                        ChatDetailPage(chatId: id)
+                    }
                 }
                 .listStyle(.carousel)
-                .navigationTitle(vm.folder?.title ?? "")
+                .navigationTitle(vm.folder.title)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button("New Chat", systemImage: "square.and.pencil") {

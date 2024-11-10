@@ -13,7 +13,7 @@ import SwiftUI
 class VoiceNoteContentViewModel: NSObject, ObservableObject {
     
     let message: MessageVoiceNote
-    var player: PlayerService?
+    var player: PlayerService_Old?
     private let logger = LoggerService(AudioMessageViewModel_Old.self)
     
     @Published var loading: Bool = false
@@ -40,7 +40,7 @@ class VoiceNoteContentViewModel: NSObject, ObservableObject {
                 }
                 
                 do {
-                    self.player = try PlayerService(audioFilePath: filePath, delegate: self)
+                    self.player = try PlayerService_Old(audioFilePath: filePath, delegate: self)
                     self.fileUrl = self.player?.filePath
                     self.loading = false
                     
