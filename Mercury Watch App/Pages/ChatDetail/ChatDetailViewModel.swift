@@ -61,6 +61,9 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     func loadChatData() {
+        
+        self.isLoadingInitialMessages = true
+        
         Task.detached(priority: .high) {
             do {
              
@@ -84,10 +87,15 @@ class ChatDetailViewModel: TDLibViewModel {
                     for msg in newMessages {
                         self.insertMessage(at: .first, message: msg)
                     }
+                    
+                    withAnimation {
+                        self.isLoadingInitialMessages = false
+                    }
                 }
                 
             } catch {
                 self.logger.log(error, level: .error)
+                self.isLoadingInitialMessages = false
             }
         }
     }

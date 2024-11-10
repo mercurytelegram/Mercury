@@ -23,24 +23,29 @@ struct ChatDetailPage: View {
     var body: some View {
         
         ScrollViewReader { proxy in
-            ScrollView {
-                
+            
+            Group {
                 if vm.isLoadingInitialMessages {
                     ProgressView()
                 } else {
-                    
-                    Button("Load more") {
-                        vm.onPressLoadMore(proxy)
+                    ScrollView {
+                        
+                        if vm.isLoadingMoreMessages {
+                            ProgressView()
+                        } else {
+                            Button("Load more") {
+                                vm.onPressLoadMore(proxy)
+                            }
+                        }
+                        
+                        messageList()
+                            .onAppear { vm.onMessageListAppear(proxy) }
+                            .padding(.vertical)
+                        
                     }
-                    .padding()
-                    
-                   messageList()
-                        .onAppear { vm.onMessageListAppear(proxy) }
-                        .padding(.bottom)
+                    .defaultScrollAnchor(.bottom)
                 }
-                
             }
-            .defaultScrollAnchor(.bottom)
             .toolbar {
                 
                 if let avatar = vm.avatar {
@@ -65,7 +70,6 @@ struct ChatDetailPage: View {
             }
             .onAppear(perform: vm.onOpenChat)
             .onDisappear(perform: vm.onCloseChat)
-            
         }
         .sheet(isPresented: $vm.showChatInfoView) {
             AlertView.inDevelopment("chat info is")
@@ -94,7 +98,6 @@ struct ChatDetailPage: View {
                 )
             }
         }
-        
     }
     
     @ViewBuilder

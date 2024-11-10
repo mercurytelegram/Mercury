@@ -12,16 +12,6 @@ extension ChatDetailViewModel {
     
     func requestMessages(fromId: Int64? = nil, firstBatch: Bool = false, limit: Int = 30) async -> [MessageModel] {
         
-        if isLoadingInitialMessages && firstBatch { return [] }
-        await MainActor.run {
-            isLoadingInitialMessages = firstBatch
-        }
-        
-        if isLoadingMoreMessages && !firstBatch { return [] }
-        await MainActor.run {
-            isLoadingMoreMessages = !firstBatch
-        }
-        
         self.logger.log("Loading \(limit) \(firstBatch ? "initial" : "more") messages")
         
         do {
@@ -39,11 +29,6 @@ extension ChatDetailViewModel {
             var newMessages: [MessageModel] = []
             for msg in data {
                 newMessages.append(await self.messageModelFrom(msg))
-            }
-           
-            await MainActor.run {
-                isLoadingInitialMessages = false
-                isLoadingMoreMessages = false
             }
             
             if newMessages.count == 1 && firstBatch {
