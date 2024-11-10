@@ -91,3 +91,37 @@ public class Mockable<T> {
         set { wrappedValue[keyPath: keyPath] = newValue }
     }
 }
+
+extension Mockable {
+    /// A helper function to create a `State` instance of `Mockable`, wrapping both a value and a mock initializer.
+    ///
+    /// This function enables initializing a `@State` `@Mockable` variable later in the view’s initializer, allowing you to pass parameters to the initializer of the type `T`
+    ///
+    /// - Returns: A `State` instance containing the `Mockable` wrapped type.
+    ///
+    /// ### Usage Example
+    /// ```swift
+    /// @State
+    /// @Mockable
+    /// var vm: ViewModel
+    ///
+    /// init() {
+    ///     _vm = Mockable.state(
+    ///         value: { ViewModel("Value") },
+    ///         mock: { ViewModelMock("Value") }
+    ///     )
+    /// }
+    /// ```
+    ///
+    /// In this example, the `vm` property is a `@State` property that uses the `@Mockable` property wrapper.
+    /// By calling `Mockable.state(value:mock:)` within the initializer, parameters can be passed to the `ViewModel` initializers.
+    static func state(
+        value: @escaping () -> T,
+        mock: @escaping () -> T
+    ) -> State<Mockable<T>> {
+        return State(wrappedValue: Mockable(
+            wrappedValue: value,
+            mockInit: mock
+        ))
+    }
+}
