@@ -32,11 +32,6 @@ struct ChatListPage: View {
                     }
                 }
             }
-            .navigationDestination(for: ChatCellModel.self) { chat in
-                if let id = chat.id {
-                    ChatDetailPage(chatId: id)
-                }
-            }
             .listStyle(.carousel)
             .navigationTitle(vm.folder.title)
             .toolbar {

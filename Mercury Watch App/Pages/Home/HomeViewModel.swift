@@ -12,7 +12,12 @@ import TDLibKit
 class HomeViewModel: TDLibViewModel {
     
     var folders: [ChatFolder] = [.main, .archive]
-    var navStack: [ChatFolder] = [.main]
+    var navigationPath = NavigationPath()
+    
+    override init() {
+        super.init()
+        self.navigationPath.append(ChatFolder.main)
+    }
     
     override func updateHandler(update: Update) {
         DispatchQueue.main.async {

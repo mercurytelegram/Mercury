@@ -14,7 +14,7 @@ struct HomePage: View {
     var vm = HomeViewModel.init
     
     var body: some View {
-        NavigationStack(path: $vm.navStack) {
+        NavigationStack(path: $vm.navigationPath) {
             List {
 //                NavigationLink {
 //                    AccountDetailView(vm: settingsVM)
@@ -41,6 +41,11 @@ struct HomePage: View {
             .navigationTitle("Mercury")
             .navigationDestination(for: ChatFolder.self) { folder in
                 return ChatListPage(folder: folder)
+            }
+            .navigationDestination(for: ChatCellModel.self) { chat in
+                if let id = chat.id {
+                    ChatDetailPage(chatId: id)
+                }
             }
         }
     }
