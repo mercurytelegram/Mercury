@@ -32,10 +32,10 @@ struct LocationView: View {
 }
 
 struct LocationModel {
-    var title: String
+    var title: String = ""
     var coordinate: CLLocationCoordinate2D
     var color: Color?
-    var markerSymbol: String
+    var markerSymbol: String = "mapin"
     var shiftCenter: Bool = false
 }
 

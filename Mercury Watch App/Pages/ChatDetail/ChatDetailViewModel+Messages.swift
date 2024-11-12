@@ -68,6 +68,7 @@ extension ChatDetailViewModel {
         let reactions = reactionsModelFrom(reactionsData)
         let reply = await replyModelFrom(message.replyTo, isOutgoing: message.isOutgoing)
         let stateStyle = await stateStyleFrom(message)
+        let content = await messageContentFrom(message)
         
         return MessageModel(
             id: message.id,
@@ -79,7 +80,7 @@ extension ChatDetailViewModel {
             reactions: reactions,
             reply: reply,
             stateStyle: stateStyle,
-            content: .text(message.description)
+            content: content
         )
     }
     

@@ -22,8 +22,8 @@ struct MessageView: View {
                     Text(text)
                 }
             
-            case .pill(let text):
-                PillMessageView(text: text)
+            case .pill(let title, let description):
+                PillView(title: title, description: description)
            
             case .location(let locationModel):
                 MessageBubbleView(model: self.model, style: .fullScreen(caption: "")) {
@@ -70,14 +70,6 @@ struct MessageView: View {
 //                            Spacer()
 //                        }
 //                }
-                
-//            case .chatChangePhoto:
-//                VStack {
-//                    PillMessageView(description: "changed group photo")
-//                    TdImageView(tdImage: message.photo)
-//                        .frame(width: 60, height: 60)
-//                        .clipShape(RoundedRectangle(cornerRadius: 10))
-//                }
             }
     }
 }
@@ -108,7 +100,7 @@ struct MessageModel: Identifiable {
     var content: MessageContent
     enum MessageContent {
         case text(AttributedString)
-        case pill(String)
+        case pill(title: String?, description: LocalizedStringKey)
         case location(model: LocationModel)
         case voiceNote(model: VoiceNoteModel, onPress: () -> Void)
         
