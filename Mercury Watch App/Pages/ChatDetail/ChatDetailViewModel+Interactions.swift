@@ -9,6 +9,11 @@ import SwiftUI
 
 extension ChatDetailViewModel {
     func onPressLoadMore(_ proxy: ScrollViewProxy) {
+        
+        withAnimation {
+            self.isLoadingMoreMessages = true
+        }
+        
         Task.detached {
             let lastMessage = self.messages.first
             let newMessages = await self.requestMessages(fromId: lastMessage?.id)
@@ -19,7 +24,10 @@ extension ChatDetailViewModel {
                     self.insertMessage(at: .first, message: msg)
                 }
                 
-                proxy.scrollTo(lastMessage?.id, anchor: .bottom)
+                withAnimation {
+                    proxy.scrollTo(lastMessage?.id, anchor: .bottom)
+                    self.isLoadingMoreMessages = false
+                }
             }
         }
     }

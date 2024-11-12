@@ -19,7 +19,7 @@ struct MercuryApp: App {
             let isAuthenticated = AppState.shared.isAuthenticated ?? false
             
             if isMock || isAuthenticated {
-                ChatListPage(folder: .main)
+                HomePage()
             } else {
                 LoginPage()
             }

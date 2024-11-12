@@ -14,16 +14,14 @@ struct VoiceNoteView: View {
     
     let model: VoiceNoteModel
     let isOutgoing: Bool
-    let onPress: () -> Void
     
     private let waveformConfig: Waveform.Configuration
     private let replyForegroundColor: Color
     private let replyBackgroundColor: Color
     
-    init(model: VoiceNoteModel, isOutgoing: Bool, onPress: @escaping () -> Void) {
+    init(model: VoiceNoteModel, isOutgoing: Bool) {
         self.model = model
         self.isOutgoing = isOutgoing
-        self.onPress = onPress
         
         self.replyForegroundColor = isOutgoing ? .white : .blue
         self.replyBackgroundColor = isOutgoing ? .blue : .white
@@ -37,12 +35,12 @@ struct VoiceNoteView: View {
     }
     
     private var actionIcon: String {
-        model.isPlaying ? "pause.fill" : "play.fill"
+        model.player.isPlaying ? "pause.fill" : "play.fill"
     }
     
     private var elapsedTime: String {
-        let time = model.seconds
-        let seconds = Int(time % 60)
+        let time = model.player.isPlaying ? model.player.elapsedTime : model.player.audioDuration
+        let seconds = Int(time.truncatingRemainder(dividingBy: 60))
         let minutes = Int(time / 60)
         return String(format:"%02d:%02d", minutes, seconds)
     }
@@ -52,16 +50,16 @@ struct VoiceNoteView: View {
         HStack(alignment: .top, spacing: 5) {
             
             Button(
-                action: onPress,
+                action: model.player.isPlaying ? model.player.pausePlayingAudio : model.player.startPlayingAudio,
                 label: {
                     
                     ZStack {
                         ProgressView()
                             .tint(replyBackgroundColor)
-                            .opacity(model.isLoading ? 1 : 0)
+                            .opacity(model.player.isLoading ? 1 : 0)
                         Image(systemName: actionIcon)
                             .foregroundStyle(replyBackgroundColor)
-                            .opacity(model.isLoading ? 0 : 1)
+                            .opacity(model.player.isLoading ? 0 : 1)
                     }
                     .font(.system(size: 24))
                     .padding(12)
@@ -75,8 +73,8 @@ struct VoiceNoteView: View {
             
             VStack(alignment: .leading) {
                 
-                if let url = model.audioUrl {
-                    waveform(url)
+                if !model.player.isLoading {
+                    waveform(model.player.filePath)
                     .frame(height: 42, alignment: .leading)
                 
                     HStack {
@@ -143,49 +141,26 @@ struct VoiceNoteView: View {
 }
 
 struct VoiceNoteModel {
-    var audioUrl: URL?
-    var isPlaying: Bool = false
-    var isLoading: Bool
+    var player: PlayerService
     var isListened: Bool = false
-    var seconds: Int = 0
 }
 
-#Preview("Loading") {
+#Preview("Listened") {
     VoiceNoteView(
         model: .init(
-            isLoading: true
+            player: PlayerServiceMock(),
+            isListened: true
         ),
         isOutgoing: true
-    ) {
-        print("Play/Pause")
-    }
+    )
 }
 
-#Preview("Ready") {
+#Preview("Not Listened") {
     VoiceNoteView(
         model: .init(
-            audioUrl: Bundle.main.url(forResource: "audio_sample", withExtension: "m4a"),
-            isLoading: false,
-            isListened: false,
-            seconds: 10
+            player: PlayerServiceMock(),
+            isListened: false
         ),
         isOutgoing: false
-    ) {
-        print("Play/Pause")
-    }
-}
-
-#Preview("Listening") {
-    VoiceNoteView(
-        model: .init(
-            audioUrl: Bundle.main.url(forResource: "audio_sample", withExtension: "m4a"),
-            isPlaying: true,
-            isLoading: false,
-            isListened: true,
-            seconds: 140
-        ),
-        isOutgoing: false
-    ) {
-        print("Play/Pause")
-    }
+    )
 }
