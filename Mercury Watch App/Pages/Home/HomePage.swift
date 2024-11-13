@@ -23,7 +23,7 @@ struct HomePage: View {
 //                }
                 
                 Section {
-                    ForEach(vm.folders, id: \.self) { folder in
+                    ForEach(AppState.shared.folders, id: \.self) { folder in
                         NavigationLink(value: folder) {
                             Label {
                                 Text(folder.title)
