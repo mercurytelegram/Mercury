@@ -79,9 +79,6 @@ extension MessageVoiceNote {
         return VoiceNoteModel(
             isListened: self.isListened,
             getPlayer: {
-                
-                try? await Task.sleep(nanoseconds: 1_000_000_000 * 10)
-                
                 guard let file = await FileService.getFilePath(for: voiceNote.voice),
                       let player = try? PlayerService(audioFilePath: file)
                 else { return nil }
