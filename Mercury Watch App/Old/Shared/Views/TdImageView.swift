@@ -9,7 +9,7 @@ import SwiftUI
 import TDLibKit
 
 struct TdImageView: View {
-    @State private var image: Image?
+    @State private var image: UIImage?
     var tdImage: TDImage
     var showHighRes: Bool = false
     
@@ -17,7 +17,7 @@ struct TdImageView: View {
     var body: some View {
         Group {
             if let image {
-                image
+                Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } else {
@@ -25,9 +25,8 @@ struct TdImageView: View {
             }
         }
         .task {
-            if let data = tdImage.minithumbnail?.data,
-               let uiImage = UIImage(data: data) {
-                self.image = Image(uiImage: uiImage)
+            if let data = tdImage.minithumbnail?.data {
+                self.image = UIImage(data: data)
             }
             
             if let file = tdImage.lowRes {

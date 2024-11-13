@@ -14,7 +14,7 @@ class FileService {
     
     static let logger = LoggerService(FileService.self)
     
-    static func getImage(for photo: File) async -> Image? {
+    static func getImage(for photo: File) async -> UIImage? {
         
         guard let imagePath = await FileService.getPath(for: photo) else {
             logger.log("imagePath is nil")
@@ -26,7 +26,7 @@ class FileService {
             return nil
         }
         
-        return Image(uiImage: uiImage)
+        return uiImage
     }
     
     static func getFilePath(for file: File) async -> URL? {

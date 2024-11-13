@@ -5,8 +5,9 @@
 //  Created by Alessandro Alberti on 11/10/24.
 //
 
-import TDLibKit
 import SwiftUI
+import TDLibKit
+import SDWebImageWebPCoder
 
 extension ChatDetailViewModel {
     
@@ -15,6 +16,25 @@ extension ChatDetailViewModel {
             
         case .messageText(let message):
             return .text(message.text.attributedString)
+            
+        case .messageVoiceNote(let message):
+            guard let model = await message.getModel()
+            else { return .text(msg.description) }
+            return .voiceNote(model: model)
+            
+        case .messagePhoto(let message):
+            return .photo(model: message.getModel(), caption: message.caption.text)
+            
+        case .messageSticker(let message):
+            switch message.sticker.format {
+                
+            case .stickerFormatWebp:
+                return .stickerImage(model: message.getImageModel())
+            case .stickerFormatTgs:
+                return .text(msg.description)
+            case .stickerFormatWebm:
+                return .text(msg.description)
+            }
             
         case .messageLocation(let message):
             return .location(model: message.getModel())
@@ -49,6 +69,47 @@ extension ChatDetailViewModel {
         return .pill(
             title: message.isOutgoing ? "me": sender,
             description: text
+        )
+    }
+}
+
+extension MessageVoiceNote {
+    func getModel() async -> VoiceNoteModel? {
+        //TODO: Download audio later in the view
+        guard let file = await FileService.getFilePath(for: voiceNote.voice),
+        let player = try? PlayerService(audioFilePath: file)
+        else { return nil }
+        return VoiceNoteModel(player: player)
+    }
+}
+
+extension MessagePhoto {
+    func getModel() -> AsyncImageModel {
+        var thumbnail: UIImage? = nil
+        if let data = photo.minithumbnail?.data {
+            thumbnail = UIImage(data: data)
+        }
+        return AsyncImageModel(
+            thumbnail: thumbnail,
+            getImage: {
+                guard let photo = photo.lowRes
+                else { return nil }
+                return await FileService.getImage(for: photo)
+            }
+        )
+    }
+}
+
+extension MessageSticker {
+    func getImageModel() -> StickerImageModel {
+        return StickerImageModel(
+            emoji: sticker.emoji,
+            getImage: {
+                guard let filePath = await FileService.getFilePath(for: sticker.sticker),
+                      let data = try? Data(contentsOf: filePath)
+                else { return nil }
+                return SDImageWebPCoder.shared.decodedImage(with: data, options: nil)
+            }
         )
     }
 }

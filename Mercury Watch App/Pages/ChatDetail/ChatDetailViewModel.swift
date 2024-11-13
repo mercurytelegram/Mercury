@@ -143,19 +143,6 @@ class ChatDetailViewModel: TDLibViewModel {
             }
         }
     }
-    
-    func getImage(_ message: Message) async -> Image? {
-        switch message.content {
-        case .messagePhoto( let msg):
-            if let imageFile = msg.photo.sizes.first {
-                return await FileService.getImage(for: imageFile.photo)
-            }
-            return nil
-        default:
-            return nil
-        }
-        
-    }
 
 }
 

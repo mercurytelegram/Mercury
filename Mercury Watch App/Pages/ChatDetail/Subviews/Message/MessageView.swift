@@ -11,40 +11,65 @@ import MapKit
 import TDLibKit
 
 struct MessageView: View {
-   
     let model: MessageModel
    
     var body: some View {
-            
             switch model.content {
+                
             case .text(let text):
                 MessageBubbleView(model: self.model) {
                     Text(text)
                 }
-            
-            case .pill(let title, let description):
-                PillView(title: title, description: description)
-           
-            case .location(let locationModel):
-                MessageBubbleView(model: self.model, style: .fullScreen(caption: "")) {
-                    LocationView(model: locationModel)
-                }
                 
-            case .voiceNote(let voiceModel, let onPress):
+            case .voiceNote(let voiceModel):
                 MessageBubbleView(model: self.model) {
                     VoiceNoteView(
                         model: voiceModel,
                         isOutgoing: self.model.isOutgoing
                     )
                 }
-            
-            default:
-                Text("")
                 
-//            case .photo(let image, let caption):
-//                MessageBubbleView(model: self.model, style: .fullScreen(caption: caption)) {
-//                    TdImageView(tdImage: image)
-//                }
+            case .photo(let imageModel, let caption):
+                MessageBubbleView(model: self.model, style: .fullScreen(caption: caption ?? "")) {
+                    AsyncView(getData: imageModel.getImage) {
+                        Group {
+                            if let thumbnail = imageModel.thumbnail {
+                                Image(uiImage: thumbnail)
+                                    .resizable()
+                                    .scaledToFill()
+                            }
+                            if imageModel.thumbnail == nil {
+                                ProgressView()
+                            }
+                        }
+                    } buildContent: { image in
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                    }
+                }
+                
+            case .stickerImage(let stickerModel):
+                MessageBubbleView(model: self.model, style: .clearBackground) {
+                    AsyncView(getData: stickerModel.getImage) {
+                        Text(stickerModel.emoji)
+                            .font(.largeTitle)
+                    } buildContent: { image in
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100)
+                    }
+                }
+                
+                
+            case .location(let locationModel):
+                MessageBubbleView(model: self.model, style: .fullScreen(caption: "")) {
+                    LocationView(model: locationModel)
+                }
+            
+            case .pill(let title, let description):
+                PillView(title: title, description: description)
 //                
 //            case .video:
 //                MessageBubbleView(model: self.model)(style: .fullScreen, caption: message.caption.text) {
@@ -54,20 +79,6 @@ struct MessageView: View {
 //                    Image(systemName: "play.circle.fill")
 //                        .font(.largeTitle)
 //                        .foregroundStyle(.white, .ultraThinMaterial)
-//                }
-//                
-//            case .sticker:
-//                MessageBubbleView(model: self.model, style: .hideBackground) {
-//                        switch message.sticker.format {
-//                        case .stickerFormatWebp:
-//                            WebpStickerView(sticker: message.sticker)
-//                                .frame(maxWidth: 100)
-//                                .padding()
-//                        case .stickerFormatTgs:
-//                            TgsStickerView(sticker: message.sticker)
-//                        case .stickerFormatWebm:
-//                            Spacer()
-//                        }
 //                }
             }
     }
@@ -99,42 +110,16 @@ struct MessageModel: Identifiable {
     var content: MessageContent
     enum MessageContent {
         case text(AttributedString)
-        case pill(title: String?, description: LocalizedStringKey)
+        case voiceNote(model: VoiceNoteModel)
+        case photo(model: AsyncImageModel, caption: String?)
+        case stickerImage(model: StickerImageModel)
         case location(model: LocationModel)
-        case voiceNote(model: VoiceNoteModel, onPress: () -> Void)
-        
-        case photo(image: File, caption: String?)
-        case video(imageURL: URL, caption: String?)
-        case sticker
+        case pill(title: String?, description: LocalizedStringKey)
     }
-    
 }
 
-//#Preview("Messages") {
-//    VStack {
-//        MessageView(vm: MessageViewModelMock(name: "Craig Federighi"))
-//        MessageView(vm: MessageViewModelMock(message: .preview(isOutgoing: true)))
-//    }
-//}
-//
-//#Preview("Location") {
-//    MessageView(vm: MessageViewModelMock())
-//    
-//}
-//
-//#Preview("Loading Name") {
-//    MessageView(vm: MessageViewModelMock(showSender: true))
-//}
-//
-//#Preview("Group Photo Change") {
-//    VStack {
-//        PillMessageView(description: "changed group photo")
-//        TdImageView(tdImage: TDImageMock("astro"))
-//            .frame(width: 60, height: 60)
-//            .clipShape(RoundedRectangle(cornerRadius: 10))
-//    }
-//    .frame(maxWidth: .infinity, maxHeight: .infinity)
-//    .background(.blue.opacity(0.3))
-//    .environmentObject(MessageViewModelMock() as MessageViewModel)
-//}
+struct StickerImageModel {
+    let emoji: String
+    let getImage: () async -> UIImage?
+}
 

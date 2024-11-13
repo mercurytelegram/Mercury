@@ -137,7 +137,9 @@ struct ChatDetailView: View {
         switch message.content {
         case .messagePhoto( let msg):
             if let imageFile = msg.photo.sizes.first {
-                return await FileService.getImage(for: imageFile.photo)
+                guard let uiImage = await FileService.getImage(for: imageFile.photo)
+                else { return nil }
+                return Image(uiImage: uiImage)
             }
             return nil
         default:
