@@ -18,6 +18,7 @@ struct VoiceNoteView: View {
     private let waveformConfig: Waveform.Configuration
     private let replyForegroundColor: Color
     private let replyBackgroundColor: Color
+    private var player: PlayerService?
     
     init(model: VoiceNoteModel, isOutgoing: Bool) {
         self.model = model
@@ -34,69 +35,90 @@ struct VoiceNoteView: View {
         )
     }
     
-    private var actionIcon: String {
-        model.player.isPlaying ? "pause.fill" : "play.fill"
-    }
-    
-    private var elapsedTime: String {
-        let time = model.player.isPlaying ? model.player.elapsedTime : model.player.audioDuration
-        let seconds = Int(time.truncatingRemainder(dividingBy: 60))
-        let minutes = Int(time / 60)
-        return String(format:"%02d:%02d", minutes, seconds)
-    }
-    
     var body: some View {
+        AsyncView(getData: model.getPlayer) {
+            loader()
+        } buildContent: { player in
+            content(player)
+        }
+    }
+    
+    @ViewBuilder
+    func content(_ player: PlayerService) -> some View {
+        
+        var actionIcon: String {
+            player.isPlaying ? "pause.fill" : "play.fill"
+        }
+        
+        var elapsedTime: String {
+            let time = player.isPlaying ? player.elapsedTime : player.audioDuration
+            let seconds = Int(time.truncatingRemainder(dividingBy: 60))
+            let minutes = Int(time / 60)
+            return String(format:"%02d:%02d", minutes, seconds)
+        }
         
         HStack(alignment: .top, spacing: 5) {
             
-            Button(
-                action: model.player.isPlaying ? model.player.pausePlayingAudio : model.player.startPlayingAudio,
-                label: {
-                    
-                    ZStack {
-                        ProgressView()
-                            .tint(replyBackgroundColor)
-                            .opacity(model.player.isLoading ? 1 : 0)
-                        Image(systemName: actionIcon)
-                            .foregroundStyle(replyBackgroundColor)
-                            .opacity(model.player.isLoading ? 0 : 1)
-                    }
+            Button {
+                model.onPress?()
+                if player.isPlaying {
+                    player.pausePlayingAudio()
+                } else {
+                    player.startPlayingAudio()
+                }
+            } label: {
+                Image(systemName: actionIcon)
+                    .foregroundStyle(replyBackgroundColor)
                     .font(.system(size: 24))
                     .padding(12)
                     .background(replyForegroundColor)
                     .clipShape(Circle())
-                    
-                }
-            )
+            }
             .frame(width: 42, height: 42)
             .buttonStyle(.plain)
             
             VStack(alignment: .leading) {
                 
-                if !model.player.isLoading {
-                    waveform(model.player.filePath)
+                waveform(player.filePath)
                     .frame(height: 42, alignment: .leading)
                 
-                    HStack {
-                        Text(elapsedTime)
-                            .font(.system(size: 15))
-                            .bold()
-                        
-                        if !model.isListened {
-                            Circle()
-                                .frame(
-                                    width: 6,
-                                    height: 6
-                                )
-                        }
-                        
-                    }
-                    .foregroundStyle(replyForegroundColor)
+                HStack {
+                    Text(elapsedTime)
+                        .font(.system(size: 15))
+                        .bold()
                     
-                } else {
-                    waveformPlaceholder()
-                        .frame(height: 42, alignment: .leading)
+                    if !model.isListened {
+                        Circle()
+                            .frame(
+                                width: 6,
+                                height: 6
+                            )
+                    }
+                    
                 }
+                .foregroundStyle(replyForegroundColor)
+                
+            }
+        }
+    }
+    
+    @ViewBuilder
+    func loader() -> some View {
+        
+        HStack(alignment: .top, spacing: 5) {
+            
+            ProgressView()
+                .tint(replyBackgroundColor)
+                .font(.system(size: 24))
+                .padding(12)
+                .background(replyForegroundColor)
+                .clipShape(Circle())
+                .frame(width: 42, height: 42)
+                .buttonStyle(.plain)
+            
+            VStack(alignment: .leading) {
+                waveformPlaceholder()
+                    .frame(height: 42, alignment: .leading)
             }
         }
     }
@@ -121,17 +143,17 @@ struct VoiceNoteView: View {
         let zeroWidth = 15
         
         TimelineView(.periodic(from: .now, by: 1/10)) { time in
-           
+            
             // Calculate the oscillating position based on time
             let timeInterval = time.date.timeIntervalSinceReferenceDate
             let sinValue = sin(timeInterval * oscillationSpeed)
             let position = Int((sinValue + 1) / 2 * Double(sampleCount - 1))
-
+            
             // Generate the samples array with a "0" region that moves back and forth
             let samples: [Float] = (0..<sampleCount).map {
                 ($0 >= position && $0 < position + zeroWidth) ? 0.2 : 1
             }
-
+            
             WaveformLiveCanvas(
                 samples: samples,
                 configuration: waveformConfig
@@ -141,15 +163,16 @@ struct VoiceNoteView: View {
 }
 
 struct VoiceNoteModel {
-    var player: PlayerService
     var isListened: Bool = false
+    var getPlayer: () async throws -> PlayerService?
+    var onPress: (() -> Void)?
 }
 
 #Preview("Listened") {
     VoiceNoteView(
         model: .init(
-            player: PlayerServiceMock(),
-            isListened: true
+            isListened: true,
+            getPlayer: { PlayerServiceMock() }
         ),
         isOutgoing: true
     )
@@ -158,8 +181,21 @@ struct VoiceNoteModel {
 #Preview("Not Listened") {
     VoiceNoteView(
         model: .init(
-            player: PlayerServiceMock(),
-            isListened: false
+            isListened: false,
+            getPlayer: { PlayerServiceMock() }
+        ),
+        isOutgoing: false
+    )
+}
+
+#Preview("Loading") {
+    VoiceNoteView(
+        model: .init(
+            isListened: false,
+            getPlayer: {
+                try? await Task.sleep(nanoseconds: 1_000_000_000 * 10)
+                return PlayerServiceMock()
+            }
         ),
         isOutgoing: false
     )

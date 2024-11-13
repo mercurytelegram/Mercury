@@ -143,6 +143,19 @@ class ChatDetailViewModel: TDLibViewModel {
             }
         }
     }
+    
+    func setMessageAsOpened(_ messageId: Int64) {
+        Task.detached(priority: .background) {
+            do {
+                try await TDLibManager.shared.client?.openMessageContent(
+                    chatId: self.chatId,
+                    messageId: messageId
+                )
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
 
 }
 
