@@ -79,7 +79,7 @@ struct VoiceNoteView: View {
             
             VStack(alignment: .leading) {
                 
-                waveform(player.filePath)
+                waveform(player)
                     .frame(height: 42, alignment: .leading)
                 
                 HStack {
@@ -124,11 +124,30 @@ struct VoiceNoteView: View {
     }
     
     @ViewBuilder
-    func waveform(_ url: URL) -> some View {
-        WaveformView(
-            audioURL: url,
-            configuration: waveformConfig
-        )
+    func waveform(_ player: PlayerService) -> some View {
+        ZStack {
+            WaveformView(
+                audioURL: player.filePath,
+                configuration: waveformConfig
+            )
+            .opacity(0.2)
+            
+            WaveformView(
+                audioURL: player.filePath,
+                configuration: waveformConfig
+            )
+            .mask {
+                GeometryReader { proxy in
+                    
+                    let elapsed = player.elapsedTime == 0 ? player.audioDuration : player.elapsedTime
+                    let duration = player.audioDuration
+                    let width = proxy.size.width * (elapsed / duration)
+                    
+                    Rectangle()
+                        .frame(width: width)
+                }
+            }
+        }
     }
     
     @ViewBuilder

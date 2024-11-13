@@ -95,7 +95,9 @@ class PlayerService: NSObject {
     
     func updateElapsedTime() {
         if isPlaying {
-            self.elapsedTime += PlayerService.updateInterval
+            withAnimation {
+                self.elapsedTime += PlayerService.updateInterval
+            }
         }
     }
     
