@@ -111,7 +111,7 @@ struct ChatDetailPage: View {
                         .opacity(phase.isIdentity ? 1 : 0)
                 }
                 .onAppear {
-                    vm.onMessageAppear(message.id)
+                    vm.onMessageAppear(message)
                 }
                 .onTapGesture(count: 2) {
                     vm.onDublePressOf(message)

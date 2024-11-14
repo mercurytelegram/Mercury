@@ -25,6 +25,21 @@ extension Date {
         return formatter.string(from: self)
     }
     
+    var dayDescription: String {
+        let formatter = DateFormatter()
+        
+        if Calendar.current.isDateInToday(self) {
+            return "Today"
+        } else if Calendar.current.isDateInYesterday(self) {
+            return "Yesterday"
+        } else {
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+        }
+        
+        return formatter.string(from: self)
+    }
+    
     init(fromUnixTimestamp timestamp: Int) {
         self.init(timeIntervalSince1970: TimeInterval(timestamp))
     }

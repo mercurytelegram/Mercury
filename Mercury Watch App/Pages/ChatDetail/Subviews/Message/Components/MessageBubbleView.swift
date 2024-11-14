@@ -126,7 +126,7 @@ struct MessageBubbleView<Content> : View where Content : View {
         
         Text(sender)
             .fontWeight(.semibold)
-            .foregroundStyle(model.senderColor)
+            .foregroundStyle(model.senderColor ?? .clear)
             .redacted(reason: sender == "placeholder" ? .placeholder : [])
             .if(isFullscreen) { view in
                 view
