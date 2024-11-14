@@ -89,11 +89,15 @@ struct MessageModel: Identifiable {
     var id: Int64
     
     var sender: String?
-    var senderColor: Color
+    var senderColor: Color?
     var isSenderHidden: Bool = false
     
-    var time: String
-    var isOutgoing: Bool
+    var date: Foundation.Date
+    var time: String {
+        date.formatted(.dateTime.hour().minute())
+    }
+    
+    var isOutgoing: Bool = false
     
     var reactions: [ReactionModel] = []
     var reply: ReplyModel? = nil
@@ -101,10 +105,6 @@ struct MessageModel: Identifiable {
     var stateStyle: StateStyle?
     enum StateStyle {
         case sending, delivered, seen, failed
-    }
-    
-    enum DatatYpe {
-        case mp4, jpeg
     }
     
     var content: MessageContent

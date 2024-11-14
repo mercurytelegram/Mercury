@@ -35,6 +35,23 @@ extension ChatDetailViewModel {
                 newMessages += await self.requestMessages(fromId: newMessages.first?.id)
             }
             
+            // Add date pill between messages
+            for (index, msg) in newMessages.enumerated() {
+                
+                guard index + 1 < newMessages.count else { continue }
+                
+                // check if the next message is from a different day
+                let nextDate = newMessages[index + 1].date
+                let currentDate = msg.date
+                if !Calendar.current.isDate(nextDate, inSameDayAs: currentDate) {
+                    newMessages.insert(
+                        await self.dateSeparatorFor(currentDate),
+                        at: index + 1
+                    )
+                }
+                
+            }
+            
             return newMessages
             
         } catch {
@@ -46,7 +63,7 @@ extension ChatDetailViewModel {
     
     func messageModelFrom(_ message: Message) async -> MessageModel {
         
-        let time = Date(fromUnixTimestamp: message.date).formatted(.dateTime.hour().minute())
+        let date = Date(fromUnixTimestamp: message.date)
         let senderColor = Color(fromUserId: message.senderID)
         let sender = await self.senderNameFrom(message)
         let reactionsData = message.interactionInfo?.reactions?.reactions ?? []
@@ -58,13 +75,26 @@ extension ChatDetailViewModel {
         return MessageModel(
             id: message.id,
             sender: sender.name,
-            senderColor: senderColor,
             isSenderHidden: sender.isHidden,
-            time: time,
+            date: date,
             isOutgoing: message.isOutgoing,
             reactions: reactions,
             reply: reply,
             stateStyle: stateStyle,
+            content: content
+        )
+    }
+    
+    func dateSeparatorFor(_ currentDate: Foundation.Date) async -> MessageModel {
+        let dateString = LocalizedStringKey(currentDate.dayDescription)
+        let content = MessageModel.MessageContent.pill(
+            title: nil,
+            description: dateString
+        )
+        
+        return MessageModel(
+            id: Int64(currentDate.timeIntervalSince1970),
+            date: currentDate,
             content: content
         )
     }
@@ -173,5 +203,19 @@ extension ChatDetailViewModel {
         
         return nil
     }
+    
+    func setMessageAsOpened(_ messageId: Int64) {
+        Task.detached(priority: .background) {
+            do {
+                try await TDLibManager.shared.client?.openMessageContent(
+                    chatId: self.chatId,
+                    messageId: messageId
+                )
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+
    
 }

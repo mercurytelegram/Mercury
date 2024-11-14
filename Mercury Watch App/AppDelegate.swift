@@ -26,6 +26,10 @@ class AppDelegate: NSObject, WKApplicationDelegate {
         LoginViewModel.setOfflineStatus()
     }
     
+    func applicationWillResignActive() {
+        LoginViewModel.setOfflineStatus()
+    }
+    
     private func cleanTmpFolder() {
         try? FileManager.default.removeItem(
             at: FileManager.default.temporaryDirectory

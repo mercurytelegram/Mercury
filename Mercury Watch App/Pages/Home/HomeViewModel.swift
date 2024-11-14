@@ -11,7 +11,6 @@ import TDLibKit
 @Observable
 class HomeViewModel: TDLibViewModel {
     
-    var folders: [ChatFolder] = [.main, .archive]
     var navigationPath = NavigationPath()
     
     override init() {
@@ -32,15 +31,10 @@ class HomeViewModel: TDLibViewModel {
     
     @MainActor
     func updateChatFolders(_ update: UpdateChatFolders) {
-        self.folders = [.main, .archive]
         for chatFolderInfo in update.chatFolders {
             let chatList = ChatList.chatListFolder(ChatListFolder(chatFolderId: chatFolderInfo.id))
             let folder = ChatFolder(title: chatFolderInfo.title, chatList: chatList)
-            
-            withAnimation {
-                // To leave Archive in the last position
-                self.folders.insert(folder, at: self.folders.count - 1)
-            }
+            AppState.shared.insertFolder(folder)
         }
     }
     

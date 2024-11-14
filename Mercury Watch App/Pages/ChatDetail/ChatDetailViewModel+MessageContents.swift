@@ -18,8 +18,9 @@ extension ChatDetailViewModel {
             return .text(message.text.attributedString)
             
         case .messageVoiceNote(let message):
-            guard let model = await message.getModel()
+            guard var model = await message.getModel()
             else { return .text(msg.description) }
+            model.onPress = { self.setMessageAsOpened(msg.id) }
             return .voiceNote(model: model)
             
         case .messagePhoto(let message):
@@ -75,11 +76,15 @@ extension ChatDetailViewModel {
 
 extension MessageVoiceNote {
     func getModel() async -> VoiceNoteModel? {
-        //TODO: Download audio later in the view
-        guard let file = await FileService.getFilePath(for: voiceNote.voice),
-        let player = try? PlayerService(audioFilePath: file)
-        else { return nil }
-        return VoiceNoteModel(player: player)
+        return VoiceNoteModel(
+            isListened: self.isListened,
+            getPlayer: {
+                guard let file = await FileService.getFilePath(for: voiceNote.voice),
+                      let player = try? PlayerService(audioFilePath: file)
+                else { return nil }
+                return player
+            }
+        )
     }
 }
 

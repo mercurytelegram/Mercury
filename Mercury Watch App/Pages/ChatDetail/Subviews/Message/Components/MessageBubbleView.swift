@@ -132,7 +132,7 @@ struct MessageBubbleView<Content> : View where Content : View {
         
         Text(sender)
             .fontWeight(.semibold)
-            .foregroundStyle(model.senderColor)
+            .foregroundStyle(model.senderColor ?? .clear)
             .redacted(reason: sender == "placeholder" ? .placeholder : [])
             .if(isFullscreen) { view in
                 view
@@ -219,7 +219,7 @@ extension MessageModel {
             sender: "",
             senderColor: .blue,
             isSenderHidden: true,
-            time: "10:09",
+            date: .now,
             isOutgoing: true,
             reactions: [],
             reply: nil,
@@ -234,7 +234,7 @@ extension MessageModel {
             sender: "",
             senderColor: .blue,
             isSenderHidden: true,
-            time: "10:09",
+            date: .now,
             isOutgoing: true,
             reactions: [
                 ReactionModel(
@@ -255,7 +255,7 @@ extension MessageModel {
             sender: "",
             senderColor: .blue,
             isSenderHidden: true,
-            time: "10:09",
+            date: .now,
             isOutgoing: true,
             reactions: [
                 ReactionModel(

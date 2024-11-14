@@ -143,7 +143,7 @@ class ChatDetailViewModel: TDLibViewModel {
             }
         }
     }
-
+    
 }
 
 

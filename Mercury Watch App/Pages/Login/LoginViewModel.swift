@@ -53,6 +53,10 @@ class LoginViewModel: TDLibViewModel {
         switch update {
         case .updateAuthorizationState(let state):
             self.manageUpdateAuthorizationState(state: state.authorizationState)
+        case .updateChatFolders(let update):
+            DispatchQueue.main.async {
+                self.updateChatFolders(update)
+            }
         default:
             break
         }
@@ -130,6 +134,15 @@ class LoginViewModel: TDLibViewModel {
                 self.isValidatingPassword = false
             }
             
+        }
+    }
+    
+    @MainActor
+    func updateChatFolders(_ update: UpdateChatFolders) {
+        for chatFolderInfo in update.chatFolders {
+            let chatList = ChatList.chatListFolder(ChatListFolder(chatFolderId: chatFolderInfo.id))
+            let folder = ChatFolder(title: chatFolderInfo.title, chatList: chatList)
+            AppState.shared.insertFolder(folder)
         }
     }
     

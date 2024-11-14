@@ -103,13 +103,17 @@ extension ChatDetailViewModel {
         }
     }
     
-    func onMessageAppear(_ id: Int64) {
+    func onMessageAppear(_ message: MessageModel) {
+        
+        // Pill messages doesn't need to be marked as seen
+        if case .pill(_,_) = message.content { return }
+        
         Task.detached(priority: .background) {
             do {
                 try await TDLibManager.shared.client?.viewMessages(
                     chatId: self.chatId,
                     forceRead: true,
-                    messageIds: [id],
+                    messageIds: [message.id],
                     source: nil
                 )
             } catch {
