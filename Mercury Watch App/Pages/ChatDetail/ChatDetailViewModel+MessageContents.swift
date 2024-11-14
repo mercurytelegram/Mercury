@@ -67,7 +67,7 @@ extension ChatDetailViewModel {
     func getPillModel(message: Message, text: LocalizedStringKey) async ->  MessageModel.MessageContent {
         let sender = await self.senderNameFrom(message)
         return .pill(
-            title: message.isOutgoing ? "me": sender,
+            title: sender.name,
             description: text
         )
     }

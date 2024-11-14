@@ -48,7 +48,7 @@ extension ChatDetailViewModel {
         
         let time = Date(fromUnixTimestamp: message.date).formatted(.dateTime.hour().minute())
         let senderColor = Color(fromUserId: message.senderID)
-        let senderName = await self.senderNameFrom(message)
+        let sender = await self.senderNameFrom(message)
         let reactionsData = message.interactionInfo?.reactions?.reactions ?? []
         let reactions = reactionsModelFrom(reactionsData)
         let reply = await replyModelFrom(message.replyTo, isOutgoing: message.isOutgoing)
@@ -57,9 +57,9 @@ extension ChatDetailViewModel {
         
         return MessageModel(
             id: message.id,
-            sender: senderName,
+            sender: sender.name,
             senderColor: senderColor,
-            isSenderHidden: senderName.isEmpty,
+            isSenderHidden: sender.isHidden,
             time: time,
             isOutgoing: message.isOutgoing,
             reactions: reactions,
@@ -90,18 +90,31 @@ extension ChatDetailViewModel {
         }
     }
     
-    func senderNameFrom(_ message: Message) async -> String {
-        guard !message.isOutgoing else { return "" }
+    func senderNameFrom(_ message: Message) async -> (name: String, isHidden: Bool) {
+        let name: String
+        var isHidden: Bool = false
+        
+        if message.isOutgoing {
+            isHidden = true
+        }
         
         let chat = try? await TDLibManager.shared.client?.getChat(chatId: message.chatId)
-        guard (chat?.isGroup ?? true) else { return "" }
+        if (chat?.isGroup ?? true) {
+            isHidden = true
+        }
         
         switch message.senderId {
         case .messageSenderUser(let user):
-            return (try? await TDLibManager.shared.client?.getUser(userId: user.userId))?.fullName ?? ""
+            name = (try? await TDLibManager.shared.client?.getUser(userId: user.userId))?.fullName ?? ""
         case .messageSenderChat(let chat):
-            return (try? await TDLibManager.shared.client?.getChat(chatId: chat.chatId))?.title ?? ""
+            name = (try? await TDLibManager.shared.client?.getChat(chatId: chat.chatId))?.title ?? ""
         }
+        
+        if name.isEmpty {
+            isHidden = true
+        }
+        
+        return (name, isHidden)
     }
     
     func stateStyleFrom(_ message: Message) async -> MessageModel.StateStyle? {
@@ -152,7 +165,7 @@ extension ChatDetailViewModel {
             
             return ReplyModel(
                 color: isOutgoing ? .white : Color(fromUserId: replyMsg.senderID),
-                title: await self.senderNameFrom(replyMsg),
+                title: await self.senderNameFrom(replyMsg).name,
                 text: replyMsg.description
             )
             

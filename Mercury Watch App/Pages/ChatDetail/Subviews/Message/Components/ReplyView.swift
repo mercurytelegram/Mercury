@@ -41,7 +41,9 @@ struct ReplyModel {
 }
 
 #Preview {
-    ReplyView(
-        model: .init(color: .blue, title: "Test", text: "Message content")
-    )
+    ReplyView(model: .init(
+        color: .blue,
+        title: "Title",
+        text: "Message content"
+    ))
 }
