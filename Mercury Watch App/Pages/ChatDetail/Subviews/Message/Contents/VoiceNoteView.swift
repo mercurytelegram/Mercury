@@ -119,33 +119,37 @@ struct VoiceNoteView: View {
             VStack(alignment: .leading) {
                 waveformPlaceholder()
                     .frame(height: 42, alignment: .leading)
+                
+                Text("00:00")
+                    .font(.system(size: 15))
+                    .bold()
+                    .foregroundStyle(replyForegroundColor)
             }
         }
     }
     
     @ViewBuilder
     func waveform(_ player: PlayerService) -> some View {
-        ZStack {
-            WaveformView(
-                audioURL: player.filePath,
-                configuration: waveformConfig
-            )
-            .opacity(0.2)
+        
+        GeometryReader { proxy in
             
-            WaveformView(
-                audioURL: player.filePath,
-                configuration: waveformConfig
-            )
+            let elapsed = player.elapsedTime == 0 ? player.audioDuration : player.elapsedTime
+            let duration = player.audioDuration
+            let width = proxy.size.width * (elapsed / duration)
+            
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(replyForegroundColor.opacity(0.3))
+                
+                Rectangle()
+                    .fill(replyForegroundColor)
+                    .frame(width: width)
+            }
             .mask {
-                GeometryReader { proxy in
-                    
-                    let elapsed = player.elapsedTime == 0 ? player.audioDuration : player.elapsedTime
-                    let duration = player.audioDuration
-                    let width = proxy.size.width * (elapsed / duration)
-                    
-                    Rectangle()
-                        .frame(width: width)
-                }
+                WaveformView(
+                    audioURL: player.filePath,
+                    configuration: waveformConfig
+                )
             }
         }
     }
@@ -212,10 +216,10 @@ struct VoiceNoteModel {
         model: .init(
             isListened: false,
             getPlayer: {
-                try? await Task.sleep(nanoseconds: 1_000_000_000 * 10)
+                try? await Task.sleep(for: .seconds(1_000_000))
                 return PlayerServiceMock()
             }
         ),
-        isOutgoing: false
+        isOutgoing: true
     )
 }
