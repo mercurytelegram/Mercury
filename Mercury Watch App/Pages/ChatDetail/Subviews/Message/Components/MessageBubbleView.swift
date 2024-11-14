@@ -35,6 +35,8 @@ struct MessageBubbleView<Content> : View where Content : View {
         }
     }
     
+    @State private var contentSize: CGSize = .zero
+    
     var body: some View {
         
         Group {
@@ -52,21 +54,21 @@ struct MessageBubbleView<Content> : View where Content : View {
                     }
                     
                     content()
-                    
-                    //Spacing for the footerView
-                    Spacer()
-                        .frame(height: model.reactions.isEmpty ? 15 : 30)
-                }
-                .frame(
-                    minWidth: model.reactions.isEmpty ? 80 : 130,
-                    alignment: .leading
-                )
-                .overlay {
-                    footerView()
                         .frame(
-                            maxHeight: .infinity,
-                            alignment: .bottom
+                            minWidth: model.reactions.isEmpty ? 80 : 130,
+                            alignment: .leading
                         )
+                        .overlay {
+                            GeometryReader { geometry in
+                                Spacer()
+                                    .onAppear {
+                                        self.contentSize = geometry.size
+                                    }
+                            }
+                        }
+                    
+                    footerView()
+                        .frame(maxWidth: contentSize.width)
                 }
                 .padding()
                 
@@ -74,7 +76,11 @@ struct MessageBubbleView<Content> : View where Content : View {
                 VStack(alignment: .leading) {
                     
                     content()
-                        .overlay { senderView() }
+                        .overlay {
+                            if !model.isSenderHidden {
+                                senderView()
+                            }
+                        }
                     
                     if !caption.isEmpty {
                         VStack(alignment: .leading) {
@@ -151,20 +157,24 @@ struct MessageBubbleView<Content> : View where Content : View {
     
     @ViewBuilder
     func footerView(blurredBg: Bool = false) -> some View {
-        HStack(alignment: .bottom) {
-            ForEach(model.reactions, id: \.self) { reaction in
-                ReactionView(
-                    reaction: reaction,
-                    blurredBg: blurredBg
-                )
-                .transition(.opacity
-                    .combined(with: .scale(0.5, anchor: .leading))
-                )
+        FitStack {
+            // Reactions
+            HStack {
+                ForEach(model.reactions, id: \.self) { reaction in
+                    ReactionView(
+                        reaction: reaction,
+                        avatarMaxNumber: model.reactions.count > 1 ? 2 : 3,
+                        blurredBg: blurredBg
+                    )
+                    .transition(.opacity
+                        .combined(with: .scale(0.5, anchor: .leading))
+                    )
+                }
             }
             
-            Spacer()
-            
+            // Time
             HStack {
+                Spacer()
                 Text(model.time)
                     .font(.system(size: 15))
                     .foregroundStyle(.secondary)
@@ -177,6 +187,95 @@ struct MessageBubbleView<Content> : View where Content : View {
     }
     
 }
+
+
+#Preview {
+    ScrollView {
+        MessageBubbleView(
+            model: .mock0(),
+            style: .plain
+        ) {
+            Text("Message")
+        }
+        MessageBubbleView(
+            model: .mock1(),
+            style: .plain
+        ) {
+            Text("Hello")
+        }
+        MessageBubbleView(
+            model: .mock2(),
+            style: .plain
+        ) {
+            Text("Hello")
+        }
+    }
+}
+
+extension MessageModel {
+    static func mock0() -> Self {
+        .init(
+            id: 0,
+            sender: "",
+            senderColor: .blue,
+            isSenderHidden: true,
+            time: "10:09",
+            isOutgoing: true,
+            reactions: [],
+            reply: nil,
+            stateStyle: .delivered,
+            content: .text("")
+        )
+    }
+    
+    static func mock1() -> Self {
+        .init(
+            id: 0,
+            sender: "",
+            senderColor: .blue,
+            isSenderHidden: true,
+            time: "10:09",
+            isOutgoing: true,
+            reactions: [
+                ReactionModel(
+                    emoji: "😍",
+                    count: 1,
+                    isSelected: false
+                )
+            ],
+            reply: nil,
+            stateStyle: .delivered,
+            content: .text("")
+        )
+    }
+    
+    static func mock2() -> Self {
+        .init(
+            id: 0,
+            sender: "",
+            senderColor: .blue,
+            isSenderHidden: true,
+            time: "10:09",
+            isOutgoing: true,
+            reactions: [
+                ReactionModel(
+                    emoji: "😍",
+                    count: 1,
+                    isSelected: false
+                ),
+                ReactionModel(
+                    emoji: "😍",
+                    count: 1,
+                    isSelected: false
+                )
+            ],
+            reply: nil,
+            stateStyle: .delivered,
+            content: .text("")
+        )
+    }
+}
+
 
 //#Preview("Regular") {
 //    VStack {

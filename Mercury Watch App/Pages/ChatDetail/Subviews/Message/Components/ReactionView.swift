@@ -10,11 +10,12 @@ import TDLibKit
 
 struct ReactionView: View {
     var reaction: ReactionModel
+    var avatarMaxNumber = 3
     var blurredBg: Bool = false
     @State private var images: [TDImage] = []
     
     var shouldShowAvatars: Bool {
-        reaction.count <= 3 && !images.isEmpty
+        reaction.count <= avatarMaxNumber && !images.isEmpty
     }
     
     var bgColor: AnyShapeStyle {
@@ -82,7 +83,7 @@ struct ReactionView: View {
     func loadUserImages() async {
         
         guard !isPreview else {
-            let tmpImages = [TDImageMock("tim"), TDImageMock("craig"), TDImageMock("lisa")]
+            let tmpImages = [TDImageMock("alessandro"), TDImageMock("marco"), TDImageMock("astro")]
             for i in 0 ..< reaction.count {
                 images.append(tmpImages[i])
             }
