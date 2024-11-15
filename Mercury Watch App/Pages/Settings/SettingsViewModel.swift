@@ -47,6 +47,5 @@ class SettingsViewModel: TDLibViewModel {
 // MARK: - Mock
 @Observable
 class SettingsViewModelMock: SettingsViewModel {
-    override func logout() {}
     override func getUser() {}
 }

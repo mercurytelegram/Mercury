@@ -31,4 +31,8 @@ class AppState {
             self.folders.insert(folder, at: self.folders.count - 1)
         }
     }
+    
+    public func clear() {
+        folders = [.main, .archive]
+    }
 }
