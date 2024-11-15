@@ -75,6 +75,7 @@ extension ChatDetailViewModel {
         return MessageModel(
             id: message.id,
             sender: sender.name,
+            senderColor: senderColor,
             isSenderHidden: sender.isHidden,
             date: date,
             isOutgoing: message.isOutgoing,
@@ -129,7 +130,7 @@ extension ChatDetailViewModel {
         }
         
         let chat = try? await TDLibManager.shared.client?.getChat(chatId: message.chatId)
-        if (chat?.isGroup ?? true) {
+        if !(chat?.isGroup ?? true) {
             isHidden = true
         }
         
