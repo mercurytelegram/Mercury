@@ -89,8 +89,6 @@
 		A0CDF8C22CE7D4B10015E20E /* FileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDF8C12CE7D4B10015E20E /* FileService.swift */; };
 		A0CDF8C62CE7D4D70015E20E /* SendMessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDF8C52CE7D4D70015E20E /* SendMessageService.swift */; };
 		A0CDF94D2CE7D6060015E20E /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDF94C2CE7D6060015E20E /* AlertView.swift */; };
-		A0CDF94F2CE7D7880015E20E /* TDImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDF94E2CE7D7880015E20E /* TDImageView.swift */; };
-		A0CDF9512CE7D7C90015E20E /* TDImageMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CDF9502CE7D7C90015E20E /* TDImageMock.swift */; };
 		A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53262BDFD78900BA394B /* TDLibManager.swift */; };
 		A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */; };
 		A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */; };
@@ -193,8 +191,6 @@
 		A0CDF8C12CE7D4B10015E20E /* FileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileService.swift; sourceTree = "<group>"; };
 		A0CDF8C52CE7D4D70015E20E /* SendMessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendMessageService.swift; sourceTree = "<group>"; };
 		A0CDF94C2CE7D6060015E20E /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
-		A0CDF94E2CE7D7880015E20E /* TDImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDImageView.swift; sourceTree = "<group>"; };
-		A0CDF9502CE7D7C90015E20E /* TDImageMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDImageMock.swift; sourceTree = "<group>"; };
 		A0CF53262BDFD78900BA394B /* TDLibManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManager.swift; sourceTree = "<group>"; };
 		A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManagerProtocols.swift; sourceTree = "<group>"; };
 		A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibViewModel.swift; sourceTree = "<group>"; };
@@ -469,8 +465,6 @@
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
 				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
 				A0CDF94C2CE7D6060015E20E /* AlertView.swift */,
-				A0CDF94E2CE7D7880015E20E /* TDImageView.swift */,
-				A0CDF9502CE7D7C90015E20E /* TDImageMock.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -649,7 +643,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9B0B6CBC2CD679A600BB6A94 /* StepView.swift in Sources */,
-				A0CDF9512CE7D7C90015E20E /* TDImageMock.swift in Sources */,
 				A080D8E22CDC0B1800920564 /* VoiceNoteView.swift in Sources */,
 				A04ABE5A2CE015F800641BC1 /* VoiceNoteRecordSubpage.swift in Sources */,
 				A04ABE5B2CE015F800641BC1 /* VoiceNoteRecordViewModel.swift in Sources */,
@@ -705,7 +698,6 @@
 				A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */,
 				A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */,
 				4AE620222C09C6CF00722512 /* FormattedText+.swift in Sources */,
-				A0CDF94F2CE7D7880015E20E /* TDImageView.swift in Sources */,
 				9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */,
 				A0DF848A2CCB9A7500CC101E /* FileManager+.swift in Sources */,
 				A080D8F22CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift in Sources */,

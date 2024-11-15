@@ -52,7 +52,10 @@ extension ChatListViewModel {
         }
         
         let letters: String = "\(chat.title.prefix(1))"
-        let avatar = AvatarModel(tdImage: chat.photo, letters: letters, userId: userId)
+        
+        var avatar = chat.toAvatarModel()
+        avatar.userId = userId
+        
         let position = chat.positions.first(where: { $0.list == folder.chatList })?.order.rawValue
         let isMuted = chat.notificationSettings.muteFor != 0
         

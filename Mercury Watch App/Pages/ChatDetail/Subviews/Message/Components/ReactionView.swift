@@ -12,7 +12,7 @@ struct ReactionView: View {
     var reaction: ReactionModel
     var avatarMaxNumber = 3
     var blurredBg: Bool = false
-    @State private var images: [TDImage] = []
+    @State private var images: [AsyncImageModel] = []
     
     var shouldShowAvatars: Bool {
         reaction.count <= avatarMaxNumber && !images.isEmpty
@@ -60,39 +60,34 @@ struct ReactionView: View {
     func avatarsView() -> some View {
         HStack(spacing: 0) {
             ForEach(images.indices, id: \.self) { index in
-                AvatarView(image: images[index])
-                    .frame(width: 20, height: 20)
-                    .if(index != 0) { view in
-                            view.mask {
-                                Rectangle()
-                                    .overlay {
-                                        Circle()
-                                            .frame(width: 21, height: 21)
-                                            .blendMode(.destinationOut)
-                                            .offset(x: -11)
-                                    }
-                            }
-                    }
+                avatar(index)
                     .padding(.leading, index == 0 ? 0 : -8)
                     .zIndex(Double(images.count - index))
-                    
             }
         }
     }
     
-    func loadUserImages() async {
-        
-        guard !isPreview else {
-            let tmpImages = [TDImageMock("alessandro"), TDImageMock("marco"), TDImageMock("astro")]
-            for i in 0 ..< reaction.count {
-                images.append(tmpImages[i])
+    @ViewBuilder
+    func avatar(_ index: Int) -> some View {
+        let mask = Rectangle()
+            .overlay {
+                Circle()
+                    .frame(width: 21, height: 21)
+                    .blendMode(.destinationOut)
+                    .offset(x: -11)
             }
-            return
-        }
         
+        AvatarView(image: images[index])
+            .frame(width: 20, height: 20)
+            .if(index != 0) { view in
+                view.mask { mask }
+            }
+    }
+    
+    func loadUserImages() async {
         for userId in reaction.recentUsers {
             guard let user = try? await TDLibManager.shared.client?.getUser(userId: userId) else { return }
-            guard let photo = user.profilePhoto else { return }
+            guard let photo = user.toAvatarModel().avatarImage else { return }
             await MainActor.run {
                 images.append(photo)
             }

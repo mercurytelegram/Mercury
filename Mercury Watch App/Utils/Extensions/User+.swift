@@ -5,7 +5,7 @@
 //  Created by Alessandro Alberti on 15/07/24.
 //
 
-import Foundation
+import SwiftUI
 import TDLibKit
 
 extension User {
@@ -22,8 +22,23 @@ extension User {
         let secondLetter = self.lastName.prefix(1)
         
         return AvatarModel(
-            tdImage: self.profilePhoto,
+            avatarImage: getAvatar(),
             letters: "\(firstLetter)\(secondLetter)"
+        )
+    }
+    
+    private func getAvatar() -> AsyncImageModel {
+        var thumbnail: UIImage? = nil
+        if let data = self.profilePhoto?.minithumbnail?.data {
+            thumbnail = UIImage(data: data)
+        }
+        return AsyncImageModel(
+            thumbnail: thumbnail,
+            getImage: {
+                guard let photo = self.profilePhoto?.lowRes
+                else { return nil }
+                return await FileService.getImage(for: photo)
+            }
         )
     }
 }

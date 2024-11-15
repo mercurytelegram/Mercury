@@ -77,9 +77,7 @@ class ChatDetailViewModel: TDLibViewModel {
                     self.canSendText = chat.permissions.canSendBasicMessages
                     self.canSendStickers = chat.permissions.canSendOtherMessages
                     self.lastReadInboxMessageId = chat.lastReadInboxMessageId
-                    
-                    let letters: String = "\(chat.title.prefix(1))"
-                    self.avatar = AvatarModel(tdImage: chat.photo, letters: letters)
+                    self.avatar = chat.toAvatarModel()
                 }
                 
                 let newMessages = await self.requestMessages(firstBatch: true)

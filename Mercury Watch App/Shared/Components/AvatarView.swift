@@ -14,8 +14,8 @@ struct AvatarView: View {
         self.model = model
     }
     
-    init(image: TDImage) {
-        self.model = AvatarModel(tdImage: image)
+    init(image: AsyncImageModel) {
+        self.model = AvatarModel(avatarImage: image)
     }
     
     var body: some View {
@@ -52,9 +52,13 @@ struct AvatarView: View {
     
     @ViewBuilder
     func circle(_ size: CGFloat) -> some View {
-        if let image = model.tdImage {
-            TDImageView(tdImage: image)
-                .clipShape(Circle())
+        if let getImage = model.avatarImage?.getImage {
+            AsyncView(getData: getImage) { data in
+                Image(uiImage: data)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(Circle())
+            }
         } else {
             Circle()
                 .foregroundStyle(model.color.gradient)
@@ -69,7 +73,7 @@ struct AvatarView: View {
 }
 
 struct AvatarModel: Equatable {
-    var tdImage: TDImage?
+    var avatarImage: AsyncImageModel?
     var letters: String = ""
     var color: Color = .blue
     var isOnline: Bool = false
@@ -89,13 +93,19 @@ struct AvatarModel: Equatable {
 extension AvatarModel {
     static var marco: AvatarModel {
         AvatarModel(
-            tdImage: TDImageMock("marco")
+            avatarImage: AsyncImageModel(
+                thumbnail: UIImage(named: "marco"),
+                getImage: { UIImage(named: "marco") }
+            )
         )
     }
     
     static var alessandro: AvatarModel {
         AvatarModel(
-            tdImage: TDImageMock("alessandro")
+            avatarImage: AsyncImageModel(
+                thumbnail: UIImage(named: "alessandro"),
+                getImage: { UIImage(named: "alessandro") }
+            )
         )
     }
 }
