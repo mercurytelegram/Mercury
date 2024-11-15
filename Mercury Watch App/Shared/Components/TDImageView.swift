@@ -1,5 +1,5 @@
 //
-//  TdPhotoView.swift
+//  TDPhotoView.swift
 //  Mercury Watch App
 //
 //  Created by Alessandro Alberti on 17/05/24.
@@ -8,11 +8,10 @@
 import SwiftUI
 import TDLibKit
 
-struct TdImageView: View {
+struct TDImageView: View {
     @State private var image: UIImage?
     var tdImage: TDImage
     var showHighRes: Bool = false
-    
     
     var body: some View {
         Group {

@@ -1,12 +1,12 @@
 //
-//  PreviewTDImage.swift
-//  Mercury Watch App
+//  TDImageMock.swift
+//  Mercury
 //
-//  Created by Alessandro Alberti on 21/08/24.
+//  Created by Marco Tammaro on 15/11/24.
 //
 
+import SwiftUI
 import TDLibKit
-import UIKit
 
 struct TDImageMock: TDImage {
     var minithumbnail: Minithumbnail?

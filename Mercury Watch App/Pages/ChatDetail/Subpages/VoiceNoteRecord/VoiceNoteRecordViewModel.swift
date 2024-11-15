@@ -43,7 +43,7 @@ class VoiceNoteRecordViewModel: NSObject {
     let action: Binding<ChatAction?>
     
     var filePath: URL
-    private let logger = LoggerService(AudioMessageViewModel_Old.self)
+    private let logger = LoggerService(VoiceNoteRecordViewModel.self)
     
     init(action: Binding<ChatAction?>, sendService: SendMessageService) {
         self.sendService = sendService

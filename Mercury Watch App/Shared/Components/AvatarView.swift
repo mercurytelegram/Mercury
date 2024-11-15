@@ -53,7 +53,7 @@ struct AvatarView: View {
     @ViewBuilder
     func circle(_ size: CGFloat) -> some View {
         if let image = model.tdImage {
-            TdImageView(tdImage: image)
+            TDImageView(tdImage: image)
                 .clipShape(Circle())
         } else {
             Circle()

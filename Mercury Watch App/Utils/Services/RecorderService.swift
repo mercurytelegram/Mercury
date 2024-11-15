@@ -99,7 +99,7 @@ class RecorderService {
         let scaledNormalizedValue = (normalizedValue * (normalizationTo.max - normalizationTo.min)) + normalizationTo.min
         
         self.waveformSamples.append(scaledNormalizedValue)
-        self.elapsedTime += RecorderService_Old.updateInterval
+        self.elapsedTime += RecorderService.updateInterval
         
     }
     

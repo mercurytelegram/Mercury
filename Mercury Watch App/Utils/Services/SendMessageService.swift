@@ -11,10 +11,10 @@ import SwiftOGG
 
 class SendMessageService {
     
-    let chat: Chat
+    let chat: Chat?
     let logger: LoggerService
     
-    init(chat: Chat) {
+    init(chat: Chat?) {
         self.chat = chat
         self.logger = LoggerService(SendMessageService.self)
     }
@@ -28,7 +28,7 @@ class SendMessageService {
         Task.detached {
             do {
                 let result = try await TDLibManager.shared.client?.sendMessage(
-                    chatId: self.chat.id,
+                    chatId: self.chat?.id,
                     inputMessageContent: messageContent,
                     messageThreadId: nil,
                     options: nil,
@@ -73,7 +73,7 @@ class SendMessageService {
                 )
                 
                 let result = try await TDLibManager.shared.client?.sendMessage(
-                    chatId: self.chat.id,
+                    chatId: self.chat?.id,
                     inputMessageContent: .inputMessageVoiceNote(audio),
                     messageThreadId: nil,
                     options: nil,
@@ -118,7 +118,7 @@ class SendMessageService {
 class SendMessageServiceMock: SendMessageService {
     
     init() {
-        super.init(chat: .preview())
+        super.init(chat: nil)
     }
     
     override func sendTextMessage(_ text: String) {}
