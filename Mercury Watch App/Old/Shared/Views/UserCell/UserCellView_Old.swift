@@ -8,7 +8,7 @@
 import SwiftUI
 import TDLibKit
 
-struct UserCellView: View {
+struct UserCellView_Old: View {
     var vm: UserCellViewModel
     
     var body: some View {
@@ -27,9 +27,9 @@ struct UserCellView: View {
 
 #Preview {
     List {
-        UserCellView(vm: UserCellViewModel())
-        UserCellView(vm: MockUserCellViewModel())
-        UserCellView(vm: MockUserCellViewModel(
+        UserCellView_Old(vm: UserCellViewModel())
+        UserCellView_Old(vm: MockUserCellViewModel())
+        UserCellView_Old(vm: MockUserCellViewModel(
             user: .preview(firstName: "Very Long", lastName: "Name"),
             imageName: "alessandro")
         )

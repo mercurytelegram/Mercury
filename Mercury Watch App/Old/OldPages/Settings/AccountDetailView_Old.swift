@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AccountDetailView: View {
+struct AccountDetailView_Old: View {
     @EnvironmentObject var loginVM: LoginViewModel_Old
     @ObservedObject var vm: SettingsViewModel_Old
     
@@ -88,6 +88,6 @@ struct AccountDetailView: View {
 }
 
 #Preview {
-    AccountDetailView(vm: MockSettingsViewModel())
+    AccountDetailView_Old(vm: MockSettingsViewModel())
         .environmentObject(LoginViewModel_Old())
 }

@@ -75,6 +75,9 @@ extension ChatDetailViewModel {
         
         // Scroll to the first unread message
         for message in messages {
+            
+            if case .pill(_,_) = message.content { continue }
+            
             if message.id >= lastReadInboxMessageId {
                 proxy.scrollTo(message.id)
                 break
