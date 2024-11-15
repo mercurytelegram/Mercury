@@ -52,6 +52,8 @@
 		9B778D212C92D7760022B093 /* MockMessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */; };
 		9B8493E82C7623B700AC90E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* View+.swift */; };
 		9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E92C76241400AC90E9 /* MockTDImage.swift */; };
+		9BA9A4F22CE798C5005C717C /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA9A4F12CE798C5005C717C /* FlowLayout.swift */; };
+		9BA9A4F42CE79DB0005C717C /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA9A4F32CE79DB0005C717C /* Stack.swift */; };
 		9BAA75DA2CD4EDDA0007B4E2 /* LottieService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAA75D92CD4EDDA0007B4E2 /* LottieService.swift */; };
 		9BAA75DD2CD4EE370007B4E2 /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */; };
 		9BAA75DF2CD4EF9C0007B4E2 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BAA75DE2CD4EF9C0007B4E2 /* LottieView.swift */; };
@@ -214,6 +216,8 @@
 		9B778D202C92D7760022B093 /* MockMessageOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMessageOptionsViewModel.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		9B8493E92C76241400AC90E9 /* MockTDImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTDImage.swift; sourceTree = "<group>"; };
+		9BA9A4F12CE798C5005C717C /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
+		9BA9A4F32CE79DB0005C717C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		9BAA75D92CD4EDDA0007B4E2 /* LottieService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieService.swift; sourceTree = "<group>"; };
 		9BAA75DE2CD4EF9C0007B4E2 /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */ = {isa = PBXFileReference; lastKnownFileType = file; path = sticker.tgs; sourceTree = "<group>"; };
@@ -763,7 +767,9 @@
 			children = (
 				A080D8BE2CD78CED00920564 /* AvatarView.swift */,
 				9BD9F9E32CDD044900833C48 /* AsyncView.swift */,
+				9BA9A4F32CE79DB0005C717C /* Stack.swift */,
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
+				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -967,6 +973,7 @@
 				9B8493EA2C76241400AC90E9 /* MockTDImage.swift in Sources */,
 				A05C1A012BEB74B700724B6E /* ChatListView.swift in Sources */,
 				A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */,
+				9BA9A4F22CE798C5005C717C /* FlowLayout.swift in Sources */,
 				9B2E1BDF2C08739800B9B63D /* MessageViewModel_Old.swift in Sources */,
 				A04388FB2C3FE384007B83C0 /* PlayerService_Old.swift in Sources */,
 				9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */,
@@ -1016,6 +1023,7 @@
 				9B0B6CB72CD64F6100BB6A94 /* AppState.swift in Sources */,
 				A080D8C42CD9666C00920564 /* ChatNotificationSettings+.swift in Sources */,
 				9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */,
+				9BA9A4F42CE79DB0005C717C /* Stack.swift in Sources */,
 				A04389062C3FE3B2007B83C0 /* AudioMessageViewModel_Old.swift in Sources */,
 				A080D8A22CD64B1700920564 /* ChatDetailPage.swift in Sources */,
 				A080D8A32CD64B1700920564 /* LoginViewModel.swift in Sources */,

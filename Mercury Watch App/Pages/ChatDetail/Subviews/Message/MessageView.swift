@@ -123,3 +123,27 @@ struct StickerImageModel {
     let getImage: () async -> UIImage?
 }
 
+extension MessageModel {
+    static func mock(
+        sender: String = "",
+        isOutgoing: Bool = true,
+        reactions: [ReactionModel] = [],
+        reply: ReplyModel? = nil,
+        state: MessageModel.StateStyle = .delivered,
+        content: MessageModel.MessageContent = .text("")
+    ) -> Self {
+        .init(
+            id: 0,
+            sender: sender,
+            senderColor: .blue,
+            isSenderHidden: sender.isEmpty,
+            date: .now,
+            isOutgoing: sender.isEmpty ? isOutgoing : false,
+            reactions: reactions,
+            reply: reply,
+            stateStyle: isOutgoing ? state : nil,
+            content: content
+        )
+    }
+}
+

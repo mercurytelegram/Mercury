@@ -1,5 +1,5 @@
 //
-//  BubbleStyle.swift
+//  MessageBubbleView.swift
 //  Mercury Watch App
 //
 //  Created by Alessandro Alberti on 16/07/24.
@@ -12,7 +12,7 @@ struct MessageBubbleView<Content> : View where Content : View {
     
     enum BubbleStyle: Equatable {
         case plain
-        case fullScreen(caption: String)
+        case fullScreen(caption: String? = nil)
         case clearBackground
     }
     
@@ -35,7 +35,9 @@ struct MessageBubbleView<Content> : View where Content : View {
         }
     }
     
-    @State private var contentSize: CGSize = .zero
+    func shouldShowCaptionBackgroud(_ caption: String?) -> Bool {
+        model.reactions.count > 1 || caption?.isEmpty == false
+    }
     
     var body: some View {
         
@@ -54,21 +56,29 @@ struct MessageBubbleView<Content> : View where Content : View {
                     }
                     
                     content()
-                        .frame(
-                            minWidth: model.reactions.isEmpty ? 80 : 130,
-                            alignment: .leading
-                        )
-                        .overlay {
-                            GeometryReader { geometry in
-                                Spacer()
-                                    .onAppear {
-                                        self.contentSize = geometry.size
-                                    }
-                            }
-                        }
                     
-                    footerView()
-                        .frame(maxWidth: contentSize.width)
+                    HStack {
+                        reactionsView()
+                        // Horizontal spacing for timeView
+                        if model.reactions.count <= 1 {
+                            Spacer()
+                                .frame(width: 80, height: 0)
+                        }
+                    }
+                    
+                    // Vertical spacing for timeView
+                    if model.reactions.count != 1 {
+                        Spacer()
+                            .frame(width: 0, height: 20)
+                    }
+                }
+                .overlay {
+                    timeView()
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity,
+                            alignment: .bottomTrailing
+                        )
                 }
                 .padding()
                 
@@ -82,10 +92,17 @@ struct MessageBubbleView<Content> : View where Content : View {
                             }
                         }
                     
-                    if !caption.isEmpty {
+                    if shouldShowCaptionBackgroud(caption) {
                         VStack(alignment: .leading) {
-                            Text(caption)
-                            footerView()
+                            if let caption {
+                                Text(caption)
+                            }
+                            reactionsView()
+                            
+                            if model.reactions.count != 1 {
+                                Spacer()
+                                    .frame(width: 0, height: 20)
+                            }
                         }
                         .padding(.bottom)
                         .padding(.horizontal)
@@ -93,15 +110,20 @@ struct MessageBubbleView<Content> : View where Content : View {
                     
                 }
                 .overlay {
-                    if caption.isEmpty {
-                        footerView(blurredBg: true)
-                            .frame(
-                                maxWidth: .infinity,
-                                maxHeight: .infinity,
-                                alignment: .bottomLeading
-                            )
-                            .padding()
+                    FitStack(hAlignment: .bottom) {
+                        if model.reactions.count == 1 {
+                            reactionsView(blurredBg: true)
+                        }
+                        timeView(blurredBg: !shouldShowCaptionBackgroud(caption))
+                            .frame(maxWidth: .infinity, alignment: .trailing)
                     }
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: .infinity,
+                        alignment: .bottomLeading
+                    )
+                    .padding(.bottom)
+                    .padding(.horizontal)
                 }
             }
         }
@@ -126,6 +148,7 @@ struct MessageBubbleView<Content> : View where Content : View {
         )
     }
     
+    // MARK: - SenderView
     @ViewBuilder
     func senderView() -> some View {
         let sender = model.sender ?? "placeholder"
@@ -155,33 +178,40 @@ struct MessageBubbleView<Content> : View where Content : View {
             }
     }
     
+    // MARK: - ReactionsView
     @ViewBuilder
-    func footerView(blurredBg: Bool = false) -> some View {
-        FitStack {
-            // Reactions
-            HStack {
-                ForEach(model.reactions, id: \.self) { reaction in
-                    ReactionView(
-                        reaction: reaction,
-                        avatarMaxNumber: model.reactions.count > 1 ? 2 : 3,
-                        blurredBg: blurredBg
-                    )
-                    .transition(.opacity
-                        .combined(with: .scale(0.5, anchor: .leading))
-                    )
-                }
+    func reactionsView(blurredBg: Bool = false) -> some View {
+        FlowLayout {
+            ForEach(model.reactions, id: \.self) { reaction in
+                ReactionView(
+                    reaction: reaction,
+                    avatarMaxNumber: model.reactions.count > 1 ? 2 : 3,
+                    blurredBg: blurredBg
+                )
+                .transition(.opacity
+                    .combined(with: .scale(0.5, anchor: .leading))
+                )
             }
+        }
+    }
+    
+    @ViewBuilder
+    func timeView(blurredBg: Bool = false) -> some View {
+        HStack {
+            Text(model.time)
+                .font(.system(size: 15))
+                .foregroundStyle(.secondary)
             
-            // Time
-            HStack {
-                Spacer()
-                Text(model.time)
-                    .font(.system(size: 15))
-                    .foregroundStyle(.secondary)
-                
-                if let style = model.stateStyle {
-                    StateIconView(style: style)
-                }
+            if let style = model.stateStyle {
+                StateIconView(style: style)
+            }
+        }
+        .padding(.horizontal, blurredBg ? 5 : 0)
+        .padding(.vertical, blurredBg ? 2 : 0)
+        .background {
+            if blurredBg {
+                Capsule()
+                    .foregroundStyle(.ultraThinMaterial)
             }
         }
     }
@@ -189,230 +219,104 @@ struct MessageBubbleView<Content> : View where Content : View {
 }
 
 
-#Preview {
+// MARK: - Previews
+
+#Preview("Plain") {
     ScrollView {
         MessageBubbleView(
-            model: .mock0(),
+            model: .mock(),
             style: .plain
         ) {
             Text("Message")
         }
         MessageBubbleView(
-            model: .mock1(),
+            model: .mock(sender: "Alessandro"),
             style: .plain
         ) {
-            Text("Hello")
+            Text("Message")
         }
         MessageBubbleView(
-            model: .mock2(),
+            model: .mock(),
             style: .plain
         ) {
-            Text("Hello")
+            Text("Loooong Message")
+        }
+        MessageBubbleView(
+            model: .mock(reactions: [
+                ReactionModel(emoji: "👍", count: 1, isSelected: false),
+            ]),
+            style: .plain
+        ) {
+            Text("Reaction")
+        }
+        MessageBubbleView(
+            model: .mock(reactions: [
+                ReactionModel(emoji: "👍", count: 3, isSelected: false),
+            ]),
+            style: .plain
+        ) {
+            Text("Reaction")
+        }
+        MessageBubbleView(
+            model: .mock(isOutgoing: false, reactions: [
+                ReactionModel(emoji: "👍", count: 2, isSelected: false),
+                ReactionModel(emoji: "❤️", count: 1, isSelected: true),
+            ]),
+            style: .plain
+        ) {
+            Text("Reactions")
+        }
+        
+        MessageBubbleView(
+            model: .mock(isOutgoing: false, reactions: [
+                ReactionModel(emoji: "👍", count: 2, isSelected: false),
+                ReactionModel(emoji: "❤️", count: 1, isSelected: false),
+                ReactionModel(emoji: "🔥", count: 1, isSelected: false),
+                ReactionModel(emoji: "🎉", count: 1, isSelected: true),
+            ]),
+            style: .plain
+        ) {
+            Text("A lot of reactions")
         }
     }
 }
 
-extension MessageModel {
-    static func mock0() -> Self {
-        .init(
-            id: 0,
-            sender: "",
-            senderColor: .blue,
-            isSenderHidden: true,
-            date: .now,
-            isOutgoing: true,
-            reactions: [],
-            reply: nil,
-            stateStyle: .delivered,
-            content: .text("")
-        )
-    }
-    
-    static func mock1() -> Self {
-        .init(
-            id: 0,
-            sender: "",
-            senderColor: .blue,
-            isSenderHidden: true,
-            date: .now,
-            isOutgoing: true,
-            reactions: [
-                ReactionModel(
-                    emoji: "😍",
-                    count: 1,
-                    isSelected: false
-                )
-            ],
-            reply: nil,
-            stateStyle: .delivered,
-            content: .text("")
-        )
-    }
-    
-    static func mock2() -> Self {
-        .init(
-            id: 0,
-            sender: "",
-            senderColor: .blue,
-            isSenderHidden: true,
-            date: .now,
-            isOutgoing: true,
-            reactions: [
-                ReactionModel(
-                    emoji: "😍",
-                    count: 1,
-                    isSelected: false
-                ),
-                ReactionModel(
-                    emoji: "😍",
-                    count: 1,
-                    isSelected: false
-                )
-            ],
-            reply: nil,
-            stateStyle: .delivered,
-            content: .text("")
-        )
+#Preview("FullScreen") {
+    ScrollView {
+        MessageBubbleView(
+            model: .mock(),
+            style: .fullScreen(caption: "Caption")
+        ) {
+            Image("astro")
+                .resizable()
+                .scaledToFill()
+        }
+        
+        MessageBubbleView(
+            model: .mock(sender: "Alessandro", reactions: [
+                ReactionModel(emoji: "👍", count: 2, isSelected: false)
+            ]),
+            style: .fullScreen()
+        ) {
+            Image("astro")
+                .resizable()
+                .scaledToFill()
+        }
+        
+        MessageBubbleView(
+            model: .mock(sender: "Alessandro", reactions: [
+                ReactionModel(emoji: "👍", count: 2, isSelected: false),
+                ReactionModel(emoji: "❤️", count: 1, isSelected: false),
+                ReactionModel(emoji: "🔥", count: 1, isSelected: false),
+                ReactionModel(emoji: "🎉", count: 1, isSelected: true),
+            ]),
+            style: .fullScreen()
+        ) {
+            Image("astro")
+                .resizable()
+                .scaledToFill()
+        }
+        
     }
 }
 
-
-//#Preview("Regular") {
-//    VStack {
-//        MessageBubbleView {
-//            Text("Hello")
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                message: .preview(
-//                    reaction: .preview(emoji: "👋")
-//                ),
-//                name: "Craig Federighi",
-//                showSender: true
-//            ) as MessageViewModel
-//        )
-//        
-//        MessageBubbleView {
-//            Text("World")
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                message: .preview(
-//                    reaction: nil,
-//                    isOutgoing: true)
-//            ) as MessageViewModel
-//        )
-//    }
-//}
-//
-//#Preview("FullScreen") {
-//    
-//    return MessageBubbleView(style: .fullScreen) {
-//        Image("astro")
-//            .resizable()
-//            .aspectRatio(contentMode: .fill)
-//            .frame(height: 150)
-//    }
-//    .environmentObject(
-//        MessageViewModelMock(
-//            message: .preview(
-//                reaction: .preview(count: 3)
-//            ),
-//            name: "Craig Federighi",
-//            showSender: true
-//        ) as MessageViewModel
-//    )
-//}
-//
-//#Preview("FullScreen Caption") {
-//    
-//    return MessageBubbleView(
-//        style: .fullScreen,
-//        caption: "This is a caption") {
-//            Image("astro")
-//                .resizable()
-//                .aspectRatio(contentMode: .fill)
-//                .frame(height: 100)
-//                .clipped()
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                message: .preview(
-//                    isOutgoing: true),
-//                name: "Craig Federighi",
-//                showSender: true
-//            ) as MessageViewModel
-//        )
-//}
-//
-//#Preview("HideBackground") {
-//    MessageBubbleView (style: .hideBackground){
-//        Text("😃")
-//            .font(.largeTitle)
-//    }
-//    .environmentObject(
-//        MessageViewModelMock(
-//            name: "Craig Federighi",
-//            showSender: true
-//        ) as MessageViewModel
-//    )
-//}
-//
-//#Preview("Status") {
-//    ScrollView {
-//        MessageBubbleView {
-//            Text("Sending test")
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                message: .preview(
-//                    isOutgoing: true),
-//                state: .sending
-//            ) as MessageViewModel
-//        )
-//        
-//        MessageBubbleView {
-//            Text("Delivered test")
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                message: .preview(
-//                    isOutgoing: true),
-//                state: .delivered
-//            ) as MessageViewModel
-//        )
-//        
-//        MessageBubbleView {
-//            Text("Seen test")
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                message: .preview(
-//                    isOutgoing: true),
-//                state: .seen
-//            ) as MessageViewModel
-//        )
-//        
-//        MessageBubbleView {
-//            Text("Failed test")
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                message: .preview(
-//                    isOutgoing: true),
-//                state: .failed
-//            ) as MessageViewModel
-//        )
-//        
-//        MessageBubbleView {
-//            Text("Loading name message")
-//        }
-//        .environmentObject(
-//            MessageViewModelMock(
-//                name: "placeholder",
-//                showSender: true
-//            ) as MessageViewModel
-//        )
-//    }
-//}
-//
