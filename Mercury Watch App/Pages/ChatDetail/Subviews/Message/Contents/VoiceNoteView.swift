@@ -162,8 +162,8 @@ struct VoiceNoteView: View {
         // Adjust speed for faster or slower oscillation
         let oscillationSpeed = 1.0
         
-        // Width of the "0" region to improve visibility
-        let zeroWidth = 15
+        // Width of the waveform "peak" region
+        let peakWidth = sampleCount / 4
         
         TimelineView(.periodic(from: .now, by: 1/10)) { time in
             
@@ -172,9 +172,19 @@ struct VoiceNoteView: View {
             let sinValue = sin(timeInterval * oscillationSpeed)
             let position = Int((sinValue + 1) / 2 * Double(sampleCount - 1))
             
-            // Generate the samples array with a "0" region that moves back and forth
-            let samples: [Float] = (0..<sampleCount).map {
-                ($0 >= position && $0 < position + zeroWidth) ? 0.2 : 1
+            // Generate the samples array with a smooth gradient moving back and forth
+            let samples: [Float] = (0..<sampleCount).map { i in
+                // Calculate the distance from the peak position
+                let distance = abs(i - position)
+                
+                // Scale intensity based on distance, peaking at 1 in the center
+                if distance < peakWidth {
+                    let normalizedDistance = Float(distance) / Float(peakWidth)
+                    // quadratic falloff for smooth gradient
+                    return 0.2 + pow(normalizedDistance, 2)
+                } else {
+                    return 1
+                }
             }
             
             WaveformLiveCanvas(
