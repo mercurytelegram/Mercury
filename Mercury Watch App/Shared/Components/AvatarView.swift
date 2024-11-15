@@ -108,6 +108,15 @@ extension AvatarModel {
             )
         )
     }
+    
+    static var astro: AvatarModel {
+        AvatarModel(
+            avatarImage: AsyncImageModel(
+                thumbnail: UIImage(named: "astro"),
+                getImage: { UIImage(named: "astro") }
+            )
+        )
+    }
 }
 
 

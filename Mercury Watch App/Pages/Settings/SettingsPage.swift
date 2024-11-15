@@ -27,13 +27,8 @@ struct SettingsPage: View {
     
     @ViewBuilder
     func avatarHeader() -> some View {
-        
-        let thumbnailData = vm.user?.profilePhoto?.minithumbnail?.data ?? Data()
-        let thumbnail = UIImage(data: thumbnailData) ?? UIImage()
-        let avatar = vm.user?.toAvatarModel()
-        
         ZStack {
-            Image(uiImage: thumbnail)
+            Image(uiImage: vm.user?.thumbnail ?? UIImage())
             .resizable()
             .frame(height: 120)
             .clipShape(Ellipse())
@@ -42,7 +37,7 @@ struct SettingsPage: View {
             
             VStack {
                 
-                if let avatar {
+                if let avatar = vm.user?.avatar {
                     AvatarView(model: avatar)
                         .frame(width: 50, height: 50)
                 }
@@ -101,6 +96,6 @@ struct SettingsPage: View {
     }
 }
 
-#Preview {
+#Preview(traits: .mock()) {
     SettingsPage()
 }

@@ -12,7 +12,7 @@ import TDLibKit
 @Observable
 class SettingsViewModel: TDLibViewModel {
     
-    var user: User?
+    var user: UserModel?
     
     override init() {
         super.init()
@@ -33,7 +33,7 @@ class SettingsViewModel: TDLibViewModel {
                 
                 await MainActor.run {
                     withAnimation {
-                        self.user = user
+                        self.user = user.toUserModel()
                     }
                 }
                 
@@ -44,9 +44,24 @@ class SettingsViewModel: TDLibViewModel {
     }
 }
 
+struct UserModel {
+    let thumbnail: UIImage?
+    let avatar: AvatarModel
+    let fullName: String
+    let mainUserName: String
+    let phoneNumber: String
+}
+
 // MARK: - Mock
 @Observable
 class SettingsViewModelMock: SettingsViewModel {
-    override func logout() {}
-    override func getUser() {}
+    override func getUser() {
+        self.user = .init(
+            thumbnail: UIImage(named: "astro"),
+            avatar: .astro,
+            fullName: "John Appleseed",
+            mainUserName: "@johnappleseed",
+            phoneNumber: "+39 0000000000"
+        )
+    }
 }

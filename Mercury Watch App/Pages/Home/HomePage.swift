@@ -52,6 +52,6 @@ struct HomePage: View {
 }
 
 
-#Preview {
+#Preview(traits: .mock()) {
     HomePage()
 }

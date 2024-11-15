@@ -27,11 +27,14 @@ extension User {
         )
     }
     
+    private func getThumbnail() -> UIImage? {
+        guard let data = self.profilePhoto?.minithumbnail?.data
+        else { return nil }
+        return UIImage(data: data)
+    }
+    
     private func getAvatar() -> AsyncImageModel {
-        var thumbnail: UIImage? = nil
-        if let data = self.profilePhoto?.minithumbnail?.data {
-            thumbnail = UIImage(data: data)
-        }
+        let thumbnail = getThumbnail() ?? UIImage()
         return AsyncImageModel(
             thumbnail: thumbnail,
             getImage: {
@@ -39,6 +42,16 @@ extension User {
                 else { return nil }
                 return await FileService.getImage(for: photo)
             }
+        )
+    }
+    
+    func toUserModel() -> UserModel {
+        return UserModel(
+            thumbnail: getThumbnail() ?? UIImage(),
+            avatar: toAvatarModel(),
+            fullName: fullName,
+            mainUserName: mainUserName ?? "",
+            phoneNumber: phoneNumber
         )
     }
 }

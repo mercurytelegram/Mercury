@@ -152,5 +152,15 @@ class ChatDetailViewModelMock: ChatDetailViewModel {
         super.init(chatId: 0)
     }
     
-    override func loadChatData(){}
+    override func loadChatData() {
+        self.messages = [
+            .init(
+                id: 0,
+                isSenderHidden: true,
+                date: .now,
+                isOutgoing: true,
+                content: .text("Hello World 👋")
+            )
+        ]
+    }
 }
