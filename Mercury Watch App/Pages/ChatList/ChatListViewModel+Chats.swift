@@ -51,8 +51,6 @@ extension ChatListViewModel {
             userId = data.userId
         }
         
-        let letters: String = "\(chat.title.prefix(1))"
-        
         var avatar = chat.toAvatarModel()
         avatar.userId = userId
         
