@@ -55,7 +55,18 @@ struct AvatarView: View {
         if let getImage = model.avatarImage?.getImage {
             AsyncView(
                 getData: getImage,
-                placeholder: { placeholder(size) }
+                placeholder: {
+                    Group {
+                        if let thumbnail = model.avatarImage?.thumbnail {
+                            Image(uiImage: thumbnail)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .clipShape(Circle())
+                        } else {
+                            placeholder(size)
+                        }
+                    }
+                }
             ) { data in
                 Image(uiImage: data)
                     .resizable()
