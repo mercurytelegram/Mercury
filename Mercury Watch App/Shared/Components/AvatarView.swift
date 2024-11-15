@@ -53,22 +53,30 @@ struct AvatarView: View {
     @ViewBuilder
     func circle(_ size: CGFloat) -> some View {
         if let getImage = model.avatarImage?.getImage {
-            AsyncView(getData: getImage) { data in
+            AsyncView(
+                getData: getImage,
+                placeholder: { placeholder(size) }
+            ) { data in
                 Image(uiImage: data)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .clipShape(Circle())
             }
         } else {
-            Circle()
-                .foregroundStyle(model.color.gradient)
-                .overlay {
-                    Text(model.letters)
-                        .font(.system(size: size/2, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.white)
-                }
+            placeholder(size)
         }
         
+    }
+    
+    @ViewBuilder
+    func placeholder(_ size: CGFloat) -> some View {
+        Circle()
+            .foregroundStyle(model.color.gradient)
+            .overlay {
+                Text(model.letters)
+                    .font(.system(size: size/2, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.white)
+            }
     }
 }
 

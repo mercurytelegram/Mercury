@@ -155,17 +155,17 @@ class LoginViewModel: TDLibViewModel {
             return
         }
         
-        guard let client = TDLibManager.shared.client else { return }
+        AppState.shared.clear()
         
-        Task {
+        Task.detached {
             do {
-                let result = try await client.logOut()
+                let result = try await TDLibManager.shared.client?.logOut()
                 logger.log(result)
-                
-                TDLibManager.shared.close()
             } catch {
                 logger.log(error, level: .error)
             }
+            
+            TDLibManager.shared.close()
         }
     }
     

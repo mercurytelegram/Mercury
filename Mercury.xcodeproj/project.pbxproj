@@ -405,7 +405,6 @@
 		A080D8A02CD64B1700920564 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				A080D8AE2CD64B6400920564 /* Subviews */,
 				A080D89E2CD64B1700920564 /* SettingsPage.swift */,
 				A080D89F2CD64B1700920564 /* SettingsViewModel.swift */,
 			);
@@ -422,13 +421,6 @@
 				A080D8942CD64B1700920564 /* ChatDetail */,
 			);
 			path = Pages;
-			sourceTree = "<group>";
-		};
-		A080D8AE2CD64B6400920564 /* Subviews */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Subviews;
 			sourceTree = "<group>";
 		};
 		A080D8AF2CD64B6500920564 /* Subviews */ = {
