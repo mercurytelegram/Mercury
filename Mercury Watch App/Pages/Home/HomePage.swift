@@ -16,11 +16,11 @@ struct HomePage: View {
     var body: some View {
         NavigationStack(path: $vm.navigationPath) {
             List {
-//                NavigationLink {
-//                    AccountDetailView(vm: settingsVM)
-//                } label: {
-//                    UserCellView(vm: settingsVM.userCellViewModel)
-//                }
+                NavigationLink {
+                    SettingsPage()
+                } label: {
+                    UserCellView(model: vm.userCellModel)
+                }
                 
                 Section {
                     ForEach(AppState.shared.folders, id: \.self) { folder in

@@ -16,4 +16,14 @@ extension User {
         guard let name = usernames?.activeUsernames.first else { return nil }
         return  "@" + name
     }
+    
+    func toAvatarModel() -> AvatarModel {
+        let firstLetter = self.firstName.prefix(1)
+        let secondLetter = self.lastName.prefix(1)
+        
+        return AvatarModel(
+            tdImage: self.profilePhoto,
+            letters: "\(firstLetter)\(secondLetter)"
+        )
+    }
 }

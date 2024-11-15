@@ -1,52 +1,40 @@
 //
-//  LoginPage.swift
+//  AccountDetailView.swift
 //  Mercury Watch App
 //
-//  Created by Marco Tammaro on 02/11/24.
+//  Created by Alessandro Alberti on 09/07/24.
 //
 
 import SwiftUI
 
-struct SettingsPage: View {
-    
-    @State
-    @Mockable(mockInit: SettingsViewModelMock.init)
-    var vm = SettingsViewModel.init
+struct AccountDetailView_Old: View {
+    @EnvironmentObject var loginVM: LoginViewModel_Old
+    @ObservedObject var vm: SettingsViewModel_Old
     
     var body: some View {
         ScrollView {
             avatarHeader()
             Spacer()
             Button("Logout", role: .destructive) {
-                vm.logout()
+                loginVM.logout()
             }
             credits()
                 .padding(.top)
         }
     }
     
-    @ViewBuilder
     func avatarHeader() -> some View {
-        
-        let thumbnailData = vm.user?.profilePhoto?.minithumbnail?.data ?? Data()
-        let thumbnail = UIImage(data: thumbnailData) ?? UIImage()
-        let avatar = vm.user?.toAvatarModel()
-        
         ZStack {
-            Image(uiImage: thumbnail)
-            .resizable()
-            .frame(height: 120)
-            .clipShape(Ellipse())
-            .blur(radius: 30)
-            .opacity(0.8)
+            Image(uiImage: vm.profileThimbnail())
+                .resizable()
+                .frame(height: 120)
+                .clipShape(Ellipse())
+                .blur(radius: 30)
+                .opacity(0.8)
             
             VStack {
-                
-                if let avatar {
-                    AvatarView(model: avatar)
-                        .frame(width: 50, height: 50)
-                }
-                
+                AvatarView_Old(model: AvatarModel_Old(tdImage: vm.profileTDImage()))
+                    .frame(width: 50, height: 50)
                 Text(vm.user?.fullName ?? "")
                     .fontDesign(.rounded)
                     .fontWeight(.semibold)
@@ -61,7 +49,6 @@ struct SettingsPage: View {
         .frame(height: 120)
     }
     
-    @ViewBuilder
     func credits() -> some View {
         VStack {
             HStack {
@@ -88,7 +75,6 @@ struct SettingsPage: View {
         .padding(.horizontal)
     }
     
-    @ViewBuilder
     func creditsAvatar(name: String, image: String) -> some View {
         VStack {
             Image(image)
@@ -102,5 +88,6 @@ struct SettingsPage: View {
 }
 
 #Preview {
-    SettingsPage()
+    AccountDetailView_Old(vm: MockSettingsViewModel())
+        .environmentObject(LoginViewModel_Old())
 }
