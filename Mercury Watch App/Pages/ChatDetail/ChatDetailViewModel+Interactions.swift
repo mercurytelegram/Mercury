@@ -43,7 +43,7 @@ extension ChatDetailViewModel {
         WKExtension.shared()
             .visibleInterfaceController?
             .presentTextInputController(withSuggestions: [],
-                                        allowedInputMode: .plain) { result in
+                                        allowedInputMode: .allowEmoji) { result in
                 
                 self.chatAction = nil
                 guard let result = result as? [String],
