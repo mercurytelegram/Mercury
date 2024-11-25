@@ -111,10 +111,11 @@ struct MessageBubbleView<Content> : View where Content : View {
                 }
                 .overlay {
                     FitStack(hAlignment: .bottom) {
+                        let isBlurredBg = !shouldShowCaptionBackgroud(caption)
                         if model.reactions.count == 1 {
-                            reactionsView(blurredBg: true)
+                            reactionsView(blurredBg: isBlurredBg)
                         }
-                        timeView(blurredBg: !shouldShowCaptionBackgroud(caption))
+                        timeView(blurredBg: isBlurredBg)
                             .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                     .frame(
