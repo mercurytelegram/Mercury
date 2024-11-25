@@ -160,6 +160,8 @@ struct ChatDetailPage: View {
     
 }
 
-#Preview {
-    ChatDetailPage(chatId: 0)
+#Preview(traits: .mock()) {
+    NavigationView {
+        ChatDetailPage(chatId: 0)
+    }
 }

@@ -150,6 +150,12 @@ class ChatDetailViewModel: TDLibViewModel {
 class ChatDetailViewModelMock: ChatDetailViewModel {
     init() {
         super.init(chatId: 0)
+        canSendText = true
+        canSendVoiceNotes = true
+        canSendStickers = true
+        
+        chatName = "Astro"
+        avatar = .astro
     }
     
     override func loadChatData() {
@@ -157,10 +163,34 @@ class ChatDetailViewModelMock: ChatDetailViewModel {
             .init(
                 id: 0,
                 isSenderHidden: true,
-                date: .now,
-                isOutgoing: true,
+                date: .iPhonePresentationDate,
+                isOutgoing: false,
                 content: .text("Hello World 👋")
-            )
+            ),
+            .init(
+                id: 1,
+                isSenderHidden: true,
+                date: .iPhonePresentationDate,
+                isOutgoing: false,
+                content: .text("Landed on Mercury? 👽")
+            ),
+            .init(
+                id: 2,
+                isSenderHidden: true,
+                date: .appleWatchPresentationDate,
+                isOutgoing: true,
+                content: .text("Yes, it's amazing! 😍")
+            ),
+//            
+//            .init(
+//                id: 3,
+//                isSenderHidden: true,
+//                date: .now,
+//                isOutgoing: false,
+//                content: .voiceNote(model: .init(getPlayer: {
+//                    PlayerServiceMock()
+//                }))
+//            ),
         ]
     }
 }
