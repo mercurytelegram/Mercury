@@ -20,10 +20,9 @@ struct LoginPage: View {
                     .padding(.top)
                     .padding(.bottom, vm.showFullscreenQR ? 0 : -20)
             }
-            .containerBackground(
-                .blue.gradient,
-                for: .navigation
-            )
+            .containerBackground(for: .navigation) {
+                background()
+            }
             .navigationTitle {
                 Text("Mercury")
                     .foregroundStyle(vm.showFullscreenQR ? .white : .blue)
@@ -108,6 +107,20 @@ struct LoginPage: View {
                 .ignoresSafeArea(edges: .all)
             ProgressView()
         }
+    }
+    
+    @ViewBuilder
+    func background() -> some View {
+        
+        let gradient = Gradient(
+            colors: [
+                .bgBlue,
+                .bgBlue.opacity(0.2)
+            ]
+        )
+        
+        Rectangle()
+            .foregroundStyle(gradient)
     }
     
 }

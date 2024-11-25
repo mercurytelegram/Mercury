@@ -40,7 +40,7 @@ struct ChatDetailPage: View {
                         
                         messageList()
                             .onAppear { vm.onMessageListAppear(proxy) }
-                            .padding(.vertical)
+                            .padding(.vertical, 2)
                         
                     }
                     .defaultScrollAnchor(.bottom)
@@ -149,8 +149,8 @@ struct ChatDetailPage: View {
         
         let gradient = Gradient(
             colors: [
-                .blue.opacity(0.5),
-                .blue.opacity(0.1)
+                .bgBlue,
+                .bgBlue.opacity(0.2)
             ]
         )
         
