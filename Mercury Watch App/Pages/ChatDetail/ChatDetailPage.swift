@@ -68,6 +68,7 @@ struct ChatDetailPage: View {
                 Text(vm.chatName ?? "")
                     .foregroundStyle(.white)
             }
+            .toolbarForegroundStyle(.white, for: .navigationBar)
             .onAppear(perform: vm.onOpenChat)
             .onDisappear(perform: vm.onCloseChat)
         }
