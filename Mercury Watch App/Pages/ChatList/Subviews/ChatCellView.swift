@@ -62,36 +62,40 @@ struct ChatCellView: View {
     
     @ViewBuilder
     func unreadBadge() -> some View {
-        switch model.unreadBadgeStyle {
-        case .mention:
-            Image(systemName: "at.circle.fill")
-                .font(.title3)
-                .foregroundStyle(.white, .blue)
-            
-        case .reaction:
-            Image(systemName: "heart.circle.fill")
-                .font(.title3)
-                .foregroundStyle(.white, .red)
-            
-        case .message(let count):
-            Text("\(count)")
-                .font(.system(size: 16))
-                .fontDesign(.rounded)
-                .fontWeight(.medium)
-                .padding(.horizontal, 5)
-                .background {
-                    let size: CGFloat = 22
-                    RoundedRectangle(cornerRadius: size)
-                        .frame(height: size)
-                        .frame(minWidth: size)
-                        .foregroundStyle(.blue)
-                }
-                .frame(minWidth: 25)
-                .padding(.vertical, 1)
-            
-        default:
-            EmptyView()
+        let size: CGFloat = 22
+        Group {
+            switch model.unreadBadgeStyle {
+            case .mention:
+                Image(systemName: "at.circle.fill")
+                    .resizable()
+                    .frame(width: size, height: size)
+                    .foregroundStyle(.white, .blue)
+                
+            case .reaction:
+                Image(systemName: "heart.circle.fill")
+                    .resizable()
+                    .frame(width: size, height: size)
+                    .foregroundStyle(.white, .red)
+                
+            case .message(let count):
+                Text("\(count)")
+                    .font(.system(size: 16))
+                    .fontDesign(.rounded)
+                    .fontWeight(.medium)
+                    .padding(.horizontal, 5)
+                    .background {
+                        RoundedRectangle(cornerRadius: size)
+                            .frame(height: size)
+                            .frame(minWidth: size)
+                            .foregroundStyle(.blue)
+                    }
+                
+            default:
+                EmptyView()
+            }
         }
+        .frame(minWidth: 25)
+        .padding(.vertical, 1)
     }
     
     @ViewBuilder

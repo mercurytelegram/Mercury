@@ -45,7 +45,6 @@
 		A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE8592CCAB6EE003282B2 /* DSWaveformImage */; };
 		A06AE85C2CCAB6EE003282B2 /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */; };
 		A06AE85F2CCAB812003282B2 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */; };
-		A07438ED2BD10D2D00945CB5 /* Mercury Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07438F12BD10D2D00945CB5 /* MercuryApp.swift */; };
 		A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F52BD10D2F00945CB5 /* Assets.xcassets */; };
 		A07438F92BD10D2F00945CB5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */; };
@@ -95,30 +94,6 @@
 		A0DF848A2CCB9A7500CC101E /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF84892CCB9A6F00CC101E /* FileManager+.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		A07438EE2BD10D2D00945CB5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A07438E02BD10D2D00945CB5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A07438EB2BD10D2D00945CB5;
-			remoteInfo = "Mercury Watch App";
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		A07438FF2BD10D2F00945CB5 /* Embed Watch Content */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
-			dstSubfolderSpec = 16;
-			files = (
-				A07438ED2BD10D2D00945CB5 /* Mercury Watch App.app in Embed Watch Content */,
-			);
-			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		4A4743F12BF796DF00264855 /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
 		4AE620212C09C6CF00722512 /* FormattedText+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormattedText+.swift"; sourceTree = "<group>"; };
@@ -150,7 +125,6 @@
 		A04ABE892CE0B99900641BC1 /* ChatListViewModel+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Updates.swift"; sourceTree = "<group>"; };
 		A04ABE8B2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Chats.swift"; sourceTree = "<group>"; };
 		A05C1AC42BECCF4B00724B6E /* Message+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+.swift"; sourceTree = "<group>"; };
-		A07438E62BD10D2D00945CB5 /* Mercury.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mercury.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mercury Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438F12BD10D2D00945CB5 /* MercuryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercuryApp.swift; sourceTree = "<group>"; };
 		A07438F52BD10D2F00945CB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -298,7 +272,6 @@
 		A07438E72BD10D2D00945CB5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A07438E62BD10D2D00945CB5 /* Mercury.app */,
 				A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */,
 			);
 			name = Products;
@@ -514,23 +487,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A07438E52BD10D2D00945CB5 /* Mercury */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A07439002BD10D2F00945CB5 /* Build configuration list for PBXNativeTarget "Mercury" */;
-			buildPhases = (
-				A07438E42BD10D2D00945CB5 /* Resources */,
-				A07438FF2BD10D2F00945CB5 /* Embed Watch Content */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A07438EF2BD10D2D00945CB5 /* PBXTargetDependency */,
-			);
-			name = Mercury;
-			productName = Mercury;
-			productReference = A07438E62BD10D2D00945CB5 /* Mercury.app */;
-			productType = "com.apple.product-type.application.watchapp2-container";
-		};
 		A07438EB2BD10D2D00945CB5 /* Mercury Watch App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A07438FC2BD10D2F00945CB5 /* Build configuration list for PBXNativeTarget "Mercury Watch App" */;
@@ -572,9 +528,6 @@
 				LastSwiftUpdateCheck = 1530;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
-					A07438E52BD10D2D00945CB5 = {
-						CreatedOnToolsVersion = 15.3;
-					};
 					A07438EB2BD10D2D00945CB5 = {
 						CreatedOnToolsVersion = 15.3;
 					};
@@ -602,20 +555,12 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A07438E52BD10D2D00945CB5 /* Mercury */,
 				A07438EB2BD10D2D00945CB5 /* Mercury Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A07438E42BD10D2D00945CB5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A07438EA2BD10D2D00945CB5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -707,14 +652,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A07438EF2BD10D2D00945CB5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A07438EB2BD10D2D00945CB5 /* Mercury Watch App */;
-			targetProxy = A07438EE2BD10D2D00945CB5 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A07438FA2BD10D2F00945CB5 /* Debug */ = {
@@ -900,39 +837,6 @@
 			};
 			name = Release;
 		};
-		A07439012BD10D2F00945CB5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
-				DEVELOPMENT_TEAM = 6MWN6EWBL2;
-				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		A07439022BD10D2F00945CB5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
-				DEVELOPMENT_TEAM = 6MWN6EWBL2;
-				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
-				MARKETING_VERSION = 0.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -950,15 +854,6 @@
 			buildConfigurations = (
 				A07438FD2BD10D2F00945CB5 /* Debug */,
 				A07438FE2BD10D2F00945CB5 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A07439002BD10D2F00945CB5 /* Build configuration list for PBXNativeTarget "Mercury" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A07439012BD10D2F00945CB5 /* Debug */,
-				A07439022BD10D2F00945CB5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

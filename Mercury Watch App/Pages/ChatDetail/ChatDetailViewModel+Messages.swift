@@ -10,7 +10,7 @@ import TDLibKit
 
 extension ChatDetailViewModel {
     
-    func requestMessages(fromId: Int64? = nil, firstBatch: Bool = false, limit: Int = 30) async -> [MessageModel] {
+    func requestMessages(fromId: Int64? = nil, firstBatch: Bool = false, limit: Int = 10) async -> [MessageModel] {
         
         self.logger.log("Loading \(limit) \(firstBatch ? "initial" : "more") messages")
         

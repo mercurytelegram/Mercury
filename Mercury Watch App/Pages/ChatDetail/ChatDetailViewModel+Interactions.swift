@@ -70,7 +70,8 @@ extension ChatDetailViewModel {
     }
     
     func onMessageListAppear(_ proxy: ScrollViewProxy) {
-        
+        #warning("disabling automatic scroll until future development")
+        return
         guard let lastReadInboxMessageId else { return }
         
         // Scroll to the first unread message
