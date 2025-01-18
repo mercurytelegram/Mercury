@@ -73,6 +73,7 @@ struct AvatarView: View {
                     .aspectRatio(contentMode: .fit)
                     .clipShape(Circle())
             }
+            .id(model.avatarImage?.thumbnail)
         } else {
             placeholder(size)
         }
@@ -104,8 +105,8 @@ struct AvatarModel: Equatable {
         return lhs.letters == rhs.letters &&
         lhs.color == rhs.color &&
         lhs.isOnline == rhs.isOnline &&
-        lhs.userId == rhs.userId
-        //TODO: && lhs.tdImage. == rhs.tdImage
+        lhs.userId == rhs.userId &&
+        lhs.avatarImage == rhs.avatarImage
     }
 }
 

@@ -46,6 +46,12 @@ struct AsyncImageModel {
     let getImage: () async throws -> UIImage?
 }
 
+extension AsyncImageModel: Equatable {
+    static func == (lhs: AsyncImageModel, rhs: AsyncImageModel) -> Bool {
+        return lhs.thumbnail == rhs.thumbnail
+    }
+}
+
 
 #Preview("Loader") {
     AsyncView(getData: getAsyncPreviewImage) { image in

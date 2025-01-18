@@ -140,6 +140,33 @@ extension ChatListViewModel {
     }
     
     @MainActor
+    func updateChatTitle(_ update: UpdateChatTitle) {
+        let chatId = update.chatId
+        let title = update.title
+        
+        let index = self.chats.firstIndex { c in c.id == chatId }
+        guard let index, index != -1 else { return }
+        
+        withAnimation {
+            self.chats[index].title = title
+            self.chats[index].avatar.letters = String(title.prefix(1))
+        }
+    }
+    
+    @MainActor
+    func updateChatPhoto(_ update: UpdateChatPhoto) {
+        let chatId = update.chatId
+        let avatarImage = update.photo?.getAsyncModel()
+        
+        let index = self.chats.firstIndex { c in c.id == chatId }
+        guard let index, index != -1 else { return }
+        
+        withAnimation {
+            self.chats[index].avatar.avatarImage = avatarImage
+        }
+    }
+    
+    @MainActor
     func updateChatPosition(_ update: UpdateChatPosition) {
         let chatId = update.chatId
         let position = update.position

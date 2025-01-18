@@ -25,23 +25,10 @@ extension Chat {
     }
     
     func toAvatarModel() -> AvatarModel {
-        var thumbnail: UIImage? = nil
-        if let data = self.photo?.minithumbnail?.data {
-            thumbnail = UIImage(data: data)
-        }
+        let avatarImage = photo?.getAsyncModel()
+        let letters = "\(self.title.prefix(1))"
         
-        let photo = AsyncImageModel(
-            thumbnail: thumbnail,
-            getImage: {
-                guard let photo = self.photo?.lowRes
-                else { return nil }
-                return await FileService.getImage(for: photo)
-            }
-        )
-        
-        let letters: String = "\(self.title.prefix(1))"
-        
-        return AvatarModel(avatarImage: photo, letters: letters)
+        return AvatarModel(avatarImage: avatarImage, letters: letters)
     }
     
 }

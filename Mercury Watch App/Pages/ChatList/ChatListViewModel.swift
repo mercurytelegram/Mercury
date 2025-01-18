@@ -48,6 +48,10 @@ class ChatListViewModel: TDLibViewModel {
                 self.updateUserStatus(update)
             case .updateChatLastMessage(let update):
                 self.updateChatLastMessage(update)
+            case .updateChatTitle(let update):
+                self.updateChatTitle(update)
+            case .updateChatPhoto(let update):
+                self.updateChatPhoto(update)
             case .updateChatPosition(let update):
                 self.updateChatPosition(update)
             case .updateChatNotificationSettings(let update):
@@ -72,7 +76,6 @@ class ChatListViewModel: TDLibViewModel {
             }
         }
     }
-    
     func initChatList() {
         
         Task.detached(priority: .high) {

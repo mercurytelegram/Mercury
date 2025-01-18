@@ -6,11 +6,30 @@
 //
 
 import TDLibKit
+import UIKit
 
 protocol TDImage {
     var minithumbnail: Minithumbnail? { get }
     var lowRes: File? { get }
     var highRes: File? { get }
+}
+
+extension TDImage {
+    func getAsyncModel() -> AsyncImageModel {
+        var thumbnail: UIImage? = nil
+        if let data = self.minithumbnail?.data {
+            thumbnail = UIImage(data: data)
+        }
+        
+        return AsyncImageModel(
+            thumbnail: thumbnail,
+            getImage: {
+                guard let photo = self.lowRes
+                else { return nil }
+                return await FileService.getImage(for: photo)
+            }
+        )
+    }
 }
 
 extension ChatPhotoInfo: TDImage {
