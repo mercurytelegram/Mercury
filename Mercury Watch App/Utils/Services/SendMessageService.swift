@@ -42,7 +42,7 @@ class SendMessageService {
         }
     }
     
-    func sendVoiceNote(_ filePath: URL, _ duration: Int) {
+    func sendVoiceNote(_ filePath: URL, _ duration: Int, didProcessAudio: @escaping () -> Void) {
         
         Task.detached {
             do {
@@ -71,6 +71,8 @@ class SendMessageService {
                     voiceNote: audioFile,
                     waveform: audioWaveform
                 )
+                
+                didProcessAudio()
                 
                 let result = try await TDLibManager.shared.client?.sendMessage(
                     chatId: self.chat?.id,
@@ -122,6 +124,8 @@ class SendMessageServiceMock: SendMessageService {
     }
     
     override func sendTextMessage(_ text: String) {}
-    override func sendVoiceNote(_ filePath: URL, _ duration: Int) {}
+    override func sendVoiceNote(_ filePath: URL, _ duration: Int, didProcessAudio: @escaping () -> Void) {
+        didProcessAudio()
+    }
     override func sendReaction(_ emoji: String, chatId: Int64, messageId: Int64) {}
 }

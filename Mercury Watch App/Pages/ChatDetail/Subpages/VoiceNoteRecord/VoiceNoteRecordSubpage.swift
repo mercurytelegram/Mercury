@@ -22,7 +22,7 @@ struct VoiceNoteRecordSubpage: View {
     init(isPresented: Binding<Bool>, action: Binding<ChatAction?>, sendService: SendMessageService) {
         self._isPresented = isPresented
         _vm = Mockable.state(
-            value: { VoiceNoteRecordViewModel(action: action, sendService: sendService) },
+            value: { VoiceNoteRecordViewModel(action: action, sendService: sendService, isPresented: isPresented) },
             mock: { VoiceNoteRecordViewModelMock() }
         )
     }
@@ -71,7 +71,7 @@ struct VoiceNoteRecordSubpage: View {
             shouldDrawSilencePadding: true
         )
         .overlay {
-            if vm.isLoadingPlayerWaveform {
+            if vm.isLoadingPlayerWaveform || vm.state == .sending {
                 ProgressView().background(.black.opacity(0.5))
             }
         }
@@ -80,7 +80,6 @@ struct VoiceNoteRecordSubpage: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Send", systemImage: "arrow.up") {
-                    isPresented = false
                     vm.didPressSendButton()
                 }
                 .foregroundStyle(.white, .blue)

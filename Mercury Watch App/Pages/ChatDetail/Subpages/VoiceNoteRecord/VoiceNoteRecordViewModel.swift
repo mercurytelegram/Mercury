@@ -35,6 +35,7 @@ class VoiceNoteRecordViewModel: NSObject {
     var state: RecordingState = .recStarted
     var hightlightIndex: Int?
     var isLoadingPlayerWaveform: Bool = false
+    var isPresented: Binding<Bool>
     
     var recorder: RecorderService
     var player: PlayerService?
@@ -45,7 +46,7 @@ class VoiceNoteRecordViewModel: NSObject {
     var filePath: URL
     private let logger = LoggerService(VoiceNoteRecordViewModel.self)
     
-    init(action: Binding<ChatAction?>, sendService: SendMessageService) {
+    init(action: Binding<ChatAction?>, sendService: SendMessageService, isPresented: Binding<Bool>) {
         self.sendService = sendService
         
         // Recording file path
@@ -57,6 +58,7 @@ class VoiceNoteRecordViewModel: NSObject {
         self.recorder = RecorderService(recFilePath: filePath)
         self.state = .recStarted
         self.action = action
+        self.isPresented = isPresented
         
         super.init()
     }
@@ -110,7 +112,9 @@ class VoiceNoteRecordViewModel: NSObject {
         sendService.sendVoiceNote(
             filePath,
             Int(recorder.elapsedTime)
-        )
+        ) {
+            self.isPresented.wrappedValue = false
+        }
     }
     
     private func createPlayer() {
@@ -141,7 +145,8 @@ class VoiceNoteRecordViewModelMock: VoiceNoteRecordViewModel {
     init() {
         super.init(
             action: .constant(nil),
-            sendService: SendMessageServiceMock()
+            sendService: SendMessageServiceMock(),
+            isPresented: .constant(true)
         )
     }
 }
