@@ -75,14 +75,35 @@ struct LoginPage: View {
     func tutorialView() -> some View {
         ScrollView {
             StepView(steps: vm.tutorialSteps)
-            Divider()
-            Text("If you can't scan the QR code:")
+            TextDivider("or")
+            Text("if you can’t scan the QR code login with phone number")
+                .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
                 .padding()
-            Button("Demo", action: vm.didPressDemoButton)
+            Button("Login", action: vm.didPressLoginButton)
         }
         .navigationTitle("Info")
         .scenePadding(.horizontal)
+        .sheet(isPresented: $vm.showLoginView) {
+            if vm.showCodeView {
+                TextField("Code", text: $vm.code)
+                    .onSubmit {
+                        Task {
+                            let _ = try await TDLibManager.shared.client?.checkAuthenticationCode(code: vm.code)
+                            //Dismiss
+                            vm.showLoginView = false
+                            vm.showTutorialView = false
+                            //Show Loader
+                        }
+                    }
+            } else {
+                Button("Phone number") {
+                    Task {
+                        let _ = try await TDLibManager.shared.client?.setAuthenticationPhoneNumber(phoneNumber: <#PhoneNumber#>, settings: nil)
+                    }
+                }
+            }
+        }
     }
     
     @ViewBuilder

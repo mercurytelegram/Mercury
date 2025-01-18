@@ -13,8 +13,12 @@ import TDLibKit
 class LoginViewModel: TDLibViewModel {
     var showTutorialView: Bool = false
     var showPasswordView: Bool = false
+    var showLoginView: Bool = false
+    var showCodeView: Bool = false
     var showFullscreenQR: Bool = false
     var isValidatingPassword: Bool = false
+    
+    var code: String = ""
     
     var passwordModel: PasswordModel = .plain
     var password: String = ""
@@ -27,8 +31,17 @@ class LoginViewModel: TDLibViewModel {
         "Point your phone at the QR code to confirm login"
     ]
     
-    func didPressDemoButton() {
-        AppState.shared.isMock = true
+    func didPressLoginButton() {
+        showLoginView = true
+        Task {
+            do {
+                let result = try await TDLibManager.shared.client?.logOut()
+                self.logger.log(result)
+                
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
     }
     
     func didPressInfoButton() {
@@ -73,7 +86,10 @@ class LoginViewModel: TDLibViewModel {
         
         switch state {
         case .authorizationStateWaitPhoneNumber:
-            self.getQrcodeLink()
+            if !showLoginView {
+                self.getQrcodeLink()
+            }
+            
             break
         case .authorizationStateWaitOtherDeviceConfirmation(let info):
             DispatchQueue.main.async {
@@ -86,6 +102,10 @@ class LoginViewModel: TDLibViewModel {
                 self.showPasswordView = true
             }
             break
+        case .authorizationStateWaitCode(_):
+            DispatchQueue.main.async {
+                self.showCodeView = true
+            }
         default:
             self.logger.log("Unmanaged state \(state)")
             break
