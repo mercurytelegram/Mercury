@@ -30,6 +30,7 @@
 		9BAA75E12CD4F08A0007B4E2 /* sticker.tgs in Resources */ = {isa = PBXBuildFile; fileRef = 9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */; };
 		9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75E32CD4F1620007B4E2 /* Gzip */; };
 		9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD9F9E32CDD044900833C48 /* AsyncView.swift */; };
+		9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF303552D3A70EB00309992 /* TextDivider.swift */; };
 		A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0054EA52BF3E12F009F2CEB /* TDLibKit */; };
 		A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */; };
 		A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE512CE00F1600641BC1 /* MessageOptionsViewModel.swift */; };
@@ -141,6 +142,7 @@
 		9BA9A4F32CE79DB0005C717C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */ = {isa = PBXFileReference; lastKnownFileType = file; path = sticker.tgs; sourceTree = "<group>"; };
 		9BD9F9E32CDD044900833C48 /* AsyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncView.swift; sourceTree = "<group>"; };
+		9BF303552D3A70EB00309992 /* TextDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDivider.swift; sourceTree = "<group>"; };
 		A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptionsSubpage.swift; sourceTree = "<group>"; };
 		A04ABE512CE00F1600641BC1 /* MessageOptionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptionsViewModel.swift; sourceTree = "<group>"; };
 		A04ABE572CE015F800641BC1 /* VoiceNoteRecordSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceNoteRecordSubpage.swift; sourceTree = "<group>"; };
@@ -453,6 +455,7 @@
 			children = (
 				A080D8BE2CD78CED00920564 /* AvatarView.swift */,
 				9BD9F9E32CDD044900833C48 /* AsyncView.swift */,
+				9BF303552D3A70EB00309992 /* TextDivider.swift */,
 				9BA9A4F32CE79DB0005C717C /* Stack.swift */,
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
 				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
@@ -660,6 +663,7 @@
 				9B2805CC2C4671C500F7DF72 /* TDImage+.swift in Sources */,
 				A081AAD32C071C82002A265C /* ChatAction+.swift in Sources */,
 				A080D88F2CD64A7C00920564 /* SecretService-sample.swift in Sources */,
+				9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */,
 				A080D8902CD64A7C00920564 /* SecretService.swift in Sources */,
 				9B0B6CB52CD64DB800BB6A94 /* Mockable.swift in Sources */,
 				A080D8F02CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift in Sources */,

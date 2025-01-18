@@ -59,15 +59,7 @@ struct SettingsPage: View {
     @ViewBuilder
     func credits() -> some View {
         VStack {
-            HStack {
-                Rectangle()
-                    .frame(height: 1)
-                    .foregroundStyle(.secondary)
-                Text("by")
-                Rectangle()
-                    .frame(height: 1)
-                    .foregroundStyle(.secondary)
-            }
+            TextDivider("by")
             HStack {
                 creditsAvatar(
                     name: "Alessandro\nAlberti",
