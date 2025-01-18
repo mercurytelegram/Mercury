@@ -146,6 +146,19 @@ final class TDLibManager {
                 try await self.client?.setLogVerbosityLevel(newVerbosityLevel: 0)
                 #endif
                 
+                let options = [
+                    "disable_network_statistics",
+                    "disable_persistent_network_statistics",
+                    "use_storage_optimizer"
+                ]
+                
+                for option in options {
+                    try await self.client?.setOption(
+                        name: option,
+                        value: .optionValueBoolean(.init(value: true))
+                    )
+                }
+                
                 logger.log(result)
         
             } catch {
