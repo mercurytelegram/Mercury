@@ -3,39 +3,26 @@
 <br></br>
 
 
-Mercury is an open-source Telegram client designed specifically for the Apple Watch. It delivers a native and standalone experience, allowing you to send and receive Telegram messages directly from your wrist without relying on your iPhone.
 
-<a href="https://testflight.apple.com/join/4rLEiEzE">
-  <img src="https://github.com/user-attachments/assets/7fe1142c-9d33-4e5b-88ca-d5a6f0b1d93a" alt="Download on TestFlight" width="180">
+Mercury is an open-source Telegram client designed specifically for the Apple Watch. It delivers a native and standalone experience, allowing you to send and receive Telegram messages directly from your wrist without relying on your iPhone. 
+More info available [here](https://alessandro-alberti.notion.site/mercury).
+
+
+<a href="https://testflight.apple.com/join/dCndzeB1">
+  <img src="https://github.com/user-attachments/assets/86f3a622-ed56-485e-8572-b046c56d64bf" alt="Download on TestFlight" width="180">
 </a>
 
-## Features
-### Login
-- Login with QR Code
-- Login with credentials (in development)
-- 2FA Password
-- Demo with mock data
 
-### Chat List
-- Chat preview (name, image, last message)
-- Unread messages, mention and reaction count badge
-- Is typing/recording status
-- Online status
+## Main Features  
 
-### Supported Messages
-- Text (Bold, Italic, Monospaced, Underline, Strikethrough, Mention, Spoiler, Quote)
-- Image
-- Audio
-- Reactions
-- Sticker webp (webm, tgs in development)
-- Location and Venues
+### **Privacy-Focused and Open-Source**  
+Mercury’s code is fully open-source, so anyone can verify it handles user data responsibly and transparently.  
 
-### Sending
-- Text
-- Audio
-- Reactions 
-- Stickers (in development)
+### **True Standalone Experience**  
+Enjoy Telegram on your Apple Watch without needing an iPhone. Mercury works independently, so you stay connected wherever you are.  
 
+### **Modern Design, Cutting-Edge Technology**  
+Built with the latest Apple technologies and APIs, Mercury delivers a sleek, intuitive design for a seamless user experience.  
 ## How to Build  
 
 If you want to build the project yourself, you'll need to generate your own **Telegram API Hash** and **ID**. Follow these steps:  
@@ -56,6 +43,8 @@ If you want to build the project yourself, you'll need to generate your own **Te
 ## Contributing
 
 Contributions are welcome! Feel free to submit issues or pull requests to make **Mercury for Telegram** even better!
+
+The features changelog is available [here](https://alessandro-alberti.notion.site/mercury-changelog).
 
 ## Contact  
 
