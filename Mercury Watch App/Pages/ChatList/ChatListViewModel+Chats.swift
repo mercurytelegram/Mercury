@@ -54,7 +54,9 @@ extension ChatListViewModel {
         var avatar = chat.toAvatarModel()
         avatar.userId = userId
         
-        let position = chat.positions.first(where: { $0.list == folder.chatList })?.order.rawValue
+        let position = chat.positions.first(where: { $0.list == folder.chatList })
+        let positionOrder = position?.order.rawValue
+        let isPinned = position?.isPinned ?? false
         let isMuted = chat.notificationSettings.muteFor != 0
         
         var messageStyle: ChatCellModel.MessageStyle? = nil
@@ -73,11 +75,12 @@ extension ChatListViewModel {
         
         return ChatCellModel(
             id: chat.id,
-            position: position,
+            position: positionOrder,
             title: chat.title,
             time: date.stringDescription,
             avatar: avatar,
             isMuted: isMuted,
+            isPinned: isPinned,
             messageStyle: messageStyle,
             unreadBadgeStyle: unreadBadgeStyle
         )

@@ -10,6 +10,7 @@ import SwiftUI
 struct ChatCellView: View {
     
     let model: ChatCellModel
+    let onPressPinButton: () -> Void
     let onPressMuteButton: () -> Void
     
     var body: some View {
@@ -37,6 +38,12 @@ struct ChatCellView: View {
         }
         .padding(.vertical)
         .swipeActions(
+            edge: .leading,
+            allowsFullSwipe: false,
+            content: pinButton
+        )
+        .swipeActions(
+            edge: .trailing,
             allowsFullSwipe: false,
             content: muteButton
         )
@@ -125,6 +132,16 @@ struct ChatCellView: View {
     }
     
     @ViewBuilder
+    func pinButton() -> some View {
+        Button(action: onPressPinButton) {
+            model.isPinned
+                ? Label("Unpin", systemImage: "pin.slash.fill")
+                : Label("Pin", systemImage: "pin.fill")
+        }
+        .tint(.green)
+    }
+    
+    @ViewBuilder
     func muteButton() -> some View {
         Button(action: onPressMuteButton) {
             model.isMuted
@@ -144,6 +161,7 @@ struct ChatCellModel: Identifiable {
     var time: String
     var avatar: AvatarModel
     var isMuted: Bool
+    var isPinned: Bool
     
     var messageStyle: MessageStyle?
     var unreadBadgeStyle: UnreadStyle?
@@ -213,11 +231,12 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .alessandro,
         isMuted: false,
+        isPinned: false,
         messageStyle: nil,
         unreadBadgeStyle: nil
     )
     
-    ChatCellView(model: model) {}
+    ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
 #Preview("With message") {
@@ -226,11 +245,12 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .alessandro,
         isMuted: false,
+        isPinned: false,
         messageStyle: .message("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
         unreadBadgeStyle: nil
     )
     
-    ChatCellView(model: model) {}
+    ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
 #Preview("With action") {
@@ -239,11 +259,12 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .alessandro,
         isMuted: false,
+        isPinned: false,
         messageStyle: .action("is typing"),
         unreadBadgeStyle: nil
     )
     
-    ChatCellView(model: model) {}
+    ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
 
@@ -253,11 +274,12 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .marco,
         isMuted: false,
+        isPinned: false,
         messageStyle: .message("Lorem ipsum dolor sit amet."),
         unreadBadgeStyle: .message(count: 3)
     )
     
-    ChatCellView(model: model) {}
+    ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
 #Preview("Unread mention") {
@@ -266,11 +288,12 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .marco,
         isMuted: false,
+        isPinned: false,
         messageStyle: .message("Lorem ipsum dolor sit amet."),
         unreadBadgeStyle: .mention
     )
     
-    ChatCellView(model: model) {}
+    ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
 #Preview("Unread reaction") {
@@ -279,11 +302,12 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .marco,
         isMuted: false,
+        isPinned: false,
         messageStyle: .message("Lorem ipsum dolor sit amet."),
         unreadBadgeStyle: .reaction
     )
     
-    ChatCellView(model: model) {}
+    ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
 #Preview("Muted") {
@@ -292,8 +316,9 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .marco,
         isMuted: true,
+        isPinned: false,
         messageStyle: .message("Lorem ipsum dolor sit amet.")
     )
     
-    ChatCellView(model: model) {}
+    ChatCellView(model: model) {} onPressMuteButton: {}
 }

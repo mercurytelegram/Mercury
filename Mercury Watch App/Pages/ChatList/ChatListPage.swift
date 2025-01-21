@@ -28,9 +28,12 @@ struct ChatListPage: View {
             List(vm.chats) { chat in
                 NavigationLink(value: chat) {
                     ChatCellView(model: chat) {
+                        vm.didPressPin(on: chat)
+                    } onPressMuteButton: {
                         vm.didPressMute(on: chat)
                     }
                 }
+                .listItemTint(chat.isPinned ? .blue : nil)
             }
             .listStyle(.carousel)
             .navigationTitle(vm.folder.title)

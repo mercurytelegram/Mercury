@@ -25,6 +25,11 @@ class ChatListViewModel: TDLibViewModel {
         self.initChatList()
     }
     
+    func didPressPin(on chat: ChatCellModel) {
+        guard let id = chat.id else { return }
+        pinChat(id, isPinned: chat.isPinned)
+    }
+    
     func didPressMute(on chat: ChatCellModel) {
         guard let id = chat.id else { return }
         muteChat(id)
@@ -97,6 +102,33 @@ class ChatListViewModel: TDLibViewModel {
         }
     }
     
+    private func pinChat(_ chatId: Int64, isPinned: Bool) {
+        let index = self.chats.firstIndex { c in c.id == chatId }
+        guard let index, index != -1 else { return }
+        
+        let newValue = !isPinned
+        let list = self.folder.chatList
+        
+        withAnimation {
+            self.chats[index].isPinned = newValue
+        }
+        
+        Task.detached {
+            do {
+                try await TDLibManager.shared.client?.toggleChatIsPinned(
+                    chatId: chatId,
+                    chatList: list,
+                    isPinned: newValue
+                )
+                self.logger.log("IsPinned updated")
+                
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+        
+    }
+    
     private func muteChat(_ chatId: Int64) {
         Task.detached {
             do {
@@ -158,6 +190,7 @@ class ChatListViewModelMock: ChatListViewModel {
                 time: "10:09",
                 avatar: .alessandro,
                 isMuted: false,
+                isPinned: false,
                 messageStyle: .message("Lorem ipsum dolor sit amet."),
                 unreadBadgeStyle: .message(count: 3)
             ),
@@ -167,6 +200,7 @@ class ChatListViewModelMock: ChatListViewModel {
                 time: "09:41",
                 avatar: .marco,
                 isMuted: false,
+                isPinned: false,
                 messageStyle: .action("is typing"),
                 unreadBadgeStyle: .reaction
             ),
