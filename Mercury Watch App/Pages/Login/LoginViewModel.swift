@@ -18,8 +18,6 @@ class LoginViewModel: TDLibViewModel {
     var showFullscreenQR: Bool = false
     var isValidatingPassword: Bool = false
     
-    var code: String = ""
-    
     var passwordModel: PasswordModel = .plain
     var password: String = ""
     var qrCodeLink: String? = nil
@@ -30,19 +28,6 @@ class LoginViewModel: TDLibViewModel {
         "Go to Settings → Devices → Link Desktop Device",
         "Point your phone at the QR code to confirm login"
     ]
-    
-    func didPressLoginButton() {
-        showLoginView = true
-        Task {
-            do {
-                let result = try await TDLibManager.shared.client?.logOut()
-                self.logger.log(result)
-                
-            } catch {
-                self.logger.log(error, level: .error)
-            }
-        }
-    }
     
     func didPressInfoButton() {
         showTutorialView = true
@@ -57,6 +42,36 @@ class LoginViewModel: TDLibViewModel {
     func didChangeShowPasswordValue(oldValue: Bool, newValue: Bool) {
         if newValue == false {
             LoginViewModel.logout()
+        }
+    }
+    
+    func didPressLoginButton() {
+        showLoginView = true
+        Task {
+            do {
+                let result = try await TDLibManager.shared.client?.logOut()
+                self.logger.log(result)
+                
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func didSetPhoneNumber(_ phoneNumber: String) {
+        Task {
+            let _ = try await TDLibManager.shared.client?.setAuthenticationPhoneNumber(phoneNumber: phoneNumber, settings: nil)
+        }
+    }
+    
+    func didSetCode(_ code: String) {
+        Task {
+            let _ = try await TDLibManager.shared.client?.checkAuthenticationCode(code: code)
+            //TODO: handle wrong code
+            //Dismiss
+            showLoginView = false
+            showTutorialView = false
+            //Show Loader
         }
     }
     

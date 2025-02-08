@@ -29,6 +29,9 @@
 		9BAA75DD2CD4EE370007B4E2 /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */; };
 		9BAA75E12CD4F08A0007B4E2 /* sticker.tgs in Resources */ = {isa = PBXBuildFile; fileRef = 9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */; };
 		9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75E32CD4F1620007B4E2 /* Gzip */; };
+		9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */; };
+		9BB3BCB62D14379400CAFB31 /* KeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB52D14379400CAFB31 /* KeypadView.swift */; };
+		9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */; };
 		9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD9F9E32CDD044900833C48 /* AsyncView.swift */; };
 		9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF303552D3A70EB00309992 /* TextDivider.swift */; };
 		A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0054EA52BF3E12F009F2CEB /* TDLibKit */; };
@@ -141,6 +144,9 @@
 		9BA9A4F12CE798C5005C717C /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		9BA9A4F32CE79DB0005C717C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */ = {isa = PBXFileReference; lastKnownFileType = file; path = sticker.tgs; sourceTree = "<group>"; };
+		9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeKeypadView.swift; sourceTree = "<group>"; };
+		9BB3BCB52D14379400CAFB31 /* KeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadView.swift; sourceTree = "<group>"; };
+		9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneKeypadView.swift; sourceTree = "<group>"; };
 		9BD9F9E32CDD044900833C48 /* AsyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncView.swift; sourceTree = "<group>"; };
 		9BF303552D3A70EB00309992 /* TextDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDivider.swift; sourceTree = "<group>"; };
 		A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptionsSubpage.swift; sourceTree = "<group>"; };
@@ -251,6 +257,16 @@
 				9B8493E72C7623B700AC90E9 /* View+.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9BB3BCB22D14373D00CAFB31 /* Keypad */ = {
+			isa = PBXGroup;
+			children = (
+				9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */,
+				9BB3BCB52D14379400CAFB31 /* KeypadView.swift */,
+				9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */,
+			);
+			path = Keypad;
 			sourceTree = "<group>";
 		};
 		A04ABE4E2CE00EFD00641BC1 /* Subpages */ = {
@@ -460,6 +476,7 @@
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
 				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
 				A0CDF94C2CE7D6060015E20E /* AlertView.swift */,
+				9BB3BCB22D14373D00CAFB31 /* Keypad */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -703,8 +720,11 @@
 				A080D8E02CDC08FF00920564 /* PillView.swift in Sources */,
 				A080D8B82CD7843000920564 /* ChatCellView.swift in Sources */,
 				4A4743F22BF796DF00264855 /* Color+.swift in Sources */,
+				9BB3BCB62D14379400CAFB31 /* KeypadView.swift in Sources */,
 				9B0418F02CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift in Sources */,
+				9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */,
 				9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */,
+				9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */,
 				A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */,
 				A081AAD52C0721C2002A265C /* Chat+.swift in Sources */,
 			);

@@ -86,22 +86,9 @@ struct LoginPage: View {
         .scenePadding(.horizontal)
         .sheet(isPresented: $vm.showLoginView) {
             if vm.showCodeView {
-                TextField("Code", text: $vm.code)
-                    .onSubmit {
-                        Task {
-                            let _ = try await TDLibManager.shared.client?.checkAuthenticationCode(code: vm.code)
-                            //Dismiss
-                            vm.showLoginView = false
-                            vm.showTutorialView = false
-                            //Show Loader
-                        }
-                    }
+                CodeKeypadView(onSubmit: vm.didSetCode)
             } else {
-                Button("Phone number") {
-                    Task {
-                        let _ = try await TDLibManager.shared.client?.setAuthenticationPhoneNumber(phoneNumber: <#PhoneNumber#>, settings: nil)
-                    }
-                }
+                PhoneKeypadView(onSubmit: vm.didSetPhoneNumber)
             }
         }
     }
