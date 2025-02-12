@@ -17,10 +17,12 @@
 		9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */; };
 		9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */; };
 		9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */; };
+		9B190E622D56B19E0045D311 /* InputCtaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B190E612D56B19E0045D311 /* InputCtaView.swift */; };
 		9B2805CC2C4671C500F7DF72 /* TDImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CB2C4671C500F7DF72 /* TDImage+.swift */; };
 		9B2E1BE02C08739800B9B63D /* MessageBubbleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */; };
 		9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4451F92C45C63D00A6EBC2 /* User+.swift */; };
 		9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */; };
+		9B5600FF2D59D78D005E28F1 /* ScalingButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */; };
 		9B5EBE622CE5F16F00EDCCE3 /* FitStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */; };
 		9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */; };
 		9B8493E82C7623B700AC90E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* View+.swift */; };
@@ -134,10 +136,12 @@
 		9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
 		9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreviewTrait+Mock.swift"; sourceTree = "<group>"; };
+		9B190E612D56B19E0045D311 /* InputCtaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputCtaView.swift; sourceTree = "<group>"; };
 		9B2805CB2C4671C500F7DF72 /* TDImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TDImage+.swift"; sourceTree = "<group>"; };
 		9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleShape.swift; sourceTree = "<group>"; };
 		9B4451F92C45C63D00A6EBC2 /* User+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+.swift"; sourceTree = "<group>"; };
 		9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
+		9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalingButtonStyle.swift; sourceTree = "<group>"; };
 		9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitStack.swift; sourceTree = "<group>"; };
 		9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFolder.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
@@ -234,6 +238,7 @@
 			children = (
 				9B0B6CBB2CD679A600BB6A94 /* StepView.swift */,
 				9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */,
+				9B190E612D56B19E0045D311 /* InputCtaView.swift */,
 				9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */,
 			);
 			path = Subviews;
@@ -476,6 +481,7 @@
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
 				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
 				A0CDF94C2CE7D6060015E20E /* AlertView.swift */,
+				9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */,
 				9BB3BCB22D14373D00CAFB31 /* Keypad */,
 			);
 			path = Components;
@@ -668,6 +674,7 @@
 				A0CDF8C62CE7D4D70015E20E /* SendMessageService.swift in Sources */,
 				A080D8C82CDA239B00920564 /* MessageView.swift in Sources */,
 				9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */,
+				9B5600FF2D59D78D005E28F1 /* ScalingButtonStyle.swift in Sources */,
 				A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */,
 				9BA9A4F22CE798C5005C717C /* FlowLayout.swift in Sources */,
 				9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */,
@@ -704,6 +711,7 @@
 				A080D8DE2CDC051300920564 /* LocationView.swift in Sources */,
 				A080D8DA2CDAADEC00920564 /* ReplyView.swift in Sources */,
 				A080D8A52CD64B1700920564 /* ChatListPage.swift in Sources */,
+				9B190E622D56B19E0045D311 /* InputCtaView.swift in Sources */,
 				A080D8A62CD64B1700920564 /* HomePage.swift in Sources */,
 				A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */,
 				A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */,
