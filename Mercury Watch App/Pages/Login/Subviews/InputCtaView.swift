@@ -159,6 +159,15 @@ extension InputCtaModel {
             keyboardType: .text
         )
     }
+    
+    static var passwordError: Self {
+        var model = Self.password
+        model.title = "Wrong password, try again!"
+        model.iconName = "exclamationmark.circle.fill"
+        model.tint = .red
+        
+        return model
+    }
 }
 
 #Preview("Phone") {

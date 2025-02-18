@@ -16,7 +16,7 @@ struct LoginPage: View {
         NavigationStack {
             VStack {
                 QR()
-                Text(vm.statusMessage)
+                Text(vm.state == nil ? "Connecting..." : "Login with QR code")
                     .padding(.top)
                     .padding(.bottom, vm.showFullscreenQR ? 0 : -20)
             }
@@ -38,21 +38,22 @@ struct LoginPage: View {
                     .opacity(vm.showFullscreenQR ? 0 : 1)
                 }
             }
-            .sheet(
-                isPresented: $vm.showTutorialView,
-                content: tutorialView
-            )
-            .sheet(isPresented: $vm.showPasswordView) {
+            .sheet(isPresented: vm.showPassword) {
                 passwordView()
             }
-        }
-        .onChange(
-            of: vm.showPasswordView,
-            vm.didChangeShowPasswordValue
-        )
-        .overlay {
-            if AppState.shared.isAuthenticated == nil {
-                loader()
+            .sheet(isPresented: vm.showLoader, content: loader)
+            .sheet(isPresented: vm.showTutorial, content: tutorialView)
+            .sheet(isPresented: vm.showPhoneNumber) {
+                InputCtaView(
+                    model: .phone,
+                    onSubmit: vm.setPhoneNumber
+                )
+            }
+            .sheet(isPresented: vm.showCode) {
+                InputCtaView(
+                    model: vm.state == .authCodeFailure ? .codeError : .code,
+                    onSubmit: vm.validateAuthCode
+                )
             }
         }
     }
@@ -84,27 +85,15 @@ struct LoginPage: View {
         }
         .navigationTitle("Info")
         .scenePadding(.horizontal)
-        .sheet(isPresented: $vm.showLoginView) {
-            if vm.showCodeView {
-                CodeKeypadView(onSubmit: vm.didSetCode)
-            } else {
-                PhoneKeypadView(onSubmit: vm.didSetPhoneNumber)
-            }
-        }
     }
     
     @ViewBuilder
     func passwordView() -> some View {
         PasswordView(
             password: $vm.password,
-            model: vm.passwordModel,
+            model: vm.state == .twoFactorPasswordFailure ? .error : .plain,
             onSubmit: vm.validatePassword
         )
-        .overlay {
-            if vm.isValidatingPassword {
-                loader()
-            }
-        }
     }
     
     @ViewBuilder
@@ -115,6 +104,8 @@ struct LoginPage: View {
                 .ignoresSafeArea(edges: .all)
             ProgressView()
         }
+        // Loader should not be dismissable
+        .toolbar(.hidden, for: .navigationBar)
     }
     
     @ViewBuilder
