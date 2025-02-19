@@ -39,7 +39,10 @@ struct LoginPage: View {
                 }
             }
             .sheet(isPresented: vm.showPassword) {
-                passwordView()
+                InputCtaView(
+                    model: vm.state == .twoFactorPasswordFailure ? .passwordError : .password,
+                    onSubmit: vm.validatePassword
+                )
             }
             .sheet(isPresented: vm.showLoader, content: loader)
             .sheet(isPresented: vm.showTutorial, content: tutorialView)
@@ -85,15 +88,6 @@ struct LoginPage: View {
         }
         .navigationTitle("Info")
         .scenePadding(.horizontal)
-    }
-    
-    @ViewBuilder
-    func passwordView() -> some View {
-        PasswordView(
-            password: $vm.password,
-            model: vm.state == .twoFactorPasswordFailure ? .error : .plain,
-            onSubmit: vm.validatePassword
-        )
     }
     
     @ViewBuilder

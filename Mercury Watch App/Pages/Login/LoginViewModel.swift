@@ -33,7 +33,6 @@ class LoginViewModel: TDLibViewModel {
     }
     
     var showFullscreenQR: Bool = false
-    var password: String = ""
     var qrCodeLink: String? = nil
     
     let tutorialSteps = [
@@ -60,10 +59,6 @@ class LoginViewModel: TDLibViewModel {
         
         case (.qrCodeLogin, .twoFactorPassword): // Qrcode used, not valid anymore
             self.qrCodeLink = nil
-            break
-            
-        case (.twoFactorPassword, .twoFactorPasswordFailure):
-            self.password = ""
             break
             
         case (.tutorial, .phoneNumberLogin): // Request authorization via phone number
@@ -187,7 +182,7 @@ class LoginViewModel: TDLibViewModel {
         }
     }
     
-    func validatePassword() {
+    func validatePassword(_ password: String) {
         
         self.state = .loading
         

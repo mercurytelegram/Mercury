@@ -49,21 +49,15 @@ struct InputCtaView: View {
                 .font(.title3)
                 .multilineTextAlignment(.center)
                 .padding(.bottom)
-            
-            Button(action: didTapOnCta) {
-                HStack {
-                    Image(systemName: model.inputIconName)
-                        .foregroundStyle(model.tint)
-                    Text(text ?? model.inputPlaceholder)
+            if model.keyboardType == .text {
+                TextFieldLink(label: ctaView, onSubmit: self.onSubmit)
+                .buttonStyle(.scaling)
+            } else {
+                Button(action: didTapOnCta) {
+                    ctaView()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .background {
-                    RoundedRectangle(cornerRadius: 15)
-                        .foregroundStyle(.quaternary)
-                }
+                .buttonStyle(.scaling)
             }
-            .buttonStyle(.scaling)
             
             if let description = model.description {
                 Text(description)
@@ -91,6 +85,21 @@ struct InputCtaView: View {
             default:
                 EmptyView()
             }
+        }
+    }
+    
+    @ViewBuilder
+    func ctaView() -> some View {
+        HStack {
+            Image(systemName: model.inputIconName)
+                .foregroundStyle(model.tint)
+            Text(text ?? model.inputPlaceholder)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background {
+            RoundedRectangle(cornerRadius: 15)
+                .foregroundStyle(.quaternary)
         }
     }
     
