@@ -165,6 +165,13 @@ class LoginViewModel: TDLibViewModel {
     
     func setPhoneNumber(_ phoneNumber: String) {
         
+        // Demo
+        if phoneNumber == "999" {
+            LoginViewModel.logout()
+            AppState.shared.isMock = true
+            return
+        }
+        
         self.state = .loading
         
         Task {
