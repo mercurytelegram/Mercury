@@ -48,7 +48,7 @@ struct LoginPage: View {
             .sheet(isPresented: vm.showTutorial, content: tutorialView)
             .sheet(isPresented: vm.showPhoneNumber) {
                 InputCtaView(
-                    model: .phone,
+                    model: vm.state == .phoneNumberLoginFailure ? .phoneError : .phone,
                     onSubmit: vm.setPhoneNumber
                 )
             }

@@ -14,7 +14,9 @@ enum LoginViewModelState {
     
     case qrCodeLogin
     case tutorial
+    
     case phoneNumberLogin
+    case phoneNumberLoginFailure
     
     case authCode
     case authCodeFailure
@@ -185,6 +187,12 @@ class LoginViewModel: TDLibViewModel {
                 
             } catch {
                 self.logger.log(error, level: .error)
+                guard let error = error as? TDLibKit.Error else { return }
+                if error.message == "PHONE_NUMBER_INVALID" {
+                    await MainActor.run {
+                        self.state = .phoneNumberLoginFailure
+                    }
+                }
             }
         }
     }
@@ -320,8 +328,8 @@ class LoginViewModel: TDLibViewModel {
     
     var showPhoneNumber: Binding<Bool> {
         .init(
-           get: { self.state == .phoneNumberLogin },
-           set: { if !$0 { self.state = .tutorial } }
+            get: { self.state == .phoneNumberLogin || self.state == .phoneNumberLoginFailure },
+            set: { if !$0 { self.state = .tutorial } }
        )
     }
     

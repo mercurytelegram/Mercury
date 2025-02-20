@@ -135,6 +135,15 @@ extension InputCtaModel {
         )
     }
     
+    static var phoneError: Self {
+        var model = Self.phone
+        model.title = "Invalid phone number"
+        model.iconName = "exclamationmark.circle.fill"
+        model.tint = .red
+        model.description = "The provided phone number doesn't seem to exist! Make sure to include the region prefix"
+        return model
+    }
+    
     static var code: Self {
         .init(
             title: "Enter the code you’ve received",
@@ -181,6 +190,10 @@ extension InputCtaModel {
 
 #Preview("Phone") {
     InputCtaView(model: .phone, onSubmit: {_ in})
+}
+
+#Preview("Phone Error") {
+    InputCtaView(model: .phoneError, onSubmit: {_ in})
 }
 
 #Preview("Code") {
