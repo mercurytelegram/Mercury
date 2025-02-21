@@ -36,6 +36,7 @@ class LoginViewModel: TDLibViewModel {
     
     var showFullscreenQR: Bool = false
     var qrCodeLink: String? = nil
+    var lastInputCta: String? = nil
     
     let tutorialSteps = [
         "Open Telegram on your phone",
@@ -57,6 +58,7 @@ class LoginViewModel: TDLibViewModel {
             // After logout authorizationStateWaitPhoneNumber update will be
             // triggered and new qrcode will be requested
             self.logout()
+            self.lastInputCta = nil
             break
         
         case (.qrCodeLogin, .twoFactorPassword): // Qrcode used, not valid anymore
@@ -175,6 +177,7 @@ class LoginViewModel: TDLibViewModel {
         }
         
         self.state = .loading
+        self.lastInputCta = phoneNumber
         
         Task {
             do {
@@ -223,6 +226,7 @@ class LoginViewModel: TDLibViewModel {
     func validateAuthCode(_ code: String) {
         
         self.state = .loading
+        self.lastInputCta = code
         
         Task {
             do {

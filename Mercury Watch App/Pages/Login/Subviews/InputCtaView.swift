@@ -135,12 +135,17 @@ extension InputCtaModel {
         )
     }
     
-    static var phoneError: Self {
+    static func phoneError(_ placeholder: String? = nil) -> Self {
         var model = Self.phone
         model.title = "Invalid phone number"
         model.iconName = "exclamationmark.circle.fill"
         model.tint = .red
         model.description = "The provided phone number doesn't seem to exist! Make sure to include the region prefix"
+        
+        if let placeholder {
+            model.inputPlaceholder = placeholder
+        }
+        
         return model
     }
     
@@ -156,11 +161,15 @@ extension InputCtaModel {
         )
     }
     
-    static var codeError: Self {
+    static func codeError(_ placeholder: String? = nil) -> Self {
         var model = Self.code
         model.title = "Wrong Code, try again!"
         model.iconName = "exclamationmark.bubble.fill"
         model.tint = .red
+        
+        if let placeholder {
+            model.inputPlaceholder = placeholder
+        }
         
         return model
     }
@@ -193,7 +202,7 @@ extension InputCtaModel {
 }
 
 #Preview("Phone Error") {
-    InputCtaView(model: .phoneError, onSubmit: {_ in})
+    InputCtaView(model: .phoneError(), onSubmit: {_ in})
 }
 
 #Preview("Code") {
@@ -201,7 +210,7 @@ extension InputCtaModel {
 }
 
 #Preview("Code error") {
-    InputCtaView(model: .codeError, onSubmit: {_ in})
+    InputCtaView(model: .codeError(), onSubmit: {_ in})
 }
 
 #Preview("Password") {

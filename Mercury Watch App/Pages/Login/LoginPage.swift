@@ -48,13 +48,13 @@ struct LoginPage: View {
             .sheet(isPresented: vm.showTutorial, content: tutorialView)
             .sheet(isPresented: vm.showPhoneNumber) {
                 InputCtaView(
-                    model: vm.state == .phoneNumberLoginFailure ? .phoneError : .phone,
+                    model: vm.state == .phoneNumberLoginFailure ? .phoneError(vm.lastInputCta) : .phone,
                     onSubmit: vm.setPhoneNumber
                 )
             }
             .sheet(isPresented: vm.showCode) {
                 InputCtaView(
-                    model: vm.state == .authCodeFailure ? .codeError : .code,
+                    model: vm.state == .authCodeFailure ? .codeError(vm.lastInputCta) : .code,
                     onSubmit: vm.validateAuthCode
                 )
             }
