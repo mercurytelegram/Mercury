@@ -318,29 +318,53 @@ class LoginViewModel: TDLibViewModel {
     
     var showTutorial: Binding<Bool> {
         .init(
-            get: { self.state == .tutorial },
-            set: { self.state = $0 ? .tutorial : .qrCodeLogin }
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .tutorial
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                self.state = $0 ? .tutorial : .qrCodeLogin
+            }
         )
     }
     
     var showPassword: Binding<Bool> {
         .init(
-            get: { self.state == .twoFactorPassword || self.state == .twoFactorPasswordFailure },
-            set: { if !$0 { self.state = .qrCodeLogin } }
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .twoFactorPassword || self.state == .twoFactorPasswordFailure
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                if !$0 { self.state = .qrCodeLogin }
+            }
         )
     }
     
     var showPhoneNumber: Binding<Bool> {
         .init(
-            get: { self.state == .phoneNumberLogin || self.state == .phoneNumberLoginFailure },
-            set: { if !$0 { self.state = .tutorial } }
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .phoneNumberLogin || self.state == .phoneNumberLoginFailure
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                if !$0 { self.state = .tutorial }
+            }
        )
     }
     
     var showCode: Binding<Bool> {
         .init(
-            get: { self.state == .authCode || self.state == .authCodeFailure },
-            set: { if !$0 { self.state = .phoneNumberLogin } }
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .authCode || self.state == .authCodeFailure
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                if !$0 { self.state = .phoneNumberLogin }
+            }
         )
     }
     
