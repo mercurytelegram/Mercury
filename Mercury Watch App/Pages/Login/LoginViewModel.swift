@@ -9,17 +9,33 @@ import Foundation
 import SwiftUI
 import TDLibKit
 
+enum LoginViewModelState {
+    case qrCodeLogin
+    case tutorial
+    
+    case phoneNumberLogin
+    case phoneNumberLoginFailure
+    
+    case authCode
+    case authCodeFailure
+    
+    case twoFactorPassword
+    case twoFactorPasswordFailure
+}
+
 @Observable
 class LoginViewModel: TDLibViewModel {
-    var showTutorialView: Bool = false
-    var showPasswordView: Bool = false
-    var showFullscreenQR: Bool = false
-    var isValidatingPassword: Bool = false
     
-    var passwordModel: PasswordModel = .plain
-    var password: String = ""
+    var state: LoginViewModelState? = nil {
+        didSet {
+            self.onStateChange(oldValue: oldValue, newValue: state)
+        }
+    }
+    
+    var isLoading: Bool = true
+    var showFullscreenQR: Bool = false
     var qrCodeLink: String? = nil
-    var statusMessage: String = "Connecting..."
+    var lastInputCta: String? = nil
     
     let tutorialSteps = [
         "Open Telegram on your phone",
@@ -27,12 +43,35 @@ class LoginViewModel: TDLibViewModel {
         "Point your phone at the QR code to confirm login"
     ]
     
-    func didPressDemoButton() {
-        AppState.shared.isMock = true
-    }
-    
-    func didPressInfoButton() {
-        showTutorialView = true
+    func onStateChange(oldValue: LoginViewModelState?, newValue: LoginViewModelState?) {
+        
+        self.isLoading = false
+        
+        switch (oldValue, newValue) {
+            
+        case (.tutorial, .qrCodeLogin), // Tutorial dismissed, request new qrcode
+             (.twoFactorPassword, .qrCodeLogin), // Password dismissed, request new qrcode
+             (.twoFactorPasswordFailure, .qrCodeLogin): // Password failure dismissed, request new qrcode
+            // After logout authorizationStateWaitPhoneNumber update will be
+            // triggered and new qrcode will be requested
+            self.logout()
+            self.lastInputCta = nil
+            break
+        
+        case (.qrCodeLogin, .twoFactorPassword): // Qrcode used, not valid anymore
+            self.qrCodeLink = nil
+            break
+            
+        case (.tutorial, .phoneNumberLogin): // Request authorization via phone number
+            // Doing logout to invalide current authentication flow and start a new one
+            // After logout authorizationStateWaitPhoneNumber update will be triggered
+            self.logout()
+            break
+        
+        default:
+            break
+        }
+        
     }
     
     func didPressQR() {
@@ -41,10 +80,12 @@ class LoginViewModel: TDLibViewModel {
         }
     }
     
-    func didChangeShowPasswordValue(oldValue: Bool, newValue: Bool) {
-        if newValue == false {
-            LoginViewModel.logout()
-        }
+    func didPressInfoButton() {
+        self.state = .tutorial
+    }
+    
+    func didPressLoginButton() {
+        self.state = .phoneNumberLogin
     }
     
     // MARK: - TDLib
@@ -62,32 +103,43 @@ class LoginViewModel: TDLibViewModel {
         }
     }
     
-    override func connectionStateUpdate(state: ConnectionState) {
-        guard state == .connectionStateReady else { return }
-        DispatchQueue.main.async {
-            self.statusMessage = "Login with QR code"
-        }
-    }
-    
     func manageUpdateAuthorizationState(state: AuthorizationState) {
         
+        self.logger.log(state)
+        
         switch state {
-        case .authorizationStateWaitPhoneNumber:
-            self.getQrcodeLink()
-            break
-        case .authorizationStateWaitOtherDeviceConfirmation(let info):
-            DispatchQueue.main.async {
+            
+        case .authorizationStateWaitPhoneNumber: // Triggered at app start and after each logout
+            if self.state != .phoneNumberLogin {
+                withAnimation {
+                    self.isLoading = true
+                }
+                self.getQrcodeLink()
+            }
+            
+        case .authorizationStateWaitOtherDeviceConfirmation(let info): // Requested qrcode login, link available
+            Task { @MainActor in
+                withAnimation {
+                    self.state = .qrCodeLogin
+                }
                 self.qrCodeLink = info.link
             }
-            break
+         
         case .authorizationStateWaitPassword(_):
-            DispatchQueue.main.async {
-                self.qrCodeLink = nil
-                self.showPasswordView = true
+            Task { @MainActor in
+                withAnimation {
+                    self.state = .twoFactorPassword
+                }
             }
-            break
+        
+        case .authorizationStateWaitCode(_):
+            Task { @MainActor in
+                withAnimation {
+                    self.state = .authCode
+                }
+            }
+            
         default:
-            self.logger.log("Unmanaged state \(state)")
             break
         }
     }
@@ -104,36 +156,84 @@ class LoginViewModel: TDLibViewModel {
         }
     }
     
-    func validatePassword() {
+    func setPhoneNumber(_ phoneNumber: String) {
         
-        isValidatingPassword = true
-        passwordModel = .plain
+        // Demo
+        if phoneNumber == "999" {
+            LoginViewModel.logout()
+            AppState.shared.isMock = true
+            return
+        }
+        
+        self.isLoading = true
+        self.lastInputCta = phoneNumber
+        
+        Task {
+            do {
+                let result = try await TDLibManager.shared.client?.setAuthenticationPhoneNumber(
+                    phoneNumber: phoneNumber,
+                    settings: nil
+                )
+                
+                self.logger.log(result)
+                
+            } catch {
+                self.logger.log(error, level: .error)
+                guard let error = error as? TDLibKit.Error else { return }
+                if error.message == "PHONE_NUMBER_INVALID" {
+                    await MainActor.run {
+                        self.state = .phoneNumberLoginFailure
+                    }
+                }
+            }
+        }
+    }
+    
+    func validatePassword(_ password: String) {
+        
+        self.isLoading = true
         
         Task {
             do {
                 let result = try await TDLibManager.shared.client?.checkAuthenticationPassword(password: password)
                 self.logger.log(result)
                 
-                await MainActor.run {
-                    passwordModel = .plain
-                }
+                // Authenticated.. login will be dismissed by app
                 
             } catch {
                 self.logger.log(error, level: .error)
                 guard let error = error as? TDLibKit.Error else { return }
-                
                 if error.message == "PASSWORD_HASH_INVALID" {
                     await MainActor.run {
-                        self.password = ""
-                        passwordModel = .error
+                        self.state = .twoFactorPasswordFailure
                     }
                 }
             }
-            
-            await MainActor.run {
-                self.isValidatingPassword = false
+        }
+    }
+    
+    func validateAuthCode(_ code: String) {
+        
+        self.isLoading = true
+        self.lastInputCta = code
+        
+        Task {
+            do {
+                let result = try await TDLibManager.shared.client?.checkAuthenticationCode(code: code)
+                self.logger.log(result)
+                
+                // Authenticated (login will be dismissed by app) or password required
+                
+            } catch {
+                self.logger.log(error, level: .error)
+                guard let error = error as? TDLibKit.Error else { return }
+                if error.message == "PHONE_CODE_INVALID" {
+                    await MainActor.run {
+                        self.state = .authCodeFailure
+                    }
+                }
+                
             }
-            
         }
     }
     
@@ -143,6 +243,17 @@ class LoginViewModel: TDLibViewModel {
             let chatList = ChatList.chatListFolder(ChatListFolder(chatFolderId: chatFolderInfo.id))
             let folder = ChatFolder(title: chatFolderInfo.title, chatList: chatList)
             AppState.shared.insertFolder(folder)
+        }
+    }
+    
+    func logout() {
+        Task.detached {
+            do {
+                let result = try await TDLibManager.shared.client?.logOut()
+                self.logger.log(result)
+            } catch {
+                self.logger.log(error, level: .error)
+            }
         }
     }
     
@@ -186,6 +297,60 @@ class LoginViewModel: TDLibViewModel {
     
     static func setOfflineStatus() {
         setOnlineStatus(online: false)
+    }
+    
+    // MARK: Sheets Binding
+    
+    var showTutorial: Binding<Bool> {
+        .init(
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .tutorial
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                self.state = $0 ? .tutorial : .qrCodeLogin
+            }
+        )
+    }
+    
+    var showPassword: Binding<Bool> {
+        .init(
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .twoFactorPassword || self.state == .twoFactorPasswordFailure
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                if !$0 { self.state = .qrCodeLogin }
+            }
+        )
+    }
+    
+    var showPhoneNumber: Binding<Bool> {
+        .init(
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .phoneNumberLogin || self.state == .phoneNumberLoginFailure
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                if !$0 { self.state = .tutorial }
+            }
+       )
+    }
+    
+    var showCode: Binding<Bool> {
+        .init(
+            get: { [weak self] in
+                guard let self else { return false }
+                return self.state == .authCode || self.state == .authCodeFailure
+            },
+            set: { [weak self] in
+                guard let self else { return }
+                if !$0 { self.state = .phoneNumberLogin }
+            }
+        )
     }
     
 }

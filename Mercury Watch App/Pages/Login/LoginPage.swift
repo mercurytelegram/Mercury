@@ -16,7 +16,7 @@ struct LoginPage: View {
         NavigationStack {
             VStack {
                 QR()
-                Text(vm.statusMessage)
+                Text(vm.state == nil ? "Connecting..." : "Login with QR code")
                     .padding(.top)
                     .padding(.bottom, vm.showFullscreenQR ? 0 : -20)
             }
@@ -38,21 +38,28 @@ struct LoginPage: View {
                     .opacity(vm.showFullscreenQR ? 0 : 1)
                 }
             }
-            .sheet(
-                isPresented: $vm.showTutorialView,
-                content: tutorialView
-            )
-            .sheet(isPresented: $vm.showPasswordView) {
-                passwordView()
+            .loadable(isLoading: vm.isLoading)
+            .sheet(isPresented: vm.showPassword) {
+                InputCtaView(
+                    model: vm.state == .twoFactorPasswordFailure ? .passwordError : .password,
+                    onSubmit: vm.validatePassword
+                )
+                .loadable(isLoading: vm.isLoading)
             }
-        }
-        .onChange(
-            of: vm.showPasswordView,
-            vm.didChangeShowPasswordValue
-        )
-        .overlay {
-            if AppState.shared.isAuthenticated == nil {
-                loader()
+            .sheet(isPresented: vm.showTutorial, content: tutorialView)
+            .sheet(isPresented: vm.showPhoneNumber) {
+                InputCtaView(
+                    model: vm.state == .phoneNumberLoginFailure ? .phoneError(vm.lastInputCta) : .phone,
+                    onSubmit: vm.setPhoneNumber
+                )
+                .loadable(isLoading: vm.isLoading)
+            }
+            .sheet(isPresented: vm.showCode) {
+                InputCtaView(
+                    model: vm.state == .authCodeFailure ? .codeError(vm.lastInputCta) : .code,
+                    onSubmit: vm.validateAuthCode
+                )
+                .loadable(isLoading: vm.isLoading)
             }
         }
     }
@@ -75,38 +82,15 @@ struct LoginPage: View {
     func tutorialView() -> some View {
         ScrollView {
             StepView(steps: vm.tutorialSteps)
-            Divider()
-            Text("If you can't scan the QR code:")
+            TextDivider("or")
+            Text("if you can’t scan the QR code login with phone number")
+                .multilineTextAlignment(.center)
                 .foregroundStyle(.secondary)
                 .padding()
-            Button("Demo", action: vm.didPressDemoButton)
+            Button("Login", action: vm.didPressLoginButton)
         }
         .navigationTitle("Info")
         .scenePadding(.horizontal)
-    }
-    
-    @ViewBuilder
-    func passwordView() -> some View {
-        PasswordView(
-            password: $vm.password,
-            model: vm.passwordModel,
-            onSubmit: vm.validatePassword
-        )
-        .overlay {
-            if vm.isValidatingPassword {
-                loader()
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func loader() -> some View {
-        ZStack {
-            Rectangle()
-                .foregroundStyle(.thinMaterial)
-                .ignoresSafeArea(edges: .all)
-            ProgressView()
-        }
     }
     
     @ViewBuilder

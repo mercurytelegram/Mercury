@@ -17,10 +17,12 @@
 		9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */; };
 		9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */; };
 		9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */; };
+		9B190E622D56B19E0045D311 /* InputCtaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B190E612D56B19E0045D311 /* InputCtaView.swift */; };
 		9B2805CC2C4671C500F7DF72 /* TDImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CB2C4671C500F7DF72 /* TDImage+.swift */; };
 		9B2E1BE02C08739800B9B63D /* MessageBubbleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */; };
 		9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4451F92C45C63D00A6EBC2 /* User+.swift */; };
 		9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */; };
+		9B5600FF2D59D78D005E28F1 /* ScalingButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */; };
 		9B5EBE622CE5F16F00EDCCE3 /* FitStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */; };
 		9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */; };
 		9B8493E82C7623B700AC90E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* View+.swift */; };
@@ -29,6 +31,9 @@
 		9BAA75DD2CD4EE370007B4E2 /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */; };
 		9BAA75E12CD4F08A0007B4E2 /* sticker.tgs in Resources */ = {isa = PBXBuildFile; fileRef = 9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */; };
 		9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75E32CD4F1620007B4E2 /* Gzip */; };
+		9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */; };
+		9BB3BCB62D14379400CAFB31 /* KeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB52D14379400CAFB31 /* KeypadView.swift */; };
+		9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */; };
 		9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD9F9E32CDD044900833C48 /* AsyncView.swift */; };
 		9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF303552D3A70EB00309992 /* TextDivider.swift */; };
 		A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0054EA52BF3E12F009F2CEB /* TDLibKit */; };
@@ -46,6 +51,7 @@
 		A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE8592CCAB6EE003282B2 /* DSWaveformImage */; };
 		A06AE85C2CCAB6EE003282B2 /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */; };
 		A06AE85F2CCAB812003282B2 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */; };
+		A06AEA132D6B854E00EF8377 /* LoadableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */; };
 		A07438ED2BD10D2D00945CB5 /* Mercury Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07438F12BD10D2D00945CB5 /* MercuryApp.swift */; };
 		A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F52BD10D2F00945CB5 /* Assets.xcassets */; };
@@ -131,16 +137,21 @@
 		9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
 		9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreviewTrait+Mock.swift"; sourceTree = "<group>"; };
+		9B190E612D56B19E0045D311 /* InputCtaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputCtaView.swift; sourceTree = "<group>"; };
 		9B2805CB2C4671C500F7DF72 /* TDImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TDImage+.swift"; sourceTree = "<group>"; };
 		9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleShape.swift; sourceTree = "<group>"; };
 		9B4451F92C45C63D00A6EBC2 /* User+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+.swift"; sourceTree = "<group>"; };
 		9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
+		9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalingButtonStyle.swift; sourceTree = "<group>"; };
 		9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitStack.swift; sourceTree = "<group>"; };
 		9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFolder.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		9BA9A4F12CE798C5005C717C /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		9BA9A4F32CE79DB0005C717C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */ = {isa = PBXFileReference; lastKnownFileType = file; path = sticker.tgs; sourceTree = "<group>"; };
+		9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeKeypadView.swift; sourceTree = "<group>"; };
+		9BB3BCB52D14379400CAFB31 /* KeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadView.swift; sourceTree = "<group>"; };
+		9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneKeypadView.swift; sourceTree = "<group>"; };
 		9BD9F9E32CDD044900833C48 /* AsyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncView.swift; sourceTree = "<group>"; };
 		9BF303552D3A70EB00309992 /* TextDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDivider.swift; sourceTree = "<group>"; };
 		A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptionsSubpage.swift; sourceTree = "<group>"; };
@@ -152,6 +163,7 @@
 		A04ABE892CE0B99900641BC1 /* ChatListViewModel+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Updates.swift"; sourceTree = "<group>"; };
 		A04ABE8B2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Chats.swift"; sourceTree = "<group>"; };
 		A05C1AC42BECCF4B00724B6E /* Message+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+.swift"; sourceTree = "<group>"; };
+		A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableModifier.swift; sourceTree = "<group>"; };
 		A07438E62BD10D2D00945CB5 /* Mercury.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mercury.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mercury Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438F12BD10D2D00945CB5 /* MercuryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercuryApp.swift; sourceTree = "<group>"; };
@@ -228,6 +240,7 @@
 			children = (
 				9B0B6CBB2CD679A600BB6A94 /* StepView.swift */,
 				9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */,
+				9B190E612D56B19E0045D311 /* InputCtaView.swift */,
 				9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */,
 			);
 			path = Subviews;
@@ -251,6 +264,16 @@
 				9B8493E72C7623B700AC90E9 /* View+.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9BB3BCB22D14373D00CAFB31 /* Keypad */ = {
+			isa = PBXGroup;
+			children = (
+				9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */,
+				9BB3BCB52D14379400CAFB31 /* KeypadView.swift */,
+				9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */,
+			);
+			path = Keypad;
 			sourceTree = "<group>";
 		};
 		A04ABE4E2CE00EFD00641BC1 /* Subpages */ = {
@@ -453,6 +476,7 @@
 		A080D8BD2CD78CE600920564 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */,
 				A080D8BE2CD78CED00920564 /* AvatarView.swift */,
 				9BD9F9E32CDD044900833C48 /* AsyncView.swift */,
 				9BF303552D3A70EB00309992 /* TextDivider.swift */,
@@ -460,6 +484,8 @@
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
 				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
 				A0CDF94C2CE7D6060015E20E /* AlertView.swift */,
+				9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */,
+				9BB3BCB22D14373D00CAFB31 /* Keypad */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -651,6 +677,7 @@
 				A0CDF8C62CE7D4D70015E20E /* SendMessageService.swift in Sources */,
 				A080D8C82CDA239B00920564 /* MessageView.swift in Sources */,
 				9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */,
+				9B5600FF2D59D78D005E28F1 /* ScalingButtonStyle.swift in Sources */,
 				A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */,
 				9BA9A4F22CE798C5005C717C /* FlowLayout.swift in Sources */,
 				9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */,
@@ -687,6 +714,7 @@
 				A080D8DE2CDC051300920564 /* LocationView.swift in Sources */,
 				A080D8DA2CDAADEC00920564 /* ReplyView.swift in Sources */,
 				A080D8A52CD64B1700920564 /* ChatListPage.swift in Sources */,
+				9B190E622D56B19E0045D311 /* InputCtaView.swift in Sources */,
 				A080D8A62CD64B1700920564 /* HomePage.swift in Sources */,
 				A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */,
 				A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */,
@@ -703,8 +731,12 @@
 				A080D8E02CDC08FF00920564 /* PillView.swift in Sources */,
 				A080D8B82CD7843000920564 /* ChatCellView.swift in Sources */,
 				4A4743F22BF796DF00264855 /* Color+.swift in Sources */,
+				9BB3BCB62D14379400CAFB31 /* KeypadView.swift in Sources */,
 				9B0418F02CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift in Sources */,
+				9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */,
 				9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */,
+				A06AEA132D6B854E00EF8377 /* LoadableModifier.swift in Sources */,
+				9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */,
 				A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */,
 				A081AAD52C0721C2002A265C /* Chat+.swift in Sources */,
 			);
