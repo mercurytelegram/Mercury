@@ -38,25 +38,28 @@ struct LoginPage: View {
                     .opacity(vm.showFullscreenQR ? 0 : 1)
                 }
             }
+            .loadable(isLoading: vm.isLoading)
             .sheet(isPresented: vm.showPassword) {
                 InputCtaView(
                     model: vm.state == .twoFactorPasswordFailure ? .passwordError : .password,
                     onSubmit: vm.validatePassword
                 )
+                .loadable(isLoading: vm.isLoading)
             }
-            .sheet(isPresented: vm.showLoader, content: loader)
             .sheet(isPresented: vm.showTutorial, content: tutorialView)
             .sheet(isPresented: vm.showPhoneNumber) {
                 InputCtaView(
                     model: vm.state == .phoneNumberLoginFailure ? .phoneError(vm.lastInputCta) : .phone,
                     onSubmit: vm.setPhoneNumber
                 )
+                .loadable(isLoading: vm.isLoading)
             }
             .sheet(isPresented: vm.showCode) {
                 InputCtaView(
                     model: vm.state == .authCodeFailure ? .codeError(vm.lastInputCta) : .code,
                     onSubmit: vm.validateAuthCode
                 )
+                .loadable(isLoading: vm.isLoading)
             }
         }
     }
@@ -88,18 +91,6 @@ struct LoginPage: View {
         }
         .navigationTitle("Info")
         .scenePadding(.horizontal)
-    }
-    
-    @ViewBuilder
-    func loader() -> some View {
-        ZStack {
-            Rectangle()
-                .foregroundStyle(.thinMaterial)
-                .ignoresSafeArea(edges: .all)
-            ProgressView()
-        }
-        // Loader should not be dismissable
-        .toolbar(.hidden, for: .navigationBar)
     }
     
     @ViewBuilder

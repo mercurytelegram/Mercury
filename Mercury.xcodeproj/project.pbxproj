@@ -51,6 +51,7 @@
 		A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE8592CCAB6EE003282B2 /* DSWaveformImage */; };
 		A06AE85C2CCAB6EE003282B2 /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */; };
 		A06AE85F2CCAB812003282B2 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */; };
+		A06AEA132D6B854E00EF8377 /* LoadableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */; };
 		A07438ED2BD10D2D00945CB5 /* Mercury Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07438F12BD10D2D00945CB5 /* MercuryApp.swift */; };
 		A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F52BD10D2F00945CB5 /* Assets.xcassets */; };
@@ -162,6 +163,7 @@
 		A04ABE892CE0B99900641BC1 /* ChatListViewModel+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Updates.swift"; sourceTree = "<group>"; };
 		A04ABE8B2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Chats.swift"; sourceTree = "<group>"; };
 		A05C1AC42BECCF4B00724B6E /* Message+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+.swift"; sourceTree = "<group>"; };
+		A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableModifier.swift; sourceTree = "<group>"; };
 		A07438E62BD10D2D00945CB5 /* Mercury.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mercury.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mercury Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438F12BD10D2D00945CB5 /* MercuryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercuryApp.swift; sourceTree = "<group>"; };
@@ -474,6 +476,7 @@
 		A080D8BD2CD78CE600920564 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */,
 				A080D8BE2CD78CED00920564 /* AvatarView.swift */,
 				9BD9F9E32CDD044900833C48 /* AsyncView.swift */,
 				9BF303552D3A70EB00309992 /* TextDivider.swift */,
@@ -732,6 +735,7 @@
 				9B0418F02CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift in Sources */,
 				9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */,
 				9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */,
+				A06AEA132D6B854E00EF8377 /* LoadableModifier.swift in Sources */,
 				9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */,
 				A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */,
 				A081AAD52C0721C2002A265C /* Chat+.swift in Sources */,

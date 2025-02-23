@@ -10,8 +10,6 @@ import SwiftUI
 import TDLibKit
 
 enum LoginViewModelState {
-    case loading
-    
     case qrCodeLogin
     case tutorial
     
@@ -34,6 +32,7 @@ class LoginViewModel: TDLibViewModel {
         }
     }
     
+    var isLoading: Bool = true
     var showFullscreenQR: Bool = false
     var qrCodeLink: String? = nil
     var lastInputCta: String? = nil
@@ -46,11 +45,9 @@ class LoginViewModel: TDLibViewModel {
     
     func onStateChange(oldValue: LoginViewModelState?, newValue: LoginViewModelState?) {
         
-        switch (oldValue, newValue) {
+        self.isLoading = false
         
-        case (nil, .loading): // App just started, request qrcode authentication
-            self.getQrcodeLink()
-            break
+        switch (oldValue, newValue) {
             
         case (.tutorial, .qrCodeLogin), // Tutorial dismissed, request new qrcode
              (.twoFactorPassword, .qrCodeLogin), // Password dismissed, request new qrcode
@@ -106,14 +103,6 @@ class LoginViewModel: TDLibViewModel {
         }
     }
     
-    override func connectionStateUpdate(state: ConnectionState) {
-        self.logger.log(state)
-//        guard state == .connectionStateReady else { return }
-//        Task { @MainActor in
-//            self.state = .loading
-//        }
-    }
-    
     func manageUpdateAuthorizationState(state: AuthorizationState) {
         
         self.logger.log(state)
@@ -123,7 +112,7 @@ class LoginViewModel: TDLibViewModel {
         case .authorizationStateWaitPhoneNumber: // Triggered at app start and after each logout
             if self.state != .phoneNumberLogin {
                 withAnimation {
-                    self.state = .loading
+                    self.isLoading = true
                 }
                 self.getQrcodeLink()
             }
@@ -176,7 +165,7 @@ class LoginViewModel: TDLibViewModel {
             return
         }
         
-        self.state = .loading
+        self.isLoading = true
         self.lastInputCta = phoneNumber
         
         Task {
@@ -202,7 +191,7 @@ class LoginViewModel: TDLibViewModel {
     
     func validatePassword(_ password: String) {
         
-        self.state = .loading
+        self.isLoading = true
         
         Task {
             do {
@@ -225,7 +214,7 @@ class LoginViewModel: TDLibViewModel {
     
     func validateAuthCode(_ code: String) {
         
-        self.state = .loading
+        self.isLoading = true
         self.lastInputCta = code
         
         Task {
@@ -311,10 +300,6 @@ class LoginViewModel: TDLibViewModel {
     }
     
     // MARK: Sheets Binding
-    
-    var showLoader: Binding<Bool> {
-        .constant(self.state == .loading || AppState.shared.isAuthenticated == nil)
-    }
     
     var showTutorial: Binding<Bool> {
         .init(
