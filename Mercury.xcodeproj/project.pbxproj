@@ -21,8 +21,11 @@
 		9B2805CC2C4671C500F7DF72 /* TDImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CB2C4671C500F7DF72 /* TDImage+.swift */; };
 		9B2E1BE02C08739800B9B63D /* MessageBubbleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */; };
 		9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4451F92C45C63D00A6EBC2 /* User+.swift */; };
+		9B470C392D81BD8D008A03D3 /* InputMessageContent+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B470C382D81BD8D008A03D3 /* InputMessageContent+.swift */; };
 		9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */; };
 		9B5600FF2D59D78D005E28F1 /* ScalingButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */; };
+		9B5E558B2D8165590058964B /* StickersPickerSubpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5E558A2D8165590058964B /* StickersPickerSubpage.swift */; };
+		9B5E558E2D81657C0058964B /* StickersPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5E558D2D81657C0058964B /* StickersPickerViewModel.swift */; };
 		9B5EBE622CE5F16F00EDCCE3 /* FitStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */; };
 		9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */; };
 		9B8493E82C7623B700AC90E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* View+.swift */; };
@@ -141,8 +144,11 @@
 		9B2805CB2C4671C500F7DF72 /* TDImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TDImage+.swift"; sourceTree = "<group>"; };
 		9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleShape.swift; sourceTree = "<group>"; };
 		9B4451F92C45C63D00A6EBC2 /* User+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+.swift"; sourceTree = "<group>"; };
+		9B470C382D81BD8D008A03D3 /* InputMessageContent+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputMessageContent+.swift"; sourceTree = "<group>"; };
 		9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
 		9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalingButtonStyle.swift; sourceTree = "<group>"; };
+		9B5E558A2D8165590058964B /* StickersPickerSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersPickerSubpage.swift; sourceTree = "<group>"; };
+		9B5E558D2D81657C0058964B /* StickersPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersPickerViewModel.swift; sourceTree = "<group>"; };
 		9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitStack.swift; sourceTree = "<group>"; };
 		9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFolder.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
@@ -258,12 +264,22 @@
 				A081AAD42C0721C2002A265C /* Chat+.swift */,
 				A081AAD22C071C82002A265C /* ChatAction+.swift */,
 				A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */,
+				9B470C382D81BD8D008A03D3 /* InputMessageContent+.swift */,
 				4A4743F12BF796DF00264855 /* Color+.swift */,
 				9B4451F92C45C63D00A6EBC2 /* User+.swift */,
 				9B2805CB2C4671C500F7DF72 /* TDImage+.swift */,
 				9B8493E72C7623B700AC90E9 /* View+.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9B5E558C2D8165630058964B /* StickersPicker */ = {
+			isa = PBXGroup;
+			children = (
+				9B5E558A2D8165590058964B /* StickersPickerSubpage.swift */,
+				9B5E558D2D81657C0058964B /* StickersPickerViewModel.swift */,
+			);
+			path = StickersPicker;
 			sourceTree = "<group>";
 		};
 		9BB3BCB22D14373D00CAFB31 /* Keypad */ = {
@@ -385,6 +401,7 @@
 			children = (
 				A080D8B02CD64B6600920564 /* Subviews */,
 				A04ABE4E2CE00EFD00641BC1 /* Subpages */,
+				9B5E558C2D8165630058964B /* StickersPicker */,
 				A080D8922CD64B1700920564 /* ChatDetailPage.swift */,
 				A080D8932CD64B1700920564 /* ChatDetailViewModel.swift */,
 				A080D8F12CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift */,
@@ -684,6 +701,7 @@
 				A080D8D82CDA996F00920564 /* ReactionView.swift in Sources */,
 				9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */,
 				A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */,
+				9B5E558B2D8165590058964B /* StickersPickerSubpage.swift in Sources */,
 				A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */,
 				A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */,
 				9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */,
@@ -713,6 +731,7 @@
 				A080D8A42CD64B1700920564 /* ChatDetailViewModel.swift in Sources */,
 				A080D8DE2CDC051300920564 /* LocationView.swift in Sources */,
 				A080D8DA2CDAADEC00920564 /* ReplyView.swift in Sources */,
+				9B470C392D81BD8D008A03D3 /* InputMessageContent+.swift in Sources */,
 				A080D8A52CD64B1700920564 /* ChatListPage.swift in Sources */,
 				9B190E622D56B19E0045D311 /* InputCtaView.swift in Sources */,
 				A080D8A62CD64B1700920564 /* HomePage.swift in Sources */,
@@ -722,6 +741,7 @@
 				A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */,
 				A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */,
 				4AE620222C09C6CF00722512 /* FormattedText+.swift in Sources */,
+				9B5E558E2D81657C0058964B /* StickersPickerViewModel.swift in Sources */,
 				9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */,
 				A0DF848A2CCB9A7500CC101E /* FileManager+.swift in Sources */,
 				A080D8F22CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift in Sources */,
