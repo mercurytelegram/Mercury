@@ -15,6 +15,7 @@ class ChatListViewModel: TDLibViewModel {
     var folder: ChatFolder
     
     var chats: [ChatCellModel] = []
+    var senders: [Int64:String] = [:]
     var isLoading: Bool = false
     var showNewMessage: Bool = false
     
@@ -97,6 +98,25 @@ class ChatListViewModel: TDLibViewModel {
             await MainActor.run {
                 self.chats = chatsModels
                 self.isLoading = false
+            }
+            
+            for chat in chatsData {
+                if chat.isGroup {
+                    guard let message = chat.lastMessage,
+                          let username = await message.senderId.username()
+                    else { return }
+                    
+                    var attributedUsername = AttributedString(username + ": ")
+                    attributedUsername.foregroundColor = .white
+                    let chatDescription = attributedUsername + message.description
+                    
+                    await MainActor.run {
+                        guard let index = self.chats.firstIndex(where: { $0.id == chat.id }) else { return }
+                        withAnimation {
+                            self.chats[index].messageStyle = .message(chatDescription)
+                        }
+                    }
+                }
             }
             
         }
