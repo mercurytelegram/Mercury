@@ -94,10 +94,6 @@ extension ChatListViewModel {
         let chatId = update.chatId
         let message = update.lastMessage
         
-        // If the chat does not belongs to the current folder, return
-        guard self.chats.contains(where: { $0.id == chatId })
-        else { return }
-        
         guard let message else { return }
         
         Task.detached {
@@ -105,6 +101,10 @@ extension ChatListViewModel {
             do {
                 
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
+                else { return }
+                
+                // If the chat does not belongs to the current folder, return
+                guard chat.positions.contains(where: { self.folder.chatList == $0.list })
                 else { return }
                 
                 // Update message time
@@ -120,11 +120,19 @@ extension ChatListViewModel {
                 }
                 
                 await MainActor.run { [desc] in
-                    let index = self.chats.firstIndex { c in c.id == chatId }
-                    guard let index, index != -1 else { return }
                     
-                    self.chats[index].messageStyle = .message(desc)
-                    self.chats[index].time = date.stringDescription
+                    let index = self.chats.firstIndex { c in c.id == chatId }
+                    
+                    if let index, index != -1 {
+                        // Chat already shown, update content
+                        self.chats[index].messageStyle = .message(desc)
+                        self.chats[index].time = date.stringDescription
+                        
+                    } else {
+                        // Chat not shown, add to chat list
+                        let model = self.chatCellModelFrom(chat)
+                        self.chats.append(model)
+                    }
                     
                     if let position = chat.positions.first(where: { $0.list == self.folder.chatList }) {
                         let positonUpdate = UpdateChatPosition(chatId: update.chatId, position: position)
@@ -171,17 +179,44 @@ extension ChatListViewModel {
         let chatId = update.chatId
         let position = update.position
         
-        let index = self.chats.firstIndex { c in c.id == chatId }
-        guard let index, index != -1 else { return }
+        // If the chat does not belongs to the current folder, return
+        guard position.list == self.folder.chatList
+        else { return }
         
-        withAnimation {
-            if position.order == 0 {
-                self.chats.remove(at: index)
-            } else {
-                self.chats[index].position = position.order.rawValue
-                self.chats = self.chats.sorted(by: chatSortingLogic)
+        let index = self.chats.firstIndex { c in c.id == chatId }
+        
+        if let index, index != -1 {
+            // Chat already shown, update position
+            withAnimation {
+                if position.order == 0 {
+                    self.chats.remove(at: index)
+                } else {
+                    self.chats[index].position = position.order.rawValue
+                    self.chats[index].isPinned = position.isPinned
+                    self.chats = self.chats.sorted(by: chatSortingLogic)
+                }
             }
+            
+        } else {
+            // Chat not shown, insert and update position
+            Task.detached(priority: .high) {
+                
+                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
+                else { return }
+                
+                let model = self.chatCellModelFrom(chat)
+                
+                await MainActor.run {
+                    withAnimation {
+                        self.chats.append(model)
+                        self.chats = self.chats.sorted(by: self.chatSortingLogic)
+                    }
+                }
+                
+            }
+
         }
+        
     }
     
     @MainActor
