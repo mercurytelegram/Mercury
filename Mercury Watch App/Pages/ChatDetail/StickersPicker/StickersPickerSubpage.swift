@@ -29,31 +29,45 @@ struct StickersPickerSubpage: View {
     
     var body: some View {
         ScrollView {
-            if vm.stickers.isEmpty {
-                ProgressView()
-                    .task {
-                        await vm.getStickers()
-                    }
-            }
             LazyVGrid(columns: columns, spacing: 3) {
-                ForEach(vm.stickers) { model in
-                    AsyncView(getData: model.getImage) {
-                        Text(model.sticker.emoji)
-                            .font(.largeTitle)
-                    } buildContent: { image in
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                    }
-                    .onTapGesture {
-                        vm.sendService?.sendSticker(model.sticker)
-                        isPresented = false
-                    }
+                ForEach(vm.recentStickers) { sticker in
+                    stickerCell(for: sticker)
                 }
-                
+            }
+            
+            if vm.isLoading {
+                ProgressView()
             }
         }
+        .task {
+            await vm.getStickers()
+        }
     }
+    
+    @ViewBuilder
+    func stickerCell(for model: StickerModel) -> some View {
+        AsyncView(getData: model.getImage) {
+            Text(model.sticker?.emoji ?? "")
+                .font(.largeTitle)
+        } buildContent: { image in
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+        }
+        .onTapGesture {
+            if let sticker = model.sticker {
+                vm.sendService?.sendSticker(sticker)
+            }
+            isPresented = false
+        }
+        .clipShape(.rect(cornerRadius: 7))
+        .padding(4)
+        .background {
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(.quaternary)
+        }
+    }
+
 }
 
 #Preview(traits: .mock()) {
