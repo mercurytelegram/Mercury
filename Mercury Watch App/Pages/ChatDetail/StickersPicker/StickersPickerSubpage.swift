@@ -35,6 +35,10 @@ struct StickersPickerSubpage: View {
                 }
             }
             
+            ForEach(vm.stickerPacks) { pack in
+                stickerPackCell(for: pack)
+            }
+            
             if vm.isLoading {
                 ProgressView()
             }
@@ -67,6 +71,31 @@ struct StickersPickerSubpage: View {
                 .foregroundStyle(.quaternary)
         }
     }
+    
+    @ViewBuilder
+    func stickerPackCell(for pack: StickerPackModel) -> some View {
+        HStack {
+            AsyncView(getData: pack.getThumbnail, buildContent: { image in
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+            })
+            .frame(width: 50, height: 50)
+            .clipShape(.rect(cornerRadius: 10))
+            
+            VStack(alignment: .leading) {
+                Text(pack.title)
+                    .font(.title3)
+                    .lineLimit(2)
+                Text("\(pack.size) stickers")
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.leading)
+        }
+        .padding(.vertical)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
 
 }
 
