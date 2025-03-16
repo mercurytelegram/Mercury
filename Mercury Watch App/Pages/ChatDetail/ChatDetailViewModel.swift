@@ -21,7 +21,13 @@ class ChatDetailViewModel: TDLibViewModel {
     var isLoadingMoreMessages: Bool = false
     
     var showAudioMessageView: Bool = false
-    var showStickersView: Bool = false
+    var showStickersView: Bool = false {
+        didSet {
+            if !showStickersView {
+                self.chatAction = nil
+            }
+        }
+    }
     var showOptionsView: Bool = false
     var showChatInfoView: Bool = false
     
