@@ -32,7 +32,7 @@ struct StickerModel: Identifiable {
 
 }
 
-struct StickerPackModel: Identifiable {
+struct StickerPackModel: Identifiable, Hashable {
     let id = UUID()
     var setId: TdInt64?
     var title: String
@@ -70,6 +70,15 @@ struct StickerPackModel: Identifiable {
         self.getThumbnail = getThumbnail
         self.setId = setId
     }
+    
+    static func == (lhs: StickerPackModel, rhs: StickerPackModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
 }
 
 

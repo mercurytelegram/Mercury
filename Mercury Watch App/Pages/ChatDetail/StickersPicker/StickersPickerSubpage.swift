@@ -15,7 +15,10 @@ struct StickersPickerSubpage: View {
     @Binding var isPresented: Bool
     
     let columns = [
-        GridItem(.adaptive(minimum: 60))
+        GridItem(.adaptive(minimum: 50)),
+        GridItem(.adaptive(minimum: 50)),
+        GridItem(.adaptive(minimum: 50))
+
     ]
     
     init(isPresented: Binding<Bool>, sendService: SendMessageService?) {
@@ -28,20 +31,33 @@ struct StickersPickerSubpage: View {
     
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 3) {
-                ForEach(vm.recentStickers) { sticker in
-                    stickerCell(for: sticker)
+        NavigationStack {
+            List {
+                LazyVGrid(columns: columns, spacing: 3) {
+                    ForEach(vm.recentStickers) { sticker in
+                        stickerCell(for: sticker)
+                    }
+                }
+                .padding(.horizontal, -10)
+                .padding(.bottom)
+                .listRowBackground(Color.clear)
+                
+                ForEach(vm.stickerPacks) { pack in
+                    NavigationLink(value: pack) {
+                        stickerPackCell(for: pack)
+                    }
+                }
+                
+                if vm.isLoading {
+                    ProgressView()
                 }
             }
-            
-            ForEach(vm.stickerPacks) { pack in
-                stickerPackCell(for: pack)
+            .navigationTitle("Stickers")
+            .toolbarForegroundStyle(.white, for: .navigationBar)
+            .navigationDestination(for: StickerPackModel.self) { pack in
+                stickerPackDetail(for: pack)
             }
-            
-            if vm.isLoading {
-                ProgressView()
-            }
+
         }
         .task {
             await vm.getStickers()
@@ -95,7 +111,17 @@ struct StickersPickerSubpage: View {
         .padding(.vertical)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
-
+    
+    @ViewBuilder
+    func stickerPackDetail(for pack: StickerPackModel) -> some View {
+        AsyncView(getData: pack.getThumbnail, buildContent: { image in
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+        })
+        .navigationTitle(pack.title)
+        .toolbarForegroundStyle(.white, for: .navigationBar)
+    }
 
 }
 
