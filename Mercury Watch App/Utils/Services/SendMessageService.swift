@@ -91,6 +91,26 @@ class SendMessageService {
         }
     }
     
+    func sendSticker(_ sticker: Sticker) {
+        Task.detached {
+            do {
+                let result = try await TDLibManager.shared.client?.sendMessage(
+                    chatId: self.chat?.id,
+                    inputMessageContent: .from(sticker: sticker),
+                    messageThreadId: nil,
+                    options: nil,
+                    replyMarkup: nil,
+                    replyTo: nil
+                )
+    
+                self.logger.log(result)
+    
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
     func sendReaction(_ emoji: String, chatId: Int64, messageId: Int64) {
         
         Task.detached {

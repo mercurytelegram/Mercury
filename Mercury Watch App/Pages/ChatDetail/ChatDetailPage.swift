@@ -76,7 +76,10 @@ struct ChatDetailPage: View {
             AlertView.inDevelopment("chat info is")
         }
         .sheet(isPresented: $vm.showStickersView) {
-            AlertView.inDevelopment("stickers are")
+            StickersPickerSubpage(
+                isPresented: $vm.showStickersView,
+                sendService: vm.sendService
+            )
         }
         .sheet(isPresented: $vm.showAudioMessageView) {
             if let sendService = vm.sendService {
