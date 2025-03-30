@@ -56,6 +56,8 @@
 		A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07438F12BD10D2D00945CB5 /* MercuryApp.swift */; };
 		A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F52BD10D2F00945CB5 /* Assets.xcassets */; };
 		A07438F92BD10D2F00945CB5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */; };
+		A078E5532D9950D500C92870 /* PaginatedLazyList.swift in Sources */ = {isa = PBXBuildFile; fileRef = A078E5522D9950D500C92870 /* PaginatedLazyList.swift */; };
+		A078E5552D9950DD00C92870 /* VisibilityDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A078E5542D9950D900C92870 /* VisibilityDetector.swift */; };
 		A07D48DF2CC93D9900DC34EF /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A07D48DE2CC93D9900DC34EF /* DSWaveformImage */; };
 		A07D48E12CC93D9900DC34EF /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A07D48E02CC93D9900DC34EF /* DSWaveformImageViews */; };
 		A080D88F2CD64A7C00920564 /* SecretService-sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D88C2CD64A7C00920564 /* SecretService-sample.swift */; };
@@ -169,6 +171,8 @@
 		A07438F12BD10D2D00945CB5 /* MercuryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercuryApp.swift; sourceTree = "<group>"; };
 		A07438F52BD10D2F00945CB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A078E5522D9950D500C92870 /* PaginatedLazyList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedLazyList.swift; sourceTree = "<group>"; };
+		A078E5542D9950D900C92870 /* VisibilityDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityDetector.swift; sourceTree = "<group>"; };
 		A080D88B2CD64A7C00920564 /* SecretService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretService.swift; sourceTree = "<group>"; };
 		A080D88C2CD64A7C00920564 /* SecretService-sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecretService-sample.swift"; sourceTree = "<group>"; };
 		A080D8922CD64B1700920564 /* ChatDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailPage.swift; sourceTree = "<group>"; };
@@ -355,6 +359,15 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		A078E5512D9950BB00C92870 /* PaginatedLazyList */ = {
+			isa = PBXGroup;
+			children = (
+				A078E5522D9950D500C92870 /* PaginatedLazyList.swift */,
+				A078E5542D9950D900C92870 /* VisibilityDetector.swift */,
+			);
+			path = PaginatedLazyList;
+			sourceTree = "<group>";
+		};
 		A080D88D2CD64A7C00920564 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -476,6 +489,7 @@
 		A080D8BD2CD78CE600920564 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A078E5512D9950BB00C92870 /* PaginatedLazyList */,
 				A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */,
 				A080D8BE2CD78CED00920564 /* AvatarView.swift */,
 				9BD9F9E32CDD044900833C48 /* AsyncView.swift */,
@@ -687,6 +701,7 @@
 				A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */,
 				A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */,
 				9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */,
+				A078E5532D9950D500C92870 /* PaginatedLazyList.swift in Sources */,
 				9B2805CC2C4671C500F7DF72 /* TDImage+.swift in Sources */,
 				A081AAD32C071C82002A265C /* ChatAction+.swift in Sources */,
 				A080D88F2CD64A7C00920564 /* SecretService-sample.swift in Sources */,
@@ -719,6 +734,7 @@
 				A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */,
 				A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */,
 				A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */,
+				A078E5552D9950DD00C92870 /* VisibilityDetector.swift in Sources */,
 				A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */,
 				A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */,
 				4AE620222C09C6CF00722512 /* FormattedText+.swift in Sources */,
