@@ -102,9 +102,9 @@ struct ChatDetailPage: View {
                 
                 ForEach(vm.messages) { message in
                     messageCell(message)
-//                        .onAppear {
-//                            vm.onMessageAppear(message)
-//                        }
+                        .onAppear {
+                            vm.onMessageAppear(message)
+                        }
                 }
                 .onAppear { vm.onMessageListAppear(proxy) }
                 .padding(.vertical, 2)

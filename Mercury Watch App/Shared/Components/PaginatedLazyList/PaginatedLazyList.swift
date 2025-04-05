@@ -52,28 +52,13 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
             LazyVStack {
                 ForEach(items) { item in
                     cell(item)
+                        .id(item.id)
                         .visibilityDetector(
                             value: item,
                             shouldCheckDebounce: hasScrolled,
                             onAppear: { visibleItems.insert($0) },
                             onDisappear: { visibleItems.remove($0) }
                         )
-                        .overlay {
-                            if item.id == items.last?.id || item.id == items.first?.id {
-                                Rectangle()
-                                    .fill(.red)
-                                    .opacity(0.5)
-                            }
-                        }
-                        .overlay {
-                            if item.id == firstVisibleItemId {
-                                Rectangle()
-                                    .fill(.green)
-                                    .opacity(0.5)
-                            }
-                        }
-                        .id(item.id)
-                    
                 }
             }
             .onChange(of: visibleItems, onVisibleItemChange)
