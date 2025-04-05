@@ -14,6 +14,7 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
     @State private var items: [Item] = []
     @State private var scrollPosition: Item.ID? = nil
     @State private var hasScrolled = false
+    @State private var hasStartedScrolled = false
     @State private var visibleItems: Set<Item> = []
     
     @State private var fetchItems: [Item]? = nil
@@ -22,7 +23,7 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
     
     @ViewBuilder let cell: (Item) -> Content
     
-    @State var firstVisibleItemIndex: Int?
+    @State var firstVisibleItemId: Item.ID?
     let fetchOffset: Int
     let onVisibleItemsChange: ((Set<Item>) -> Void)?
     let fetchBackwardItems: (Item) async -> [Item]
@@ -30,7 +31,7 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
     
     init(
         initialItems: [Item],
-        firstVisibleItemIndex: Int? = nil,
+        firstVisibleItemId: Item.ID? = nil,
         fetchOffset: Int = 0,
         fetchBackwardItems: @escaping (Item) async -> [Item],
         fetchForwardItems: @escaping (Item) async -> [Item],
@@ -38,7 +39,7 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
         cell: @escaping (Item) -> Content)
     {
         self.items = initialItems
-        self.firstVisibleItemIndex = firstVisibleItemIndex
+        self.firstVisibleItemId = firstVisibleItemId
         self.onVisibleItemsChange = onVisibleItemsChange
         self.fetchOffset = fetchOffset
         self.fetchBackwardItems = fetchBackwardItems
@@ -51,13 +52,28 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
             LazyVStack {
                 ForEach(items) { item in
                     cell(item)
-                        .id(item.id)
                         .visibilityDetector(
                             value: item,
                             shouldCheckDebounce: hasScrolled,
                             onAppear: { visibleItems.insert($0) },
                             onDisappear: { visibleItems.remove($0) }
                         )
+                        .overlay {
+                            if item.id == items.last?.id || item.id == items.first?.id {
+                                Rectangle()
+                                    .fill(.red)
+                                    .opacity(0.5)
+                            }
+                        }
+                        .overlay {
+                            if item.id == firstVisibleItemId {
+                                Rectangle()
+                                    .fill(.green)
+                                    .opacity(0.5)
+                            }
+                        }
+                        .id(item.id)
+                    
                 }
             }
             .onChange(of: visibleItems, onVisibleItemChange)
@@ -74,10 +90,13 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
         })
         .scrollPosition(id: $scrollPosition, anchor: .top)
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now()+0.01) {
-                if let index = firstVisibleItemIndex, items.indices.contains(index) {
-                    scrollPosition = items[index].id
+            DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
+                if let firstVisibleItemId {
+                    scrollPosition = firstVisibleItemId
+                } else {
+                    scrollPosition = items.last?.id
                 }
+                hasStartedScrolled = true
             }
         }
     }
@@ -87,12 +106,11 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
         var delta = newValue.subtracting(oldValue)
 
         // First iteration after the firstVisibleItemIndex scroll
-        if let index = firstVisibleItemIndex,
-            items.indices.contains(index),
-            visibleItems.contains(where: { $0.id == items[index].id })
+        if hasStartedScrolled, let firstVisibleItemId,
+            visibleItems.contains(where: { $0.id == firstVisibleItemId })
         {
             hasScrolled = true
-            firstVisibleItemIndex = nil
+            self.firstVisibleItemId = nil
             delta = newValue
         }
         
@@ -105,11 +123,15 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
         if items.indices.contains(forwardFetchPivot)
             && delta.contains(where: { $0 == items[forwardFetchPivot] })
             && !isFetching {
-            Task.detached {
+            Task.detached { [items] in
                 await MainActor.run { self.isFetching = true }
-                let newItems = await self.fetchForwardItems(items[forwardFetchPivot])
-                await MainActor.run {
-                    items.append(contentsOf: newItems)
+                var newItems = await self.fetchForwardItems(items[forwardFetchPivot])
+                for item in items {
+                    newItems.removeAll(where: { $0.id == item.id })
+                }
+                
+                await MainActor.run { [newItems] in
+                    self.items.append(contentsOf: newItems)
                     self.isFetching = false
                 }
             }
@@ -119,13 +141,17 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
         if items.indices.contains(backwardFetchPivot)
             && delta.contains(where: { $0 == items[backwardFetchPivot] })
             && !isFetching {
-            Task.detached {
+            Task.detached { [items] in
                 await MainActor.run { self.isFetching = true }
-                let newItems = await self.fetchBackwardItems(items[backwardFetchPivot])
-                await MainActor.run {
+                var newItems = await self.fetchBackwardItems(items[backwardFetchPivot])
+                for item in items {
+                    newItems.removeAll(where: { $0.id == item.id })
+                }
+                
+                await MainActor.run { [newItems] in
                     self.fetchItems = newItems
                     if !isScrolling {
-                        items.insert(contentsOf: newItems, at: 0)
+                        self.items.insert(contentsOf: newItems, at: 0)
                         self.fetchItems = nil
                         self.isFetching = false
                     }
@@ -152,7 +178,7 @@ struct PaginatedLazyList_Preview: PreviewProvider {
     static var previews: some View {
         PaginatedLazyList(
             initialItems: initialItems,
-            firstVisibleItemIndex: 30,
+            firstVisibleItemId: initialItems[30].id,
             fetchOffset: 2,
             fetchBackwardItems: {
                 print("fetch backward for pivot: \($0.text)")
@@ -184,9 +210,6 @@ struct PaginatedLazyList_Preview: PreviewProvider {
     
     @ViewBuilder
     static func cell(item: PaginatedLazyListPreviewModel) -> some View {
-        
-        let index = abs(Int(item.text) ?? 0)
-        
         HStack {
             Image(systemName: "globe")
                 .imageScale(.large)
