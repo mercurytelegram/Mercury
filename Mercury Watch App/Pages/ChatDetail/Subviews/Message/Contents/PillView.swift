@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PillView: View {
     var title: String? = nil
-    let description: LocalizedStringKey
+    let description: String
     
     var body: some View {
         VStack {
@@ -18,7 +18,7 @@ struct PillView: View {
                     Text(title)
                         .bold()
                 }
-                Text(description)
+                Text(LocalizedStringKey(description))
             }
             .multilineTextAlignment(.center)
             .font(.footnote)

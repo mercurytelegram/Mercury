@@ -46,9 +46,13 @@ struct AsyncImageModel {
     let getImage: () async throws -> UIImage?
 }
 
-extension AsyncImageModel: Equatable {
+extension AsyncImageModel: Equatable, Hashable {
     static func == (lhs: AsyncImageModel, rhs: AsyncImageModel) -> Bool {
         return lhs.thumbnail == rhs.thumbnail
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(thumbnail)
     }
 }
 

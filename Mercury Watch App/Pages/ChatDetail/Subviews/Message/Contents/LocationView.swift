@@ -31,12 +31,28 @@ struct LocationView: View {
     }
 }
 
-struct LocationModel {
+struct LocationModel: Equatable, Hashable {
     var title: String = ""
     var coordinate: CLLocationCoordinate2D
     var color: Color?
     var markerSymbol: String = "mapin"
     var shiftCenter: Bool = false
+    
+    static func == (lhs: LocationModel, rhs: LocationModel) -> Bool {
+        return lhs.title == rhs.title &&
+        lhs.coordinate.latitude == rhs.coordinate.latitude &&
+        lhs.coordinate.longitude == rhs.coordinate.longitude &&
+        lhs.markerSymbol == rhs.markerSymbol &&
+        lhs.shiftCenter == rhs.shiftCenter
+    }
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(title)
+            hasher.combine(coordinate.latitude)
+            hasher.combine(coordinate.longitude)
+            hasher.combine(markerSymbol)
+            hasher.combine(shiftCenter)
+        }
 }
 
 #Preview {

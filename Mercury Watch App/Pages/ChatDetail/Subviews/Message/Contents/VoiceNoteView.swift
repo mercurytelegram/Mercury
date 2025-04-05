@@ -195,10 +195,20 @@ struct VoiceNoteView: View {
     }
 }
 
-struct VoiceNoteModel {
+struct VoiceNoteModel: Equatable, Hashable {
+    let id = UUID()
     var isListened: Bool = false
     var getPlayer: () async throws -> PlayerService?
     var onPress: (() -> Void)?
+    
+    static func == (lhs: VoiceNoteModel, rhs: VoiceNoteModel) -> Bool {
+        return lhs.id == rhs.id && lhs.isListened == rhs.isListened
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(isListened)
+    }
 }
 
 #Preview("Listened") {

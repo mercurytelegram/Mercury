@@ -34,7 +34,7 @@ struct ReplyView: View {
     }
 }
 
-struct ReplyModel {
+struct ReplyModel: Equatable, Hashable {
     var color: Color
     var title: String
     var text: AttributedString
