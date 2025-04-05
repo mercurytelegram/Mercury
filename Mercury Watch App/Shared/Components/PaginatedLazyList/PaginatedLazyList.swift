@@ -50,6 +50,11 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
     var body: some View {
         ScrollView {
             LazyVStack {
+                
+                if isFetching {
+                    ProgressView()
+                }
+                
                 ForEach(items) { item in
                     cell(item)
                         .id(item.id)
@@ -60,6 +65,11 @@ struct PaginatedLazyList<Item: Identifiable & Equatable & Hashable, Content: Vie
                             onDisappear: { visibleItems.remove($0) }
                         )
                 }
+                
+                if isFetching {
+                    ProgressView()
+                }
+                
             }
             .onChange(of: visibleItems, onVisibleItemChange)
             .geometryGroup()
