@@ -17,7 +17,7 @@ extension ChatDetailViewModel {
     func requestMessages(
         fromId: Int64? = nil,
         direction: RequestMessageDirection,
-        quantity: Int = 4
+        quantity: Int = 5
     ) async -> [MessageModel] {
         
         var offset: Int {
