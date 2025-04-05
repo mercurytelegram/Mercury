@@ -16,7 +16,10 @@ extension ChatDetailViewModel {
         
         Task.detached {
             let lastMessage = self.messages.first
-            let newMessages = await self.requestMessages(fromId: lastMessage?.id)
+            let newMessages = await self.requestMessages(
+                fromId: lastMessage?.id,
+                direction: .backward
+            )
             
             await MainActor.run {
                 
@@ -69,21 +72,13 @@ extension ChatDetailViewModel {
         showOptionsView = true
     }
     
+    /// Use only on old message list (previous to watchOS 11)
     func onMessageListAppear(_ proxy: ScrollViewProxy) {
-        #warning("disabling automatic scroll until future development")
-        return
-        guard let lastReadInboxMessageId else { return }
+        guard let messageToReadId else { return }
         
         // Scroll to the first unread message
-        for message in messages {
-            
-            if case .pill(_,_) = message.content { continue }
-            
-            if message.id >= lastReadInboxMessageId {
-                proxy.scrollTo(message.id)
-                break
-            }
-        }
+        proxy.scrollTo(messageToReadId)
+        self.messageToReadId = nil
     }
     
     func onOpenChat() {

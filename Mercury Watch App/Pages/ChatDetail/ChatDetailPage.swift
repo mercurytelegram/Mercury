@@ -22,56 +22,42 @@ struct ChatDetailPage: View {
     
     var body: some View {
         
-        ScrollViewReader { proxy in
-            
-            Group {
-                if vm.isLoadingInitialMessages {
-                    ProgressView()
+        Group {
+            if vm.isLoadingInitialMessages {
+                ProgressView()
+            } else {
+                if #available(watchOS 11.0, *) {
+                    messageLazyList()
                 } else {
-                    ScrollView {
-                        
-                        if vm.isLoadingMoreMessages {
-                            ProgressView()
-                        } else {
-                            Button("Load more") {
-                                vm.onPressLoadMore(proxy)
-                            }
-                        }
-                        
-                        messageList()
-                            .onAppear { vm.onMessageListAppear(proxy) }
-                            .padding(.vertical, 2)
-                        
-                    }
-                    .defaultScrollAnchor(.bottom)
+                    messageList()
                 }
             }
-            .toolbar {
-                
-                if let avatar = vm.avatar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        AvatarView(model: avatar)
-                            .onTapGesture {
-                                vm.onPressAvatar()
-                            }
-                    }
-                }
-                
-                ToolbarItemGroup(placement: .bottomBar) {
-                    toolbarActions()
-                }
-            }
-            .containerBackground(for: .navigation) {
-                background()
-            }
-            .navigationTitle {
-                Text(vm.chatName ?? "")
-                    .foregroundStyle(.white)
-            }
-            .toolbarForegroundStyle(.white, for: .navigationBar)
-            .onAppear(perform: vm.onOpenChat)
-            .onDisappear(perform: vm.onCloseChat)
         }
+        .toolbar {
+            
+            if let avatar = vm.avatar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    AvatarView(model: avatar)
+                        .onTapGesture {
+                            vm.onPressAvatar()
+                        }
+                }
+            }
+            
+            ToolbarItemGroup(placement: .bottomBar) {
+                toolbarActions()
+            }
+        }
+        .containerBackground(for: .navigation) {
+            background()
+        }
+        .navigationTitle {
+            Text(vm.chatName ?? "")
+                .foregroundStyle(.white)
+        }
+        .toolbarForegroundStyle(.white, for: .navigationBar)
+        .onAppear(perform: vm.onOpenChat)
+        .onDisappear(perform: vm.onCloseChat)
         .sheet(isPresented: $vm.showChatInfoView) {
             AlertView.inDevelopment("chat info is")
         }
@@ -103,21 +89,57 @@ struct ChatDetailPage: View {
     
     @ViewBuilder
     func messageList() -> some View {
-        ForEach(vm.messages) { message in
-            MessageView(model: message)
-                .id(message.id)
-                .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
-                    content
-                        .scaleEffect(phase.isIdentity ? 1 : 0.7)
-                        .opacity(phase.isIdentity ? 1 : 0)
+        ScrollViewReader { proxy in
+            ScrollView {
+                
+                if vm.isLoadingMoreMessages {
+                    ProgressView()
+                } else {
+                    Button("Load more") {
+                        vm.onPressLoadMore(proxy)
+                    }
                 }
-                .onAppear {
-                    vm.onMessageAppear(message)
+                
+                ForEach(vm.messages) { message in
+                    messageCell(message)
+//                        .onAppear {
+//                            vm.onMessageAppear(message)
+//                        }
                 }
-                .onTapGesture(count: 2) {
-                    vm.onDublePressOf(message)
-                }
+                .onAppear { vm.onMessageListAppear(proxy) }
+                .padding(.vertical, 2)
+                
+            }
+            .defaultScrollAnchor(.bottom)
         }
+    }
+    
+    @ViewBuilder
+    @available(watchOS 11.0, *)
+    func messageLazyList() -> some View {
+        PaginatedLazyList(
+            initialItems: vm.messages,
+            firstVisibleItemId: vm.messageToReadId,
+            fetchOffset: 1,
+            fetchBackwardItems: vm.fetchBackwardMessages,
+            fetchForwardItems: vm.fetchForwardMessage,
+            onVisibleItemsChange: vm.onMessagesAppear,
+            cell: messageCell
+        )
+    }
+    
+    @ViewBuilder
+    func messageCell(_ message: MessageModel) -> some View {
+        MessageView(model: message)
+            .id(message.id)
+            .scrollTransition(.animated.threshold(.visible(0.2))) { content, phase in
+                content
+                    .scaleEffect(phase.isIdentity ? 1 : 0.7)
+                    .opacity(phase.isIdentity ? 1 : 0)
+            }
+            .onTapGesture(count: 2) {
+                vm.onDublePressOf(message)
+            }
     }
     
     @ViewBuilder

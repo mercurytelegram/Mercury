@@ -10,17 +10,36 @@ import TDLibKit
 
 extension ChatDetailViewModel {
     
-    func requestMessages(fromId: Int64? = nil, firstBatch: Bool = false, limit: Int = 10) async -> [MessageModel] {
+    enum RequestMessageDirection {
+        case forward, backward, all
+    }
+    
+    func requestMessages(
+        fromId: Int64? = nil,
+        direction: RequestMessageDirection,
+        quantity: Int = 4
+    ) async -> [MessageModel] {
         
-        self.logger.log("Loading \(limit) \(firstBatch ? "initial" : "more") messages")
+        var offset: Int {
+            switch direction {
+            case .forward:
+                -quantity
+            case .backward:
+                0
+            case .all:
+                -Int(quantity/2)
+            }
+        }
+        
+        self.logger.log("Loading \(quantity) \(direction) messages")
         
         do {
             
             let result = try await TDLibManager.shared.client?.getChatHistory(
                 chatId: self.chatId,
                 fromMessageId: fromId,
-                limit: limit,
-                offset: 0,
+                limit: quantity,
+                offset: offset,
                 onlyLocal: false
             )
             
@@ -31,26 +50,22 @@ extension ChatDetailViewModel {
                 newMessages.append(await self.messageModelFrom(msg))
             }
             
-            if newMessages.count == 1 && firstBatch {
-                newMessages += await self.requestMessages(fromId: newMessages.first?.id)
-            }
-            
             // Add date pill between messages
-            for (index, msg) in newMessages.enumerated() {
-                
-                guard index + 1 < newMessages.count else { continue }
-                
-                // check if the next message is from a different day
-                let nextDate = newMessages[index + 1].date
-                let currentDate = msg.date
-                if !Calendar.current.isDate(nextDate, inSameDayAs: currentDate) {
-                    newMessages.insert(
-                        await self.dateSeparatorFor(currentDate),
-                        at: index + 1
-                    )
-                }
-                
-            }
+            // TODO: move this logics into message cell
+//            for (index, msg) in newMessages.enumerated() {
+//                
+//                guard index + 1 < newMessages.count else { continue }
+//                
+//                // check if the next message is from a different day
+//                let nextDate = newMessages[index + 1].date
+//                let currentDate = msg.date
+//                if !Calendar.current.isDate(nextDate, inSameDayAs: currentDate) {
+//                    newMessages.insert(
+//                        await self.dateSeparatorFor(currentDate),
+//                        at: index + 1
+//                    )
+//                }
+//            }
             
             return newMessages
             
@@ -59,6 +74,18 @@ extension ChatDetailViewModel {
             return []
         }
         
+    }
+    
+    func fetchBackwardMessages(_ message: MessageModel) async -> [MessageModel] {
+        return (await self.requestMessages(fromId: message.id, direction: .backward)).reversed()
+    }
+    
+    func fetchForwardMessage(_ message: MessageModel) async -> [MessageModel] {
+        return (await self.requestMessages(fromId: message.id, direction: .forward)).reversed()
+    }
+    
+    func onMessagesAppear(_ messages: Set<MessageModel>) {
+        for msg in messages { self.onMessageAppear(msg) }
     }
     
     func messageModelFrom(_ message: Message) async -> MessageModel {
@@ -87,10 +114,9 @@ extension ChatDetailViewModel {
     }
     
     func dateSeparatorFor(_ currentDate: Foundation.Date) async -> MessageModel {
-        let dateString = LocalizedStringKey(currentDate.dayDescription)
         let content = MessageModel.MessageContent.pill(
             title: nil,
-            description: dateString
+            description: currentDate.dayDescription
         )
         
         return MessageModel(
@@ -109,15 +135,13 @@ extension ChatDetailViewModel {
         // if message has been already shown, update it by removing the old one
         self.messages.removeAll(where: { $0.id == message.id })
         
-        withAnimation {
-            switch at {
-            case .first:
-                self.messages.insert(message, at: 0)
-            case .last:
-                self.messages.append(message)
-            case .index(let value):
-                self.messages.insert(message, at: value)
-            }
+        switch at {
+        case .first:
+            self.messages.insert(message, at: 0)
+        case .last:
+            self.messages.append(message)
+        case .index(let value):
+            self.messages.insert(message, at: value)
         }
     }
     

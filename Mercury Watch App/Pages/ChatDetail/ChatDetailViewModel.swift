@@ -34,10 +34,11 @@ class ChatDetailViewModel: TDLibViewModel {
     var avatar: AvatarModel?
     
     var sendService: SendMessageService?
-    var lastReadInboxMessageId: Int64?
     
     var chatAction: ChatAction?
     var chatActionTimer: Timer?
+    
+    var messageToReadId: Int64? = nil
     
     init(chatId: Int64) {
         self.chatId = chatId
@@ -52,7 +53,7 @@ class ChatDetailViewModel: TDLibViewModel {
             }
         )
         
-        self.loadChatData()
+        self.loadInitialChatData()
     }
     
     deinit {
@@ -60,7 +61,7 @@ class ChatDetailViewModel: TDLibViewModel {
         chatActionTimer = nil
     }
     
-    func loadChatData() {
+    func loadInitialChatData() {
         
         self.isLoadingInitialMessages = true
         
@@ -70,25 +71,41 @@ class ChatDetailViewModel: TDLibViewModel {
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: self.chatId)
                 else { return }
                 
+                let lastReadMessageId: Int64? = chat.lastReadInboxMessageId
+                
                 await MainActor.run {
                     self.sendService = SendMessageService(chat: chat)
                     self.chatName = chat.title
                     self.canSendVoiceNotes = chat.permissions.canSendVoiceNotes
                     self.canSendText = chat.permissions.canSendBasicMessages
                     self.canSendStickers = chat.permissions.canSendOtherMessages
-                    self.lastReadInboxMessageId = chat.lastReadInboxMessageId
                     self.avatar = chat.toAvatarModel()
                 }
                 
-                let newMessages = await self.requestMessages(firstBatch: true)
-                await MainActor.run {
-                    for msg in newMessages {
+                let firstBatchMessages = await self.requestMessages(
+                    fromId: lastReadMessageId,
+                    direction: .all
+                )
+                
+                await MainActor.run { [lastReadMessageId] in
+                    for msg in firstBatchMessages {
                         self.insertMessage(at: .first, message: msg)
                     }
                     
                     withAnimation {
                         self.isLoadingInitialMessages = false
                     }
+                    
+                    // Calculate the id of the first unread message 
+                    for message in self.messages {
+                        if let lastRead = lastReadMessageId,
+                           self.messageToReadId == nil,
+                           message.id > lastRead {
+                            self.messageToReadId = message.id
+                            break
+                        }
+                    }
+                    
                 }
                 
             } catch {
@@ -158,7 +175,7 @@ class ChatDetailViewModelMock: ChatDetailViewModel {
         avatar = .astro
     }
     
-    override func loadChatData() {
+    override func loadInitialChatData() {
         self.messages = [
             .init(
                 id: 0,
