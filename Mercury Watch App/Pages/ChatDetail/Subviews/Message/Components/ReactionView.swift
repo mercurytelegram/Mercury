@@ -85,12 +85,15 @@ struct ReactionView: View {
     }
     
     func loadUserImages() async {
+        var userImages = [AsyncImageModel]()
+
         for userId in reaction.recentUsers {
             guard let user = try? await TDLibManager.shared.client?.getUser(userId: userId) else { return }
             guard let photo = user.toAvatarModel().avatarImage else { return }
-            await MainActor.run {
-                images.append(photo)
-            }
+            userImages.append(photo)
+        }
+        await MainActor.run {
+            images = userImages
         }
     }
 }
