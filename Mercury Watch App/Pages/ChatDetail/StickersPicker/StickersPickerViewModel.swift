@@ -11,7 +11,7 @@ import Foundation
 import TDLibKit
 import SDWebImageWebPCoder
 
-struct StickerModel: Identifiable {
+struct StickerModel: Identifiable, Hashable {
     let id = UUID()
     var sticker: Sticker?
     var getImage: () async -> UIImage?
@@ -29,6 +29,14 @@ struct StickerModel: Identifiable {
     init(getImage: @escaping () async -> UIImage?) {
         self.getImage = getImage
     }
+    
+    static func == (lhs: StickerModel, rhs: StickerModel) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 
 }
 
@@ -43,8 +51,8 @@ struct StickerPackModel: Identifiable, Hashable {
     init(set: StickerSetInfo) {
         self.title = set.title
         self.setId = set.id
-        self.stickers = []
         self.size = set.size
+        self.stickers = set.covers.map { StickerModel(sticker: $0) }
         
         self.getThumbnail = {
             // get thumbnail
@@ -72,11 +80,12 @@ struct StickerPackModel: Identifiable, Hashable {
     }
     
     static func == (lhs: StickerPackModel, rhs: StickerPackModel) -> Bool {
-        lhs.id == rhs.id
+        lhs.id == rhs.id && lhs.stickers == rhs.stickers
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+        hasher.combine(stickers)
     }
 
 }
@@ -114,6 +123,19 @@ class StickersPickerViewModel {
                     self.isLoading = false
                 }
             }
+        }
+    }
+    
+    func loadStickerPack(_ pack: StickerPackModel) async {
+        guard pack.stickers.count != pack.size,
+              let id = pack.setId,
+              let set = try? await TDLibManager.shared.client?.getStickerSet(setId: id),
+              let packIndex = self.stickerPacks.firstIndex(where: { $0.setId == id })
+        else { return }
+        
+        let stickers = set.stickers.map{ StickerModel(sticker: $0) }
+        await MainActor.run {
+            self.stickerPacks[packIndex].stickers = stickers
         }
     }
 }

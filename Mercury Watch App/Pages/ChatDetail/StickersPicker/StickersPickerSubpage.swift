@@ -55,7 +55,8 @@ struct StickersPickerSubpage: View {
             .navigationTitle("Stickers")
             .toolbarForegroundStyle(.white, for: .navigationBar)
             .navigationDestination(for: StickerPackModel.self) { pack in
-                stickerPackDetail(for: pack)
+                let updatedPack = vm.stickerPacks.first(where: { $0.id == pack.id })!
+                stickerPackDetail(for: updatedPack)
             }
 
         }
@@ -73,6 +74,8 @@ struct StickersPickerSubpage: View {
             Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
+                .transition(.blurReplace)
+                .clipped()
         }
         .onTapGesture {
             if let sticker = model.sticker {
@@ -95,6 +98,8 @@ struct StickersPickerSubpage: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+                    .transition(.blurReplace)
+                    .clipped()
             })
             .frame(width: 50, height: 50)
             .clipShape(.rect(cornerRadius: 10))
@@ -114,11 +119,20 @@ struct StickersPickerSubpage: View {
     
     @ViewBuilder
     func stickerPackDetail(for pack: StickerPackModel) -> some View {
-        AsyncView(getData: pack.getThumbnail, buildContent: { image in
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFit()
-        })
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 3) {
+                if pack.stickers.isEmpty {
+                    ProgressView()
+                } else {
+                    ForEach(pack.stickers) { sticker in
+                        stickerCell(for: sticker)
+                    }
+                }
+            }
+        }
+        .task {
+            await vm.loadStickerPack(pack)
+        }
         .navigationTitle(pack.title)
         .toolbarForegroundStyle(.white, for: .navigationBar)
     }
