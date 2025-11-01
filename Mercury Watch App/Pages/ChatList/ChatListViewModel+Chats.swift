@@ -25,11 +25,19 @@ extension ChatListViewModel {
             
             guard let result else { return [] }
             
-            for id in result.chatIds {
-                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: id)
-                else { continue }
+            chatsData = try await withThrowingTaskGroup(of: Chat?.self) { group in
+                for id in result.chatIds {
+                    group.addTask {
+                        try await TDLibManager.shared.client?.getChat(chatId: id)
+                    }
+                }
                 
-                chatsData.append(chat)
+                var chats: [Chat] = []
+                for try await chat in group {
+                    if let chat { chats.append(chat) }
+                }
+                
+                return chats
             }
             
             self.logger.log(result)
