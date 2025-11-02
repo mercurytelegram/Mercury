@@ -90,7 +90,8 @@ class ChatListViewModel: TDLibViewModel {
                 self.isLoading = true
             }
             
-            let chatsData = await self.loadChats()
+            let ids = await self.loadChatIds()
+            let chatsData = await self.loadChats(ids: ids)
             let chatsModels = chatsData
                 .map { self.chatCellModelFrom($0) }
                 .sorted(by: self.chatSortingLogic)

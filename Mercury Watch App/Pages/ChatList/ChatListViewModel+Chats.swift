@@ -11,22 +11,33 @@ import SwiftUI
 
 extension ChatListViewModel {
     
-    func loadChats(limit: Int = 10) async -> [Chat] {
-        
-        var chatsData = [Chat]()
+    /// This function will download the chat data and gives back their IDs
+    func loadChatIds(limit: Int = 10) async -> [Int64] {
         let chatList = folder.chatList
         
         do {
-            
             let result = try await TDLibManager.shared.client?.getChats(
                 chatList: chatList,
                 limit: limit
             )
-            
-            guard let result else { return [] }
+            self.logger.log(result)
+            return result?.chatIds ?? []
+        } catch {
+            self.logger.log(error, level: .error)
+        }
+        
+        return []
+    }
+    
+    /// This function given a set of Ids return the ``Chat`` data downloaded with ``loadChatIds``
+    func loadChats(ids: [Int64]) async -> [Chat] {
+        
+        var chatsData = [Chat]()
+        
+        do {
             
             chatsData = try await withThrowingTaskGroup(of: Chat?.self) { group in
-                for id in result.chatIds {
+                for id in ids {
                     group.addTask {
                         try await TDLibManager.shared.client?.getChat(chatId: id)
                     }
@@ -39,8 +50,6 @@ extension ChatListViewModel {
                 
                 return chats
             }
-            
-            self.logger.log(result)
             
         } catch {
             self.logger.log(error, level: .error)
