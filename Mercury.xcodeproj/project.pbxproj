@@ -73,7 +73,6 @@
 		A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89B2CD64B1700920564 /* LoginPage.swift */; };
 		A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8962CD64B1700920564 /* ChatListViewModel.swift */; };
 		A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8992CD64B1700920564 /* HomeViewModel.swift */; };
-		A080D8B22CD778F700920564 /* UserDefaulsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8B12CD778EF00920564 /* UserDefaulsService.swift */; };
 		A080D8B82CD7843000920564 /* ChatCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8B72CD7842A00920564 /* ChatCellView.swift */; };
 		A080D8BF2CD78CED00920564 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8BE2CD78CED00920564 /* AvatarView.swift */; };
 		A080D8C42CD9666C00920564 /* ChatNotificationSettings+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */; };
@@ -187,7 +186,6 @@
 		A080D89C2CD64B1700920564 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A080D89E2CD64B1700920564 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		A080D89F2CD64B1700920564 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		A080D8B12CD778EF00920564 /* UserDefaulsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaulsService.swift; sourceTree = "<group>"; };
 		A080D8B72CD7842A00920564 /* ChatCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellView.swift; sourceTree = "<group>"; };
 		A080D8BE2CD78CED00920564 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatNotificationSettings+.swift"; sourceTree = "<group>"; };
@@ -376,7 +374,6 @@
 			children = (
 				A04ABE5C2CE01F7300641BC1 /* PlayerService.swift */,
 				A04ABE5D2CE01F7300641BC1 /* RecorderService.swift */,
-				A080D8B12CD778EF00920564 /* UserDefaulsService.swift */,
 				A080D88B2CD64A7C00920564 /* SecretService.swift */,
 				A080D88C2CD64A7C00920564 /* SecretService-sample.swift */,
 				A0CDF8BF2CE7D4AB0015E20E /* LoggerService.swift */,
@@ -747,7 +744,6 @@
 				A080D8F22CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift in Sources */,
 				A0CDF8BE2CE78FC70015E20E /* UserCellView.swift in Sources */,
 				A05C1AC52BECCF4B00724B6E /* Message+.swift in Sources */,
-				A080D8B22CD778F700920564 /* UserDefaulsService.swift in Sources */,
 				A080D8E02CDC08FF00920564 /* PillView.swift in Sources */,
 				A080D8B82CD7843000920564 /* ChatCellView.swift in Sources */,
 				4A4743F22BF796DF00264855 /* Color+.swift in Sources */,

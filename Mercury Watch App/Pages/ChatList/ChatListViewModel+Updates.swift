@@ -48,7 +48,7 @@ extension ChatListViewModel {
         guard self.chats.contains(where: { $0.id == chatId })
         else { return }
         
-        Task.detached {
+        Task.detached(priority: .medium) {
             do {
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
                 else { return }
@@ -96,7 +96,7 @@ extension ChatListViewModel {
         
         guard let message else { return }
         
-        Task.detached {
+        Task.detached(priority: .medium) {
             
             do {
                 
@@ -199,7 +199,7 @@ extension ChatListViewModel {
             
         } else {
             // Chat not shown, insert and update position
-            Task.detached(priority: .high) {
+            Task.detached(priority: .medium) {
                 
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
                 else { return }
@@ -249,7 +249,7 @@ extension ChatListViewModel {
         }
         
         // If no badge counter is provided, get the latest unreadCount
-        Task {
+        Task.detached(priority: .medium) {
             
             do {
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)

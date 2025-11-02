@@ -82,9 +82,10 @@ final class TDLibManager {
     
     private func updateAuthorizationState(state: AuthorizationState) {
         
-        DispatchQueue.main.async {
-            AppState.shared.isAuthenticated = state == .authorizationStateReady
-            UserDefaulsService.isAuthenticated = state == .authorizationStateReady
+        if state != .authorizationStateWaitTdlibParameters {
+            DispatchQueue.main.async {
+                AppState.shared.isAuthenticated = state == .authorizationStateReady
+            }
         }
         
         switch state {
