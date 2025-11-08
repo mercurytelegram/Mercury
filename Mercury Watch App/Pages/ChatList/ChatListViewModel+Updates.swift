@@ -207,9 +207,16 @@ extension ChatListViewModel {
                 let model = self.chatCellModelFrom(chat)
                 
                 await MainActor.run {
-                    withAnimation {
-                        self.chats.append(model)
+                    
+                    let index = self.chats.firstIndex { c in c.id == chatId }
+                    if let index, index != -1 {
+                        self.chats[index] = model
                         self.chats = self.chats.sorted(by: self.chatSortingLogic)
+                    } else {
+                        withAnimation {
+                            self.chats.append(model)
+                            self.chats = self.chats.sorted(by: self.chatSortingLogic)
+                        }
                     }
                 }
                 
