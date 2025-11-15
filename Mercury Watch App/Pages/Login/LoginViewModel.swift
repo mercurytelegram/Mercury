@@ -105,7 +105,7 @@ class LoginViewModel: TDLibViewModel {
     
     func manageUpdateAuthorizationState(state: AuthorizationState) {
         
-        self.logger.log(state)
+        self.logger.log(state, level: .debug)
         
         switch state {
             
