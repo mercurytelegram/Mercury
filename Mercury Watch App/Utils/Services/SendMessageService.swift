@@ -8,6 +8,7 @@
 import Foundation
 import TDLibKit
 import SwiftOGG
+import UIKit
 
 class SendMessageService {
     
@@ -91,7 +92,8 @@ class SendMessageService {
         }
     }
     
-    func sendSticker(_ sticker: Sticker) {
+    func sendSticker(_ model: StickerModel) {
+        guard let sticker = model.sticker else { return }
         Task.detached {
             do {
                 let result = try await TDLibManager.shared.client?.sendMessage(
@@ -138,14 +140,26 @@ class SendMessageService {
 }
 
 class SendMessageServiceMock: SendMessageService {
+    let onSendMessage: (MessageModel.MessageContent) -> Void
     
-    init() {
+    init(_ onSendMessage: @escaping (MessageModel.MessageContent) -> Void) {
+        self.onSendMessage = onSendMessage
         super.init(chat: nil)
     }
     
-    override func sendTextMessage(_ text: String) {}
+    override func sendTextMessage(_ text: String) {
+        self.onSendMessage(.text(AttributedString(text)))
+    }
+    
     override func sendVoiceNote(_ filePath: URL, _ duration: Int, didProcessAudio: @escaping () -> Void) {
         didProcessAudio()
+        self.onSendMessage(.voiceNote(model: VoiceNoteModel(getPlayer: {
+            return PlayerServiceMock()
+        })))
+    }
+    
+    override func sendSticker(_ sticker: StickerModel) {
+        self.onSendMessage(.stickerImage(model: .init(emoji: "😃", getImage: sticker.getImage)))
     }
     override func sendReaction(_ emoji: String, chatId: Int64, messageId: Int64) {}
 }

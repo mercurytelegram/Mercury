@@ -25,7 +25,7 @@ struct StickersPickerSubpage: View {
         _isPresented = isPresented
         _vm = Mockable.state(
             value: { StickersPickerViewModel(sendService: sendService) },
-            mock: { StickersPickerViewModelMock() }
+            mock: { StickersPickerViewModelMock(sendService: sendService) }
         )
     }
     
@@ -78,9 +78,7 @@ struct StickersPickerSubpage: View {
                 .clipped()
         }
         .onTapGesture {
-            if let sticker = model.sticker {
-                vm.sendService?.sendSticker(sticker)
-            }
+            vm.sendService?.sendSticker(model)
             isPresented = false
         }
         .clipShape(.rect(cornerRadius: 7))
@@ -140,5 +138,5 @@ struct StickersPickerSubpage: View {
 }
 
 #Preview(traits: .mock()) {
-    StickersPickerSubpage(isPresented: .constant(true), sendService: SendMessageServiceMock())
+    StickersPickerSubpage(isPresented: .constant(true), sendService: SendMessageServiceMock { _ in })
 }

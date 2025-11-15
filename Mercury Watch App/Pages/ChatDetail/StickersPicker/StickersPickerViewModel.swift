@@ -141,20 +141,20 @@ class StickersPickerViewModel {
 }
 
 class StickersPickerViewModelMock: StickersPickerViewModel {
-    init() {
-        super.init(sendService: SendMessageServiceMock())
+    override init(sendService: SendMessageService?) {
+        super.init(sendService: sendService)
         
         self.isLoading = false
         self.recentStickers = [
             .init(getImage: { UIImage(named: "alessandro") }),
-            .init(getImage: { UIImage(named: "marco") }),
-            .init(getImage: { UIImage(named: "alessandro") })
+            .init(getImage: { UIImage(named: "marco") })
         ]
         
-        self.stickerPacks = [
-            .init(title: "Title", stickers: [], size: 10, getThumbnail: { UIImage(named: "alessandro") }),
-            .init(title: "Title", stickers: [], size: 10, getThumbnail: { UIImage(named: "marco") })
-        ]
+        self.stickerPacks = []
+//        self.stickerPacks = [
+//            .init(title: "Title", stickers: [], size: 10, getThumbnail: { UIImage(named: "alessandro") }),
+//            .init(title: "Title", stickers: [], size: 10, getThumbnail: { UIImage(named: "marco") })
+//        ]
 
 
     }

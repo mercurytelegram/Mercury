@@ -73,7 +73,7 @@ struct MessageOptionsModel {
                 model: .init(
                     chatId: 0,
                     messageId: 0,
-                    sendService: SendMessageServiceMock()
+                    sendService: SendMessageServiceMock { _ in }
                 )
             )
         })
