@@ -49,7 +49,7 @@ class LoginViewModel: TDLibViewModel {
         
         switch (oldValue, newValue) {
             
-        case (.tutorial, .qrCodeLogin), // Tutorial dismissed, request new qrcode
+        case (.phoneNumberLogin, .qrCodeLogin), // Login with phone number dismissed, request new qrcode
              (.twoFactorPassword, .qrCodeLogin), // Password dismissed, request new qrcode
              (.twoFactorPasswordFailure, .qrCodeLogin): // Password failure dismissed, request new qrcode
             // After logout authorizationStateWaitPhoneNumber update will be
@@ -120,7 +120,9 @@ class LoginViewModel: TDLibViewModel {
         case .authorizationStateWaitOtherDeviceConfirmation(let info): // Requested qrcode login, link available
             Task { @MainActor in
                 withAnimation {
-                    self.state = .qrCodeLogin
+                    if self.qrCodeLink == nil {
+                        self.state = .qrCodeLogin
+                    }
                 }
                 self.qrCodeLink = info.link
             }
@@ -335,7 +337,7 @@ class LoginViewModel: TDLibViewModel {
             },
             set: { [weak self] in
                 guard let self else { return }
-                if !$0 { self.state = .tutorial }
+                if !$0 { self.state = .qrCodeLogin }
             }
        )
     }
