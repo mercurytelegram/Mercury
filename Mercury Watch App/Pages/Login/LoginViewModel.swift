@@ -55,6 +55,7 @@ class LoginViewModel: TDLibViewModel {
             // After logout authorizationStateWaitPhoneNumber update will be
             // triggered and new qrcode will be requested
             self.logout()
+            self.qrCodeLink = nil
             self.lastInputCta = nil
             break
         
@@ -91,19 +92,11 @@ class LoginViewModel: TDLibViewModel {
     // MARK: - TDLib
     override func updateHandler(update: Update) {
         super.updateHandler(update: update)
-        switch update {
-        case .updateAuthorizationState(let state):
-            self.manageUpdateAuthorizationState(state: state.authorizationState)
-        case .updateChatFolders(let update):
-            DispatchQueue.main.async {
-                self.updateChatFolders(update)
-            }
-        default:
-            break
-        }
+        guard case .updateChatFolders(let update) = update else { return }
+        Task { @MainActor in self.updateChatFolders(update) }
     }
     
-    func manageUpdateAuthorizationState(state: AuthorizationState) {
+    override func authorizationStateUpdate(state: AuthorizationState) {
         
         self.logger.log(state, level: .debug)
         
