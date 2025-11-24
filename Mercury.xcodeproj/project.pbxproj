@@ -355,6 +355,7 @@
 				A0CF53252BDFD77D00BA394B /* TDLib */,
 				A07438F72BD10D2F00945CB5 /* Preview Content */,
 				A07438F52BD10D2F00945CB5 /* Assets.xcassets */,
+				A080D8EB2CDC17BC00920564 /* audio_sample.m4a */,
 			);
 			path = "Mercury Watch App";
 			sourceTree = "<group>";
@@ -362,7 +363,6 @@
 		A07438F72BD10D2F00945CB5 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				A080D8EB2CDC17BC00920564 /* audio_sample.m4a */,
 				9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */,
 				A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */,
 			);

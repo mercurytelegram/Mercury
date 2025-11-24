@@ -100,7 +100,7 @@ class MessageOptionsViewModelMock: MessageOptionsViewModel {
             model: MessageOptionsModel(
                 chatId: 0,
                 messageId: 0,
-                sendService: SendMessageServiceMock()
+                sendService: SendMessageServiceMock { _ in }
             )
         )
     }

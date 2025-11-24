@@ -68,6 +68,7 @@ extension ChatDetailViewModel {
     }
     
     func onDublePressOf(_ message: MessageModel) {
+        guard !AppState.shared.isMock else { return }
         selectedMessage = message
         showOptionsView = true
     }
