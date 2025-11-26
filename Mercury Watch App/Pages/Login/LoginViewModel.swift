@@ -50,6 +50,7 @@ class LoginViewModel: TDLibViewModel {
         switch (oldValue, newValue) {
             
         case (.phoneNumberLogin, .qrCodeLogin), // Login with phone number dismissed, request new qrcode
+             (.phoneNumberLoginFailure, .qrCodeLogin), // Login with phone number failure dismissed, request new qrcode
              (.twoFactorPassword, .qrCodeLogin), // Password dismissed, request new qrcode
              (.twoFactorPasswordFailure, .qrCodeLogin): // Password failure dismissed, request new qrcode
             // After logout authorizationStateWaitPhoneNumber update will be
