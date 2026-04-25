@@ -8,6 +8,7 @@
 import AVFoundation
 import AVKit
 import SwiftUI
+import WatchKit
 
 struct VideoNoteModel {
     let thumbnail: AsyncImageModel
@@ -59,18 +60,18 @@ struct VideoNoteView: View {
 
     @State private var isOpening = false
     @State private var isPlaying = false
-    @State private var player: AVPlayer? = nil
+    @State private var videoURL: URL? = nil
     @State private var playbackProgress: Double = 0
     @State private var playbackStartDate: Foundation.Date? = nil
     @State private var accumulatedPlaybackTime: TimeInterval = 0
-    @State private var volume: Double = Double(AVAudioSession.sharedInstance().outputVolume)
+    @State private var movieRef: WKInterfaceInlineMovie? = nil
 
     private var videoSize: CGFloat {
-        player == nil ? 112 : 156
+        videoURL == nil ? 112 : 156
     }
 
     private var isExpanded: Bool {
-        player != nil
+        videoURL != nil
     }
 
     var body: some View {
@@ -87,30 +88,9 @@ struct VideoNoteView: View {
                     )
             }
 
-            if isExpanded {
-                volumeIndicator()
-                    .frame(
-                        maxWidth: .infinity,
-                        maxHeight: videoSize,
-                        alignment: .bottomLeading
-                    )
-            }
         }
         .frame(width: isExpanded ? nil : videoSize, height: videoSize)
         .frame(maxWidth: isExpanded ? .infinity : nil)
-        .focusable(isExpanded)
-        .digitalCrownRotation(
-            $volume,
-            from: 0.0,
-            through: 1.0,
-            by: 0.05,
-            sensitivity: .medium,
-            isContinuous: false,
-            isHapticFeedbackEnabled: true
-        )
-        .onChange(of: volume) { _, newValue in
-            player?.volume = Float(newValue)
-        }
         .onReceive(Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()) { _ in
             updateProgress()
         }
@@ -118,12 +98,12 @@ struct VideoNoteView: View {
             resetPlayback()
         }
         .onAppear {
-            if autoplay && player == nil && !isOpening {
+            if autoplay && videoURL == nil && !isOpening {
                 togglePlayback()
             }
         }
-        .onChange(of: isExpanded) { _, isExpanded in
-            onExpansionChange?(isExpanded)
+        .onChange(of: isExpanded) { _, newValue in
+            onExpansionChange?(newValue)
         }
         .animation(.snappy(duration: 0.25), value: videoSize)
         .animation(.snappy(duration: 0.25), value: isExpanded)
@@ -134,7 +114,7 @@ struct VideoNoteView: View {
             mediaContent()
                 .frame(width: videoSize, height: videoSize)
                 .clipShape(Circle())
-                .blur(radius: model.isSecret && player == nil ? 8 : 0)
+                .blur(radius: model.isSecret && videoURL == nil ? 8 : 0)
                 .overlay {
                     Circle()
                         .stroke(.white.opacity(0.18), lineWidth: 1)
@@ -160,9 +140,8 @@ struct VideoNoteView: View {
 
     @ViewBuilder
     private func mediaContent() -> some View {
-        if let player {
-            VideoPlayer(player: player)
-                .disabled(true)
+        if let url = videoURL {
+            InlineMovieView(url: url, isPlaying: isPlaying, movieRef: $movieRef)
         } else {
             VideoNoteThumbnailView(model: model)
         }
@@ -183,7 +162,7 @@ struct VideoNoteView: View {
 
     @ViewBuilder
     private func progressRing() -> some View {
-        if player != nil {
+        if videoURL != nil {
             ZStack {
                 Circle()
                     .stroke(.white.opacity(0.2), lineWidth: 4)
@@ -204,40 +183,8 @@ struct VideoNoteView: View {
     }
 
     @ViewBuilder
-    private func volumeIndicator() -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: volumeIconName)
-                .font(.system(size: 10, weight: .semibold))
-                .foregroundStyle(.white)
-
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(.white.opacity(0.25))
-                    Capsule()
-                        .fill(.white)
-                        .frame(width: geo.size.width * volume)
-                }
-            }
-            .frame(width: 36, height: 4)
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 5)
-        .background(.ultraThinMaterial, in: Capsule())
-        .padding(6)
-        .animation(.easeInOut(duration: 0.2), value: volume)
-    }
-
-    private var volumeIconName: String {
-        if volume == 0 { return "speaker.slash.fill" }
-        if volume < 0.4 { return "speaker.fill" }
-        if volume < 0.75 { return "speaker.wave.1.fill" }
-        return "speaker.wave.2.fill"
-    }
-
-    @ViewBuilder
     private func closeButton() -> some View {
-        if player != nil {
+        if videoURL != nil {
             Button {
                 closePlayback()
             } label: {
@@ -262,13 +209,13 @@ struct VideoNoteView: View {
     }
 
     private func togglePlayback() {
-        if let player {
+        if videoURL != nil {
             if isPlaying {
                 pausePlayback()
             } else {
                 playbackStartDate = Foundation.Date()
                 isPlaying = true
-                player.play()
+                movieRef?.play()
             }
             return
         }
@@ -287,19 +234,15 @@ struct VideoNoteView: View {
 
             guard let url = try? await model.getVideoURL() else { return }
 
-            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
             try? AVAudioSession.sharedInstance().setActive(true)
 
-            let player = AVPlayer(url: url)
-            player.volume = Float(volume)
-
             await MainActor.run {
-                self.player = player
+                self.videoURL = url
                 self.isPlaying = true
                 self.playbackProgress = 0
                 self.playbackStartDate = Foundation.Date()
                 self.accumulatedPlaybackTime = 0
-                player.play()
             }
         }
     }
@@ -308,18 +251,20 @@ struct VideoNoteView: View {
         if let playbackStartDate {
             accumulatedPlaybackTime += Foundation.Date().timeIntervalSince(playbackStartDate)
         }
-        player?.pause()
+        movieRef?.pause()
         playbackStartDate = nil
         isPlaying = false
     }
 
     private func resetPlayback() {
-        player?.pause()
-        player = nil
+        movieRef?.pause()
+        movieRef = nil
+        videoURL = nil
         playbackStartDate = nil
         isPlaying = false
         playbackProgress = 0
         accumulatedPlaybackTime = 0
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
     }
 
     private func closePlayback() {
@@ -328,12 +273,9 @@ struct VideoNoteView: View {
     }
 
     private func updateProgress() {
-        guard let player else { return }
+        guard videoURL != nil else { return }
 
-        let playerDuration = player.currentItem?.duration.seconds ?? 0
-        let duration = playerDuration.isFinite && playerDuration > 0
-            ? playerDuration
-            : TimeInterval(model.duration)
+        let duration = TimeInterval(model.duration)
         guard duration > 0 else { return }
 
         let activePlaybackTime: TimeInterval
@@ -350,6 +292,38 @@ struct VideoNoteView: View {
         }
     }
 }
+
+// MARK: - InlineMovieView
+
+private struct InlineMovieView: WKInterfaceObjectRepresentable {
+    let url: URL
+    let isPlaying: Bool
+    @Binding var movieRef: WKInterfaceInlineMovie?
+
+    func makeWKInterfaceObject(context: Context) -> WKInterfaceInlineMovie {
+        let movie = WKInterfaceInlineMovie()
+        movie.setMovieURL(url)
+        movie.setLoops(false)
+        movie.setAutoplays(false)
+        DispatchQueue.main.async {
+            movieRef = movie
+            if isPlaying {
+                movie.playFromBeginning()
+            }
+        }
+        return movie
+    }
+
+    func updateWKInterfaceObject(_ movie: WKInterfaceInlineMovie, context: Context) {
+        if isPlaying {
+            movie.play()
+        } else {
+            movie.pause()
+        }
+    }
+}
+
+// MARK: - Supporting Views
 
 private struct VideoNoteDurationBadge: View {
     let model: VideoNoteModel
