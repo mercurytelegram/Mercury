@@ -10,25 +10,30 @@ import TDLibKit
 import SDWebImageWebPCoder
 
 extension ChatDetailViewModel {
-    
+
     func messageContentFrom(_ msg: Message) async ->  MessageModel.MessageContent {
         switch msg.content {
-            
+
         case .messageText(let message):
             return .text(message.text.attributedString)
-            
+
         case .messageVoiceNote(let message):
             guard var model = await message.getModel()
             else { return .text(msg.description) }
             model.onPress = { self.setMessageAsOpened(msg.id) }
             return .voiceNote(model: model)
-            
+
         case .messagePhoto(let message):
             return .photo(model: message.getModel(), caption: message.caption.text)
-            
+
+        case .messageVideoNote(let message):
+            var model = message.getModel()
+            model.onPress = { self.setMessageAsOpened(msg.id) }
+            return .videoNote(model: model)
+
         case .messageSticker(let message):
             switch message.sticker.format {
-                
+
             case .stickerFormatWebp:
                 return .stickerImage(model: message.getImageModel())
             case .stickerFormatTgs:
@@ -36,40 +41,54 @@ extension ChatDetailViewModel {
             case .stickerFormatWebm:
                 return .text(msg.description)
             }
-            
+
         case .messageLocation(let message):
             return .location(model: message.getModel())
-            
+
         case .messageVenue(let message):
             return .location(model: message.getModel())
-            
+
         case .messagePinMessage(_):
             return await getPillModel(message: msg, text: "pinned a message")
-            
+
         case .messageChatChangeTitle(let message):
             return await getPillModel(
                 message: msg,
                 text: "changed the group name to _\(message.title)_"
             )
-            
+
         case .messageChatChangePhoto(_):
             return await getPillModel(
                 message: msg,
                 text: "changed group photo"
             )
-            
-            
+
+
         default:
             return .text(msg.description)
         }
-        
+
     }
-    
+
     func getPillModel(message: Message, text: LocalizedStringKey) async ->  MessageModel.MessageContent {
         let sender = await self.senderNameFrom(message)
         return .pill(
             title: sender.name,
             description: text
+        )
+    }
+}
+
+extension MessageVideoNote {
+    func getModel() -> VideoNoteModel {
+        return VideoNoteModel(
+            thumbnail: videoNote.getAsyncModel(),
+            duration: videoNote.duration,
+            isSecret: isSecret,
+            isViewed: isViewed,
+            getVideoURL: {
+                await FileService.getFilePath(for: videoNote.video)
+            }
         )
     }
 }
@@ -133,7 +152,7 @@ extension MessageLocation {
 extension MessageVenue {
     func getModel() -> LocationModel {
         let style = pinStyle()
-        
+
         return LocationModel(
             title: venue.title,
             coordinate: CLLocationCoordinate2D(
@@ -144,7 +163,7 @@ extension MessageVenue {
             markerSymbol: style.symbol
         )
     }
-    
+
     private func pinStyle() -> (symbol: String, color: Color) {
         switch venue.type {
         case "arts_entertainment/museum":

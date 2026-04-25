@@ -5,116 +5,120 @@
 //  Created by Alessandro Alberti on 16/05/24.
 //
 
-import SwiftUI
-import TDLibKit
 import MapKit
+import SwiftUI
 import TDLibKit
 
 struct MessageView: View {
     let model: MessageModel
-   
+    var onVideoNoteOpen: ((VideoNoteModel) -> Void)? = nil
+
     var body: some View {
-            switch model.content {
-                
-            case .text(let text):
-                MessageBubbleView(model: self.model) {
-                    Text(text)
-                }
-                
-            case .voiceNote(let voiceModel):
-                MessageBubbleView(model: self.model) {
-                    VoiceNoteView(
-                        model: voiceModel,
-                        isOutgoing: self.model.isOutgoing
-                    )
-                }
-                
-            case .photo(let imageModel, let caption):
-                MessageBubbleView(model: self.model, style: .fullScreen(caption: caption ?? "")) {
-                    AsyncView(getData: imageModel.getImage) {
-                        Group {
-                            if let thumbnail = imageModel.thumbnail {
-                                Image(uiImage: thumbnail)
-                                    .resizable()
-                                    .scaledToFill()
-                            }
-                            if imageModel.thumbnail == nil {
-                                ProgressView()
-                            }
-                        }
-                    } buildContent: { image in
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                    }
-                }
-                
-            case .stickerImage(let stickerModel):
-                MessageBubbleView(model: self.model, style: .clearBackground) {
-                    AsyncView(getData: stickerModel.getImage) {
-                        Text(stickerModel.emoji)
-                            .font(.largeTitle)
-                    } buildContent: { image in
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 100)
-                    }
-                }
-                
-                
-            case .location(let locationModel):
-                MessageBubbleView(model: self.model, style: .fullScreen(caption: "")) {
-                    LocationView(model: locationModel)
-                }
-            
-            case .pill(let title, let description):
-                PillView(title: title, description: description)
-//                
-//            case .video:
-//                MessageBubbleView(model: self.model)(style: .fullScreen, caption: message.caption.text) {
-//                    TdImageView(tdImage: message.video)
-//                }
-//                .overlay {
-//                    Image(systemName: "play.circle.fill")
-//                        .font(.largeTitle)
-//                        .foregroundStyle(.white, .ultraThinMaterial)
-//                }
+        switch model.content {
+
+        case .text(let text):
+            MessageBubbleView(model: model) {
+                Text(text)
             }
+
+        case .voiceNote(let voiceModel):
+            MessageBubbleView(model: model) {
+                VoiceNoteView(
+                    model: voiceModel,
+                    isOutgoing: model.isOutgoing
+                )
+            }
+
+        case .photo(let imageModel, let caption):
+            MessageBubbleView(model: model, style: .fullScreen(caption: caption ?? "")) {
+                AsyncView(getData: imageModel.getImage) {
+                    Group {
+                        if let thumbnail = imageModel.thumbnail {
+                            Image(uiImage: thumbnail)
+                                .resizable()
+                                .scaledToFill()
+                        }
+                        if imageModel.thumbnail == nil {
+                            ProgressView()
+                        }
+                    }
+                } buildContent: { image in
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                }
+            }
+
+        case .videoNote(let videoNoteModel):
+            MessageBubbleView(model: model, style: .clearBackground) {
+                VideoNotePreviewView(model: videoNoteModel) {
+                    onVideoNoteOpen?(videoNoteModel)
+                }
+            }
+
+        case .stickerImage(let stickerModel):
+            MessageBubbleView(model: model, style: .clearBackground) {
+                AsyncView(getData: stickerModel.getImage) {
+                    Text(stickerModel.emoji)
+                        .font(.largeTitle)
+                } buildContent: { image in
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100)
+                }
+            }
+
+        case .location(let locationModel):
+            MessageBubbleView(model: model, style: .fullScreen(caption: "")) {
+                LocationView(model: locationModel)
+            }
+
+        case .pill(let title, let description):
+            PillView(title: title, description: description)
+        }
     }
 }
 
 struct MessageModel: Identifiable {
-    
+
     var id: Int64
-    
+
     var sender: String?
     var senderColor: Color?
     var isSenderHidden: Bool = false
-    
+
     var date: Foundation.Date
     var time: String {
         date.formatted(.dateTime.hour().minute())
     }
-    
+
     var isOutgoing: Bool = false
-    
+
     var reactions: [ReactionModel] = []
     var reply: ReplyModel? = nil
-    
+
     var stateStyle: StateStyle?
     enum StateStyle {
         case sending, delivered, seen, failed
     }
-    
+
     var content: MessageContent
     enum MessageContent {
         case text(AttributedString)
         case voiceNote(model: VoiceNoteModel)
         case photo(model: AsyncImageModel, caption: String?)
+        case videoNote(model: VideoNoteModel)
         case stickerImage(model: StickerImageModel)
         case location(model: LocationModel)
         case pill(title: String?, description: LocalizedStringKey)
+
+        var isVideoNote: Bool {
+            if case .videoNote = self {
+                return true
+            }
+            return false
+        }
     }
 }
 
@@ -146,4 +150,3 @@ extension MessageModel {
         )
     }
 }
-
