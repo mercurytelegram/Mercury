@@ -63,6 +63,7 @@ struct VideoNoteView: View {
     @State private var playbackProgress: Double = 0
     @State private var playbackStartDate: Foundation.Date? = nil
     @State private var accumulatedPlaybackTime: TimeInterval = 0
+    @State private var volume: Double = Double(AVAudioSession.sharedInstance().outputVolume)
 
     private var videoSize: CGFloat {
         player == nil ? 112 : 156
@@ -85,9 +86,31 @@ struct VideoNoteView: View {
                         alignment: .topLeading
                     )
             }
+
+            if isExpanded {
+                volumeIndicator()
+                    .frame(
+                        maxWidth: .infinity,
+                        maxHeight: videoSize,
+                        alignment: .bottomLeading
+                    )
+            }
         }
         .frame(width: isExpanded ? nil : videoSize, height: videoSize)
         .frame(maxWidth: isExpanded ? .infinity : nil)
+        .focusable(isExpanded)
+        .digitalCrownRotation(
+            $volume,
+            from: 0.0,
+            through: 1.0,
+            by: 0.05,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
+        .onChange(of: volume) { _, newValue in
+            player?.volume = Float(newValue)
+        }
         .onReceive(Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()) { _ in
             updateProgress()
         }
@@ -139,7 +162,7 @@ struct VideoNoteView: View {
     private func mediaContent() -> some View {
         if let player {
             VideoPlayer(player: player)
-                .allowsHitTesting(false)
+                .disabled(true)
         } else {
             VideoNoteThumbnailView(model: model)
         }
@@ -178,6 +201,38 @@ struct VideoNoteView: View {
             }
             .padding(2)
         }
+    }
+
+    @ViewBuilder
+    private func volumeIndicator() -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: volumeIconName)
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(.white)
+
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(.white.opacity(0.25))
+                    Capsule()
+                        .fill(.white)
+                        .frame(width: geo.size.width * volume)
+                }
+            }
+            .frame(width: 36, height: 4)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+        .background(.ultraThinMaterial, in: Capsule())
+        .padding(6)
+        .animation(.easeInOut(duration: 0.2), value: volume)
+    }
+
+    private var volumeIconName: String {
+        if volume == 0 { return "speaker.slash.fill" }
+        if volume < 0.4 { return "speaker.fill" }
+        if volume < 0.75 { return "speaker.wave.1.fill" }
+        return "speaker.wave.2.fill"
     }
 
     @ViewBuilder
@@ -231,7 +286,12 @@ struct VideoNoteView: View {
             }
 
             guard let url = try? await model.getVideoURL() else { return }
+
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try? AVAudioSession.sharedInstance().setActive(true)
+
             let player = AVPlayer(url: url)
+            player.volume = Float(volume)
 
             await MainActor.run {
                 self.player = player
@@ -248,7 +308,6 @@ struct VideoNoteView: View {
         if let playbackStartDate {
             accumulatedPlaybackTime += Foundation.Date().timeIntervalSince(playbackStartDate)
         }
-
         player?.pause()
         playbackStartDate = nil
         isPlaying = false

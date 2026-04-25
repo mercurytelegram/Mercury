@@ -63,10 +63,11 @@ struct ChatDetailPage: View {
                     )
                 }
             }
+            .navigationBarBackButtonHidden(isVideoNoteViewerPresented)
             .toolbar {
 
-                if isVideoNoteViewerPresented {
-                    ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
+                    if isVideoNoteViewerPresented {
                         Button {
                             closeVideoNote()
                         } label: {
