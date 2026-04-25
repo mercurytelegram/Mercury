@@ -1,6 +1,6 @@
 //
 //  ChatCellView.swift
-//  Mercury
+//  Mercury Watch App
 //
 //  Created by Marco Tammaro on 03/11/24.
 //
@@ -53,16 +53,42 @@ struct ChatCellView: View {
     func title() -> some View {
         
         let isMutedText = model.isMuted
-        ? Text(Image(systemName: "speaker.slash.fill"))
-        : Text("")
+            ? Text(Image(systemName: "speaker.slash.fill"))
+            : Text("")
+        
+        let typeText: Text = switch model.chatType {
+        case .savedMessages:  Text(Image(systemName: "bookmark.fill"))
+        case .secretChat:     Text(Image(systemName: "lock.fill"))
+        case .channel:        Text(Image(systemName: "megaphone.fill"))
+        case .bot:            Text(Image(systemName: "cpu"))
+        case .deletedAccount: Text(Image(systemName: "person.slash.fill"))
+        default:              Text("")
+        }
+        
+        let hasTypeIcon = model.chatType != .unknown
+            && model.chatType != .privateUser
+            && model.chatType != .group
         
         Group {
-            Text(model.title)
-                .font(.headline)
-            +
-            isMutedText
-                .font(.caption)
-                .foregroundColor(.secondary)
+            if hasTypeIcon {
+                typeText
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                + Text(" ")
+                + Text(model.title)
+                    .font(.headline)
+                + Text(" ")
+                + isMutedText
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            } else {
+                Text(model.title)
+                    .font(.headline)
+                + Text(" ")
+                + isMutedText
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
         }
         .lineLimit(2)
     }
@@ -152,6 +178,8 @@ struct ChatCellView: View {
     }
 }
 
+// MARK: - Model
+
 struct ChatCellModel: Identifiable {
     
     var id: Int64?
@@ -166,18 +194,38 @@ struct ChatCellModel: Identifiable {
     var messageStyle: MessageStyle?
     var unreadBadgeStyle: UnreadStyle?
     
+    var chatType: ChatType = .unknown
+    
+    // MARK: ChatType
+    
+    enum ChatType: Equatable {
+        case savedMessages
+        case privateUser
+        case deletedAccount
+        case bot
+        case secretChat
+        case group
+        case channel
+        case unknown
+    }
+    
+    // MARK: MessageStyle
+    
     enum MessageStyle {
         case message(_ text: AttributedString)
         case action(_ action: AttributedString)
     }
+    
+    // MARK: UnreadStyle
     
     enum UnreadStyle {
         case mention
         case reaction
         case message(count: Int)
     }
-    
 }
+
+// MARK: - Hashable
 
 extension ChatCellModel: Hashable {
     public func hash(into hasher: inout Hasher) {
@@ -186,26 +234,23 @@ extension ChatCellModel: Hashable {
 
     static func == (lhs: ChatCellModel, rhs: ChatCellModel) -> Bool {
         return lhs.id == rhs.id &&
-                lhs.position == rhs.position &&
-                lhs.title == rhs.title &&
-                lhs.time == rhs.time &&
-                lhs.avatar == rhs.avatar &&
-                lhs.isMuted == rhs.isMuted &&
-                lhs.messageStyle == rhs.messageStyle &&
-                lhs.unreadBadgeStyle == rhs.unreadBadgeStyle
+               lhs.position == rhs.position &&
+               lhs.title == rhs.title &&
+               lhs.time == rhs.time &&
+               lhs.avatar == rhs.avatar &&
+               lhs.isMuted == rhs.isMuted &&
+               lhs.messageStyle == rhs.messageStyle &&
+               lhs.unreadBadgeStyle == rhs.unreadBadgeStyle &&
+               lhs.chatType == rhs.chatType
     }
-    
 }
 
 extension ChatCellModel.MessageStyle: Equatable {
     static func == (lhs: ChatCellModel.MessageStyle, rhs: ChatCellModel.MessageStyle) -> Bool {
         switch (lhs, rhs) {
-        case (.message(let text1), .message(let text2)):
-            return text1 == text2
-        case (.action(let action1), .action(let action2)):
-            return action1 == action2
-        default:
-            return false
+        case (.message(let t1), .message(let t2)): return t1 == t2
+        case (.action(let a1), .action(let a2)):   return a1 == a2
+        default: return false
         }
     }
 }
@@ -213,17 +258,15 @@ extension ChatCellModel.MessageStyle: Equatable {
 extension ChatCellModel.UnreadStyle: Equatable {
     static func == (lhs: ChatCellModel.UnreadStyle, rhs: ChatCellModel.UnreadStyle) -> Bool {
         switch (lhs, rhs) {
-        case (.mention, .mention):
-            return true
-        case (.reaction, .reaction):
-            return true
-        case (.message(let count1), .message(let count2)):
-            return count1 == count2
-        default:
-            return false
+        case (.mention, .mention):                         return true
+        case (.reaction, .reaction):                       return true
+        case (.message(let c1), .message(let c2)):         return c1 == c2
+        default:                                           return false
         }
     }
 }
+
+// MARK: - Previews
 
 #Preview("Plain") {
     let model = ChatCellModel(
@@ -231,11 +274,74 @@ extension ChatCellModel.UnreadStyle: Equatable {
         time: "09:41",
         avatar: .alessandro,
         isMuted: false,
-        isPinned: false,
-        messageStyle: nil,
-        unreadBadgeStyle: nil
+        isPinned: false
     )
-    
+    ChatCellView(model: model) {} onPressMuteButton: {}
+}
+
+#Preview("Saved Messages") {
+    let model = ChatCellModel(
+        title: "Saved Messages",
+        time: "10:00",
+        avatar: .alessandro,
+        isMuted: false,
+        isPinned: true,
+        messageStyle: .message("Your cloud storage"),
+        chatType: .savedMessages
+    )
+    ChatCellView(model: model) {} onPressMuteButton: {}
+}
+
+#Preview("Secret Chat") {
+    let model = ChatCellModel(
+        title: "Marco",
+        time: "09:41",
+        avatar: .marco,
+        isMuted: false,
+        isPinned: false,
+        messageStyle: .message("This is encrypted 🔒"),
+        chatType: .secretChat
+    )
+    ChatCellView(model: model) {} onPressMuteButton: {}
+}
+
+#Preview("Bot") {
+    let model = ChatCellModel(
+        title: "NotificationBot",
+        time: "08:00",
+        avatar: .marco,
+        isMuted: true,
+        isPinned: false,
+        messageStyle: .message("Your order has shipped!"),
+        chatType: .bot
+    )
+    ChatCellView(model: model) {} onPressMuteButton: {}
+}
+
+#Preview("Deleted Account") {
+    let model = ChatCellModel(
+        title: "Deleted Account",
+        time: "Yesterday",
+        avatar: .marco,
+        isMuted: false,
+        isPinned: false,
+        messageStyle: .message("This account no longer exists"),
+        chatType: .deletedAccount
+    )
+    ChatCellView(model: model) {} onPressMuteButton: {}
+}
+
+#Preview("Channel") {
+    let model = ChatCellModel(
+        title: "Tech News",
+        time: "11:30",
+        avatar: .marco,
+        isMuted: false,
+        isPinned: false,
+        messageStyle: .message("New article published"),
+        unreadBadgeStyle: .message(count: 12),
+        chatType: .channel
+    )
     ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
@@ -246,27 +352,10 @@ extension ChatCellModel.UnreadStyle: Equatable {
         avatar: .alessandro,
         isMuted: false,
         isPinned: false,
-        messageStyle: .message("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."),
-        unreadBadgeStyle: nil
+        messageStyle: .message("Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
     )
-    
     ChatCellView(model: model) {} onPressMuteButton: {}
 }
-
-#Preview("With action") {
-    let model = ChatCellModel(
-        title: "Alessandro",
-        time: "09:41",
-        avatar: .alessandro,
-        isMuted: false,
-        isPinned: false,
-        messageStyle: .action("is typing"),
-        unreadBadgeStyle: nil
-    )
-    
-    ChatCellView(model: model) {} onPressMuteButton: {}
-}
-
 
 #Preview("Unread message") {
     let model = ChatCellModel(
@@ -278,35 +367,6 @@ extension ChatCellModel.UnreadStyle: Equatable {
         messageStyle: .message("Lorem ipsum dolor sit amet."),
         unreadBadgeStyle: .message(count: 3)
     )
-    
-    ChatCellView(model: model) {} onPressMuteButton: {}
-}
-
-#Preview("Unread mention") {
-    let model = ChatCellModel(
-        title: "Marco",
-        time: "09:41",
-        avatar: .marco,
-        isMuted: false,
-        isPinned: false,
-        messageStyle: .message("Lorem ipsum dolor sit amet."),
-        unreadBadgeStyle: .mention
-    )
-    
-    ChatCellView(model: model) {} onPressMuteButton: {}
-}
-
-#Preview("Unread reaction") {
-    let model = ChatCellModel(
-        title: "Marco",
-        time: "09:41",
-        avatar: .marco,
-        isMuted: false,
-        isPinned: false,
-        messageStyle: .message("Lorem ipsum dolor sit amet."),
-        unreadBadgeStyle: .reaction
-    )
-    
     ChatCellView(model: model) {} onPressMuteButton: {}
 }
 
@@ -319,6 +379,5 @@ extension ChatCellModel.UnreadStyle: Equatable {
         isPinned: false,
         messageStyle: .message("Lorem ipsum dolor sit amet.")
     )
-    
     ChatCellView(model: model) {} onPressMuteButton: {}
 }

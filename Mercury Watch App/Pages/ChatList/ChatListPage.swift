@@ -1,5 +1,5 @@
 //
-//  LoginPage.swift
+//  ChatListPage.swift
 //  Mercury Watch App
 //
 //  Created by Marco Tammaro on 02/11/24.

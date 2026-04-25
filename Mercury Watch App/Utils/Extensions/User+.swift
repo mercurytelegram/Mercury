@@ -73,6 +73,19 @@ extension User {
             return "last seen last month"
         }
     }
+    var isDeleted: Bool {
+        if case .userTypeDeleted = self.type {
+            return true
+        }
+        return false
+    }
+    
+    var isBot: Bool {
+        if case .userTypeBot(_) = self.type {
+            return true
+        }
+        return false
+    }
 }
 
 extension UserStatus {
