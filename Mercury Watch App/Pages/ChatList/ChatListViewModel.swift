@@ -15,6 +15,7 @@ class ChatListViewModel: TDLibViewModel {
     var folder: ChatFolder
     
     var chats: [ChatCellModel] = []
+    var senders: [Int64:String] = [:]
     var isLoading: Bool = false
     var showNewMessage: Bool = false
     
@@ -89,7 +90,8 @@ class ChatListViewModel: TDLibViewModel {
                 self.isLoading = true
             }
             
-            let chatsData = await self.loadChats()
+            let ids = await self.loadChatIds()
+            let chatsData = await self.loadChats(ids: ids)
             let chatsModels = chatsData
                 .map { self.chatCellModelFrom($0) }
                 .sorted(by: self.chatSortingLogic)
@@ -97,6 +99,25 @@ class ChatListViewModel: TDLibViewModel {
             await MainActor.run {
                 self.chats = chatsModels
                 self.isLoading = false
+            }
+            
+            for chat in chatsData {
+                if chat.isGroup {
+                    guard let message = chat.lastMessage,
+                          let username = await message.senderId.username()
+                    else { return }
+                    
+                    var attributedUsername = AttributedString(username + ": ")
+                    attributedUsername.foregroundColor = .white
+                    let chatDescription = attributedUsername + message.description
+                    
+                    await MainActor.run {
+                        guard let index = self.chats.firstIndex(where: { $0.id == chat.id }) else { return }
+                        withAnimation {
+                            self.chats[index].messageStyle = .message(chatDescription)
+                        }
+                    }
+                }
             }
             
         }
@@ -191,7 +212,7 @@ class ChatListViewModelMock: ChatListViewModel {
                 avatar: .alessandro,
                 isMuted: false,
                 isPinned: false,
-                messageStyle: .message("Lorem ipsum dolor sit amet."),
+                messageStyle: .message("Manage multiple chats and folders 📁"),
                 unreadBadgeStyle: .message(count: 3)
             ),
             .init(
@@ -201,8 +222,7 @@ class ChatListViewModelMock: ChatListViewModel {
                 avatar: .marco,
                 isMuted: false,
                 isPinned: false,
-                messageStyle: .action("is typing"),
-                unreadBadgeStyle: .reaction
+                messageStyle: .action("is typing")
             ),
         ]
     }

@@ -80,6 +80,6 @@ class HomeViewModel: TDLibViewModel {
 @Observable
 class HomeViewModelMock: HomeViewModel {
     override func getUserCellModel() {
-        self.userCellModel = UserCellModel(avatar: .astro, fullname: "John Appleseed")
+        self.userCellModel = UserCellModel(avatar: .alessandro, fullname: "John Appleseed")
     }
 }

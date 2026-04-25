@@ -18,6 +18,7 @@ final class TDLibManager {
     // Properties
     public var client: TDLibClient?
     public var connectionState: ConnectionState?
+    public var authorizationState: AuthorizationState?
     
     private var isClosing = false
     private let tdlibPath = FileManager.default
@@ -39,6 +40,9 @@ final class TDLibManager {
     
     public func subscribe(_ delegate: TDLibManagerProtocol) {
         self.delegatesObj.add(delegate)
+        if let authorizationState {
+            delegate.authorizationStateUpdate(state: authorizationState)
+        }
         if let connectionState {
             delegate.connectionStateUpdate(state: connectionState)
         }
@@ -65,26 +69,23 @@ final class TDLibManager {
         case .updateAuthorizationState(let state):
             self.updateAuthorizationState(state: state.authorizationState)
         default:
-            break
-        }
-        
-        for elem in delegates {
-            elem.updateHandler(update: update)
+            self.delegates.forEach { $0.updateHandler(update: update) }
         }
     }
     
     private func updateConnectionState(state: ConnectionState) {
-        for elem in delegates {
-            elem.connectionStateUpdate(state: state)
-        }
+        self.delegates.forEach { $0.connectionStateUpdate(state: state) }
         self.connectionState = state
     }
     
     private func updateAuthorizationState(state: AuthorizationState) {
+        self.delegates.forEach { $0.authorizationStateUpdate(state: state) }
+        self.authorizationState = state
         
-        DispatchQueue.main.async {
-            AppState.shared.isAuthenticated = state == .authorizationStateReady
-            UserDefaulsService.isAuthenticated = state == .authorizationStateReady
+        if state != .authorizationStateWaitTdlibParameters {
+            DispatchQueue.main.async {
+                AppState.shared.isAuthenticated = state == .authorizationStateReady
+            }
         }
         
         switch state {
@@ -135,7 +136,7 @@ final class TDLibManager {
                     systemVersion: systemVersion,
                     useChatInfoDatabase: true,
                     useFileDatabase: true,
-                    useMessageDatabase: true,
+                    useMessageDatabase: false,
                     useSecretChats: false,
                     useTestDc: false
                 )

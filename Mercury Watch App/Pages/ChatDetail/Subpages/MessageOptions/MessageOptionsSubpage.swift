@@ -53,7 +53,27 @@ struct MessageOptionsSubpage: View {
                 }
             }
             .padding(.horizontal)
+            
+            if vm.shouldDisplayReportButton {
+                Button(action: {
+                    vm.showReportMessageOptions = true
+                }, label: {
+                    Label("Report content", systemImage: "exclamationmark.triangle")
+                })
+                .tint(.red)
+            }
         }
+        .sheet(isPresented: $vm.showReportMessageOptions) {
+            List {
+                ForEach(vm.reportMessageOptions, id: \.self) { option in
+                    Button(option.description) {
+                        vm.reportMessage(option)
+                    }
+                }
+                .navigationTitle("Reason")
+            }
+        }
+
     }
 }
 
@@ -61,6 +81,7 @@ struct MessageOptionsModel {
     var chatId: Int64
     var messageId: Int64
     var sendService: SendMessageService
+    var chatType: ChatType?
 }
 
 #Preview {
@@ -73,7 +94,7 @@ struct MessageOptionsModel {
                 model: .init(
                     chatId: 0,
                     messageId: 0,
-                    sendService: SendMessageServiceMock()
+                    sendService: SendMessageServiceMock { _ in }
                 )
             )
         })

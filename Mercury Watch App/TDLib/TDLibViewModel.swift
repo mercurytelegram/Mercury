@@ -28,4 +28,5 @@ class TDLibViewModel: ObservableObject, TDLibManagerProtocol {
     // TDLibManagerProtocol
     func updateHandler(update: TDLibKit.Update) {}
     func connectionStateUpdate(state: TDLibKit.ConnectionState) {}
+    func authorizationStateUpdate(state: TDLibKit.AuthorizationState) {}
 }

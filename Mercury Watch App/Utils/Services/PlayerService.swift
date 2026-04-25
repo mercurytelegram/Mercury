@@ -129,8 +129,8 @@ extension PlayerService: AVAudioPlayerDelegate {
 }
 
 class PlayerServiceMock: PlayerService {
-    init() {
+    init?() {
         let sampleFile = Bundle.main.url(forResource: "audio_sample", withExtension: "m4a")!
-        try! super.init(audioFilePath: sampleFile)
+        try? super.init(audioFilePath: sampleFile)
     }
 }

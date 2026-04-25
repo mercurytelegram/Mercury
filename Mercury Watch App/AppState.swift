@@ -14,7 +14,7 @@ class AppState {
     static var shared = AppState()
     
     var isMock: Bool = false
-    var isAuthenticated: Bool? = UserDefaulsService.isAuthenticated
+    var isAuthenticated: Bool? = nil
     private(set) var folders: [ChatFolder] = [.main, .archive]
     
     func insertFolder(_ folder: ChatFolder) {

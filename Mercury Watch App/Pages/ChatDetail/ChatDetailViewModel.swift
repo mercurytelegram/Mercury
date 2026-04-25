@@ -21,7 +21,13 @@ class ChatDetailViewModel: TDLibViewModel {
     var isLoadingMoreMessages: Bool = false
     
     var showAudioMessageView: Bool = false
-    var showStickersView: Bool = false
+    var showStickersView: Bool = false {
+        didSet {
+            if !showStickersView {
+                self.chatAction = nil
+            }
+        }
+    }
     var showOptionsView: Bool = false
     var showChatInfoView: Bool = false
     
@@ -38,6 +44,9 @@ class ChatDetailViewModel: TDLibViewModel {
     
     var chatAction: ChatAction?
     var chatActionTimer: Timer?
+    
+    var chatType: ChatType?
+    var isChatBlocked: Bool = false
     
     init(chatId: Int64) {
         self.chatId = chatId
@@ -78,6 +87,8 @@ class ChatDetailViewModel: TDLibViewModel {
                     self.canSendStickers = chat.permissions.canSendOtherMessages
                     self.lastReadInboxMessageId = chat.lastReadInboxMessageId
                     self.avatar = chat.toAvatarModel()
+                    self.chatType = chat.type
+                    self.isChatBlocked = chat.blockList != nil
                 }
                 
                 let newMessages = await self.requestMessages(firstBatch: true)
@@ -120,6 +131,8 @@ class ChatDetailViewModel: TDLibViewModel {
                 self.updateChatReadOutbox(update)
             case .updateMessageContentOpened(let update):
                 self.updateMessageContentOpened(update)
+            case .updateChatBlockList(let list):
+                self.updateChatBlockList(list)
             default:
                 break
             }
@@ -127,7 +140,7 @@ class ChatDetailViewModel: TDLibViewModel {
     }
      
     /// Do not call this function manually, it is periodically called from a task
-    private func setChatAction(_ action: ChatAction?) {
+    fileprivate func setChatAction(_ action: ChatAction?) {
         Task.detached(priority: .background) {
             do {
                 try await TDLibManager.shared.client?.sendChatAction(
@@ -138,6 +151,42 @@ class ChatDetailViewModel: TDLibViewModel {
                 )
             } catch {
                 self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    public func getProfileDetailPageType() -> ProfileDetailPageType? {
+        
+        switch self.chatType {
+        case .chatTypePrivate(let chatTypePrivate):
+            return .user(userId: chatTypePrivate.userId)
+            
+        case .chatTypeBasicGroup(let basicGroupId):
+            return .basicGroup(
+                groupId: basicGroupId.basicGroupId,
+                chatId: self.chatId
+            )
+            
+        case .chatTypeSupergroup(let superGroupId):
+            return .superGroup(
+                groupId: superGroupId.supergroupId,
+                chatId: self.chatId
+            )
+            
+        default:
+            // TODO: Implement all cases (missing .chatTypeSecret)
+            return nil
+        }
+    }
+    
+    public func unblockUser() {
+        if case .chatTypePrivate(let chatTypePrivate) = self.chatType {
+            let userId = chatTypePrivate.userId
+            Task.detached {
+                try await TDLibManager.shared.client?.setMessageSenderBlockList(
+                    blockList: nil,
+                    senderId: .messageSenderUser(.init(userId: userId))
+                )
             }
         }
     }
@@ -154,8 +203,17 @@ class ChatDetailViewModelMock: ChatDetailViewModel {
         canSendVoiceNotes = true
         canSendStickers = true
         
-        chatName = "Astro"
-        avatar = .astro
+        chatName = "Houston"
+        avatar = .huston()
+        
+        sendService = SendMessageServiceMock(insertMessage)
+    }
+    
+    func insertMessage(_ msg: MessageModel.MessageContent) {
+        self.messages.append(.mock(
+            id: self.messages.count,
+            content: msg
+        ))
     }
     
     override func loadChatData() {
@@ -179,18 +237,30 @@ class ChatDetailViewModelMock: ChatDetailViewModel {
                 isSenderHidden: true,
                 date: .appleWatchPresentationDate,
                 isOutgoing: true,
-                content: .text("Yes, it's amazing! 😍")
-            ),
-//            
-//            .init(
-//                id: 3,
-//                isSenderHidden: true,
-//                date: .now,
-//                isOutgoing: false,
-//                content: .voiceNote(model: .init(getPlayer: {
-//                    PlayerServiceMock()
-//                }))
-//            ),
+                content: .stickerImage(model: .init(emoji: "", getImage: {
+                    return UIImage(named: "sticker-alien")
+                }))
+            )
         ]
+        
+        if let player = PlayerServiceMock() {
+            self.messages.append (
+                .init(
+                    id: 3,
+                    isSenderHidden: true,
+                    date: .iPhonePresentationDate,
+                    isOutgoing: true,
+                    content: .voiceNote(model: .init(getPlayer: { return player }))
+                )
+            )
+        }
+        
+            
     }
+    
+    override public func getProfileDetailPageType() -> ProfileDetailPageType? {
+        return .user(userId: 0)
+    }
+    
+    override func setChatAction(_ action: ChatAction?) {}
 }

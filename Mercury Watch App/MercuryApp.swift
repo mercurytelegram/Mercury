@@ -16,12 +16,14 @@ struct MercuryApp: App {
         WindowGroup {
             
             let isMock = AppState.shared.isMock
-            let isAuthenticated = AppState.shared.isAuthenticated ?? false
+            let isAuthenticated = AppState.shared.isAuthenticated
             
-            if isMock || isAuthenticated {
+            if isMock || isAuthenticated == true {
                 HomePage()
-            } else {
+            } else if isAuthenticated == false {
                 LoginPage()
+            } else {
+                ProgressView()
             }
             
         }

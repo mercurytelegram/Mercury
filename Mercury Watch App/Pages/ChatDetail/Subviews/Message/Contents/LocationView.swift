@@ -44,8 +44,7 @@ struct LocationModel {
         model: .init(
             title: "",
             coordinate: CLLocationCoordinate2DMake(
-                37.33187132756376,
-                -122.02965972794414
+                37.3348015587359, (-122.00891835050895 - 0.00009)
             ),
             markerSymbol: ""
         )

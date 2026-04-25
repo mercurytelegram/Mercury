@@ -61,6 +61,7 @@ extension ChatDetailViewModel {
     }
     
     func onPressStickersSelection() {
+        self.chatAction = .chatActionChoosingSticker
         self.showStickersView = true
     }
     

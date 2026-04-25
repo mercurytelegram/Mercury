@@ -15,7 +15,7 @@ protocol TDImage {
 }
 
 extension TDImage {
-    func getAsyncModel() -> AsyncImageModel {
+    func getAsyncModel(highRes: Bool = false) -> AsyncImageModel {
         var thumbnail: UIImage? = nil
         if let data = self.minithumbnail?.data {
             thumbnail = UIImage(data: data)
@@ -24,7 +24,7 @@ extension TDImage {
         return AsyncImageModel(
             thumbnail: thumbnail,
             getImage: {
-                guard let photo = self.lowRes
+                guard let photo = highRes ? self.highRes : self.lowRes
                 else { return nil }
                 return await FileService.getImage(for: photo)
             }

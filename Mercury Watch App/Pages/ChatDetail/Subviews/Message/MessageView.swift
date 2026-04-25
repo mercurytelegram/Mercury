@@ -129,6 +129,7 @@ struct StickerImageModel {
 
 extension MessageModel {
     static func mock(
+        id: Int = 0,
         sender: String = "",
         isOutgoing: Bool = true,
         reactions: [ReactionModel] = [],
@@ -137,7 +138,7 @@ extension MessageModel {
         content: MessageModel.MessageContent = .text("")
     ) -> Self {
         .init(
-            id: 0,
+            id: Int64(id),
             sender: sender,
             senderColor: .blue,
             isSenderHidden: sender.isEmpty,

@@ -57,8 +57,8 @@ struct UserModel {
 class SettingsViewModelMock: SettingsViewModel {
     override func getUser() {
         self.user = .init(
-            thumbnail: UIImage(named: "astro"),
-            avatar: .astro,
+            thumbnail: UIImage(named: "alessandro"),
+            avatar: .alessandro,
             fullName: "John Appleseed",
             mainUserName: "@johnappleseed",
             phoneNumber: "+39 0000000000"

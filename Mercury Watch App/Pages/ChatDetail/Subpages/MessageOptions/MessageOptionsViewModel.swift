@@ -13,8 +13,16 @@ class MessageOptionsViewModel {
     
     var emojis: [String] = []
     var selectedEmoji: String? = nil
+    var showReportMessageOptions: Bool = false
+    
+    var shouldDisplayReportButton: Bool {
+        if case .chatTypeBasicGroup(_) = model.chatType { return true }
+        if case .chatTypeSupergroup(_) = model.chatType { return true }
+        return false
+    }
     
     let model: MessageOptionsModel
+    let reportMessageOptions: [ReportReason] = [.reportReasonSpam, .reportReasonViolence, .reportReasonPornography, .reportReasonChildAbuse, .reportReasonCopyright, .reportReasonUnrelatedLocation, .reportReasonFake, .reportReasonIllegalDrugs, .reportReasonPersonalDetails]
     
     private let logger = LoggerService(MessageOptionsViewModel.self)
     
@@ -26,7 +34,7 @@ class MessageOptionsViewModel {
         }
     }
     
-    private func getReactions() async {
+    fileprivate func getReactions() async {
         
         let chatId = model.chatId
         let messageId = model.messageId
@@ -49,7 +57,7 @@ class MessageOptionsViewModel {
         }
     }
     
-    private func getSelectedEmoji() async {
+    fileprivate func getSelectedEmoji() async {
         
         let chatId = model.chatId
         let messageId = model.messageId
@@ -92,6 +100,23 @@ class MessageOptionsViewModel {
         )
         
     }
+    
+    func reportMessage(_ reason: ReportReason) {
+        let chatId = model.chatId
+        let messageId = model.messageId
+        
+        Task {
+            do {
+                try await TDLibManager.shared.client?.reportChat(chatId: chatId, messageIds: [messageId], reason: reason, text: nil)
+            } catch {
+                logger.log(error)
+            }
+            
+            await MainActor.run {
+                self.showReportMessageOptions = false
+            }
+        }
+    }
 }
 
 class MessageOptionsViewModelMock: MessageOptionsViewModel {
@@ -100,8 +125,24 @@ class MessageOptionsViewModelMock: MessageOptionsViewModel {
             model: MessageOptionsModel(
                 chatId: 0,
                 messageId: 0,
-                sendService: SendMessageServiceMock()
+                sendService: SendMessageServiceMock { _ in }
             )
         )
+        
+    }
+    
+    override var shouldDisplayReportButton: Bool {
+        return true
+    }
+    
+    override func getReactions() async {
+        self.emojis = ["🤣", "❤️", "🤝", "🔥",
+                       "👌", "😱", "👀", "‍‍❤️‍🔥",
+                       "🤯", "😢", "😭", "🗿"]
+    }
+    
+    override func getSelectedEmoji() async {}
+    override func reportMessage(_ reason: ReportReason) {
+        self.showReportMessageOptions = false
     }
 }

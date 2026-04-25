@@ -61,7 +61,10 @@ struct AvatarView: View {
                             Image(uiImage: thumbnail)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .clipShape(Circle())
+                                .if(!model.isFullScreen) {
+                                    $0.clipShape(Circle())
+                                }
+                            
                         } else {
                             placeholder(size)
                         }
@@ -71,7 +74,9 @@ struct AvatarView: View {
                 Image(uiImage: data)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .clipShape(Circle())
+                    .if(!model.isFullScreen) {
+                        $0.clipShape(Circle())
+                    }
             }
             .id(model.avatarImage?.thumbnail)
         } else {
@@ -82,7 +87,14 @@ struct AvatarView: View {
     
     @ViewBuilder
     func placeholder(_ size: CGFloat) -> some View {
-        Circle()
+        
+        Group {
+            if model.isFullScreen {
+                Rectangle()
+            } else {
+                Circle()
+            }
+        }
             .foregroundStyle(model.color.gradient)
             .overlay {
                 Text(model.letters)
@@ -97,6 +109,7 @@ struct AvatarModel: Equatable {
     var letters: String = ""
     var color: Color = .blue
     var isOnline: Bool = false
+    var isFullScreen = false
     
     /// The id releated to the TDImage, nil if the avatar represent a group chat
     var userId: Int64? = nil
@@ -129,12 +142,12 @@ extension AvatarModel {
         )
     }
     
-    static var astro: AvatarModel {
+    static func huston(isFullScreen: Bool = false) -> AvatarModel {
         AvatarModel(
             avatarImage: AsyncImageModel(
-                thumbnail: UIImage(named: "astro"),
-                getImage: { UIImage(named: "astro") }
-            )
+                thumbnail: UIImage(named: "huston"),
+                getImage: { UIImage(named: "huston") }
+            ), isFullScreen: isFullScreen
         )
     }
 }
@@ -151,7 +164,7 @@ extension AvatarModel {
 }
 
 #Preview("Big Letters") {
-    AvatarView(model: .init(letters: "AA"))
+    AvatarView(model: .init(letters: "AA", isFullScreen: true))
         .frame(width: 150, height: 150)
 }
 

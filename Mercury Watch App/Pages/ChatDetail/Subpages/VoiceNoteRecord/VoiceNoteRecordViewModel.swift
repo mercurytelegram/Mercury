@@ -142,11 +142,11 @@ extension VoiceNoteRecordViewModel: AVAudioPlayerDelegate {
 }
 
 class VoiceNoteRecordViewModelMock: VoiceNoteRecordViewModel {
-    init() {
+    init(sendService: SendMessageService, isPresented: Binding<Bool>) {
         super.init(
             action: .constant(nil),
-            sendService: SendMessageServiceMock(),
-            isPresented: .constant(true)
+            sendService: sendService,
+            isPresented: isPresented
         )
     }
 }

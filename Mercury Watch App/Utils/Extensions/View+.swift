@@ -24,4 +24,9 @@ extension View {
             self
         }
     }
+    
+    /// Overlays a `ProgressView` on top of the View if the `isLoading` is true
+    func loadable(isLoading: Bool) -> some View {
+        modifier(LoadableModifier(isLoading: isLoading))
+    }
 }

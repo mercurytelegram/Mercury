@@ -17,10 +17,15 @@
 		9B0BD4A52CD688F000ADE7C9 /* PasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */; };
 		9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */; };
 		9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */; };
+		9B190E622D56B19E0045D311 /* InputCtaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B190E612D56B19E0045D311 /* InputCtaView.swift */; };
 		9B2805CC2C4671C500F7DF72 /* TDImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2805CB2C4671C500F7DF72 /* TDImage+.swift */; };
 		9B2E1BE02C08739800B9B63D /* MessageBubbleShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */; };
 		9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4451F92C45C63D00A6EBC2 /* User+.swift */; };
+		9B470C392D81BD8D008A03D3 /* InputMessageContent+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B470C382D81BD8D008A03D3 /* InputMessageContent+.swift */; };
 		9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */; };
+		9B5600FF2D59D78D005E28F1 /* ScalingButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */; };
+		9B5E558B2D8165590058964B /* StickersPickerSubpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5E558A2D8165590058964B /* StickersPickerSubpage.swift */; };
+		9B5E558E2D81657C0058964B /* StickersPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5E558D2D81657C0058964B /* StickersPickerViewModel.swift */; };
 		9B5EBE622CE5F16F00EDCCE3 /* FitStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */; };
 		9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */; };
 		9B8493E82C7623B700AC90E9 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8493E72C7623B700AC90E9 /* View+.swift */; };
@@ -29,6 +34,10 @@
 		9BAA75DD2CD4EE370007B4E2 /* SDWebImageLottieCoder in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */; };
 		9BAA75E12CD4F08A0007B4E2 /* sticker.tgs in Resources */ = {isa = PBXBuildFile; fileRef = 9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */; };
 		9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = 9BAA75E32CD4F1620007B4E2 /* Gzip */; };
+		9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */; };
+		9BB3BCB62D14379400CAFB31 /* KeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB52D14379400CAFB31 /* KeypadView.swift */; };
+		9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */; };
+		9BCDA5002F5DCD1500FEBAE4 /* ReportReason+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCDA4FF2F5DCD1500FEBAE4 /* ReportReason+.swift */; };
 		9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD9F9E32CDD044900833C48 /* AsyncView.swift */; };
 		9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF303552D3A70EB00309992 /* TextDivider.swift */; };
 		A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0054EA52BF3E12F009F2CEB /* TDLibKit */; };
@@ -46,6 +55,7 @@
 		A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE8592CCAB6EE003282B2 /* DSWaveformImage */; };
 		A06AE85C2CCAB6EE003282B2 /* DSWaveformImageViews in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85B2CCAB6EE003282B2 /* DSWaveformImageViews */; };
 		A06AE85F2CCAB812003282B2 /* SDWebImageWebPCoder in Frameworks */ = {isa = PBXBuildFile; productRef = A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */; };
+		A06AEA132D6B854E00EF8377 /* LoadableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */; };
 		A07438ED2BD10D2D00945CB5 /* Mercury Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A07438F22BD10D2D00945CB5 /* MercuryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07438F12BD10D2D00945CB5 /* MercuryApp.swift */; };
 		A07438F62BD10D2F00945CB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07438F52BD10D2F00945CB5 /* Assets.xcassets */; };
@@ -64,7 +74,6 @@
 		A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89B2CD64B1700920564 /* LoginPage.swift */; };
 		A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8962CD64B1700920564 /* ChatListViewModel.swift */; };
 		A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8992CD64B1700920564 /* HomeViewModel.swift */; };
-		A080D8B22CD778F700920564 /* UserDefaulsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8B12CD778EF00920564 /* UserDefaulsService.swift */; };
 		A080D8B82CD7843000920564 /* ChatCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8B72CD7842A00920564 /* ChatCellView.swift */; };
 		A080D8BF2CD78CED00920564 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8BE2CD78CED00920564 /* AvatarView.swift */; };
 		A080D8C42CD9666C00920564 /* ChatNotificationSettings+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */; };
@@ -94,6 +103,8 @@
 		A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */; };
 		A0CF532B2BDFD79D00BA394B /* TDLibViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */; };
 		A0DF848A2CCB9A7500CC101E /* FileManager+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0DF84892CCB9A6F00CC101E /* FileManager+.swift */; };
+		A9EF32402F38D9C100BD8A8B /* ProfileDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EF323F2F38D9BE00BD8A8B /* ProfileDetailPage.swift */; };
+		A9EF32422F38DC7F00BD8A8B /* ProfileDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EF32412F38DC7F00BD8A8B /* ProfileDetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,16 +142,25 @@
 		9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordView.swift; sourceTree = "<group>"; };
 		9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeView.swift; sourceTree = "<group>"; };
 		9B0E23512CD69FC800ED69D6 /* PreviewTrait+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PreviewTrait+Mock.swift"; sourceTree = "<group>"; };
+		9B190E612D56B19E0045D311 /* InputCtaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputCtaView.swift; sourceTree = "<group>"; };
 		9B2805CB2C4671C500F7DF72 /* TDImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TDImage+.swift"; sourceTree = "<group>"; };
 		9B2E1BDD2C08739800B9B63D /* MessageBubbleShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleShape.swift; sourceTree = "<group>"; };
 		9B4451F92C45C63D00A6EBC2 /* User+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+.swift"; sourceTree = "<group>"; };
+		9B470C382D81BD8D008A03D3 /* InputMessageContent+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InputMessageContent+.swift"; sourceTree = "<group>"; };
 		9B53DD7B2C5F933A00CAA125 /* MessageBubbleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBubbleView.swift; sourceTree = "<group>"; };
+		9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScalingButtonStyle.swift; sourceTree = "<group>"; };
+		9B5E558A2D8165590058964B /* StickersPickerSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersPickerSubpage.swift; sourceTree = "<group>"; };
+		9B5E558D2D81657C0058964B /* StickersPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StickersPickerViewModel.swift; sourceTree = "<group>"; };
 		9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitStack.swift; sourceTree = "<group>"; };
 		9B6D223E2C39BC2B008A1054 /* ChatFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFolder.swift; sourceTree = "<group>"; };
 		9B8493E72C7623B700AC90E9 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		9BA9A4F12CE798C5005C717C /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		9BA9A4F32CE79DB0005C717C /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */ = {isa = PBXFileReference; lastKnownFileType = file; path = sticker.tgs; sourceTree = "<group>"; };
+		9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeKeypadView.swift; sourceTree = "<group>"; };
+		9BB3BCB52D14379400CAFB31 /* KeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypadView.swift; sourceTree = "<group>"; };
+		9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneKeypadView.swift; sourceTree = "<group>"; };
+		9BCDA4FF2F5DCD1500FEBAE4 /* ReportReason+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReportReason+.swift"; sourceTree = "<group>"; };
 		9BD9F9E32CDD044900833C48 /* AsyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncView.swift; sourceTree = "<group>"; };
 		9BF303552D3A70EB00309992 /* TextDivider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDivider.swift; sourceTree = "<group>"; };
 		A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageOptionsSubpage.swift; sourceTree = "<group>"; };
@@ -152,6 +172,7 @@
 		A04ABE892CE0B99900641BC1 /* ChatListViewModel+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Updates.swift"; sourceTree = "<group>"; };
 		A04ABE8B2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatListViewModel+Chats.swift"; sourceTree = "<group>"; };
 		A05C1AC42BECCF4B00724B6E /* Message+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+.swift"; sourceTree = "<group>"; };
+		A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadableModifier.swift; sourceTree = "<group>"; };
 		A07438E62BD10D2D00945CB5 /* Mercury.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mercury.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mercury Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07438F12BD10D2D00945CB5 /* MercuryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MercuryApp.swift; sourceTree = "<group>"; };
@@ -169,7 +190,6 @@
 		A080D89C2CD64B1700920564 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A080D89E2CD64B1700920564 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		A080D89F2CD64B1700920564 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		A080D8B12CD778EF00920564 /* UserDefaulsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaulsService.swift; sourceTree = "<group>"; };
 		A080D8B72CD7842A00920564 /* ChatCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellView.swift; sourceTree = "<group>"; };
 		A080D8BE2CD78CED00920564 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatNotificationSettings+.swift"; sourceTree = "<group>"; };
@@ -198,6 +218,8 @@
 		A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibViewModel.swift; sourceTree = "<group>"; };
 		A0DF84892CCB9A6F00CC101E /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		A0F63BD82BD63B0500F7135E /* Mercury-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mercury-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		A9EF323F2F38D9BE00BD8A8B /* ProfileDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailPage.swift; sourceTree = "<group>"; };
+		A9EF32412F38DC7F00BD8A8B /* ProfileDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +250,7 @@
 			children = (
 				9B0B6CBB2CD679A600BB6A94 /* StepView.swift */,
 				9B0BD4A42CD688F000ADE7C9 /* PasswordView.swift */,
+				9B190E612D56B19E0045D311 /* InputCtaView.swift */,
 				9B0BD4A62CD6951200ADE7C9 /* QRCodeView.swift */,
 			);
 			path = Subviews;
@@ -245,12 +268,33 @@
 				A081AAD42C0721C2002A265C /* Chat+.swift */,
 				A081AAD22C071C82002A265C /* ChatAction+.swift */,
 				A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */,
+				9B470C382D81BD8D008A03D3 /* InputMessageContent+.swift */,
 				4A4743F12BF796DF00264855 /* Color+.swift */,
 				9B4451F92C45C63D00A6EBC2 /* User+.swift */,
 				9B2805CB2C4671C500F7DF72 /* TDImage+.swift */,
 				9B8493E72C7623B700AC90E9 /* View+.swift */,
+				9BCDA4FF2F5DCD1500FEBAE4 /* ReportReason+.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9B5E558C2D8165630058964B /* StickersPicker */ = {
+			isa = PBXGroup;
+			children = (
+				9B5E558A2D8165590058964B /* StickersPickerSubpage.swift */,
+				9B5E558D2D81657C0058964B /* StickersPickerViewModel.swift */,
+			);
+			path = StickersPicker;
+			sourceTree = "<group>";
+		};
+		9BB3BCB22D14373D00CAFB31 /* Keypad */ = {
+			isa = PBXGroup;
+			children = (
+				9BB3BCB72D14379F00CAFB31 /* PhoneKeypadView.swift */,
+				9BB3BCB52D14379400CAFB31 /* KeypadView.swift */,
+				9BB3BCB32D14376700CAFB31 /* CodeKeypadView.swift */,
+			);
+			path = Keypad;
 			sourceTree = "<group>";
 		};
 		A04ABE4E2CE00EFD00641BC1 /* Subpages */ = {
@@ -318,6 +362,7 @@
 				A0CF53252BDFD77D00BA394B /* TDLib */,
 				A07438F72BD10D2F00945CB5 /* Preview Content */,
 				A07438F52BD10D2F00945CB5 /* Assets.xcassets */,
+				A080D8EB2CDC17BC00920564 /* audio_sample.m4a */,
 			);
 			path = "Mercury Watch App";
 			sourceTree = "<group>";
@@ -325,7 +370,6 @@
 		A07438F72BD10D2F00945CB5 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				A080D8EB2CDC17BC00920564 /* audio_sample.m4a */,
 				9BAA75E02CD4F08A0007B4E2 /* sticker.tgs */,
 				A07438F82BD10D2F00945CB5 /* Preview Assets.xcassets */,
 			);
@@ -337,7 +381,6 @@
 			children = (
 				A04ABE5C2CE01F7300641BC1 /* PlayerService.swift */,
 				A04ABE5D2CE01F7300641BC1 /* RecorderService.swift */,
-				A080D8B12CD778EF00920564 /* UserDefaulsService.swift */,
 				A080D88B2CD64A7C00920564 /* SecretService.swift */,
 				A080D88C2CD64A7C00920564 /* SecretService-sample.swift */,
 				A0CDF8BF2CE7D4AB0015E20E /* LoggerService.swift */,
@@ -362,6 +405,7 @@
 			children = (
 				A080D8B02CD64B6600920564 /* Subviews */,
 				A04ABE4E2CE00EFD00641BC1 /* Subpages */,
+				9B5E558C2D8165630058964B /* StickersPicker */,
 				A080D8922CD64B1700920564 /* ChatDetailPage.swift */,
 				A080D8932CD64B1700920564 /* ChatDetailViewModel.swift */,
 				A080D8F12CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift */,
@@ -421,6 +465,7 @@
 				A080D8A02CD64B1700920564 /* Settings */,
 				A080D8972CD64B1700920564 /* ChatList */,
 				A080D8942CD64B1700920564 /* ChatDetail */,
+				A9EF323E2F38D9AC00BD8A8B /* ProfileDetail */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -453,6 +498,7 @@
 		A080D8BD2CD78CE600920564 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A06AEA122D6B854E00EF8377 /* LoadableModifier.swift */,
 				A080D8BE2CD78CED00920564 /* AvatarView.swift */,
 				9BD9F9E32CDD044900833C48 /* AsyncView.swift */,
 				9BF303552D3A70EB00309992 /* TextDivider.swift */,
@@ -460,6 +506,8 @@
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
 				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
 				A0CDF94C2CE7D6060015E20E /* AlertView.swift */,
+				9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */,
+				9BB3BCB22D14373D00CAFB31 /* Keypad */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -512,6 +560,15 @@
 				A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */,
 			);
 			path = TDLib;
+			sourceTree = "<group>";
+		};
+		A9EF323E2F38D9AC00BD8A8B /* ProfileDetail */ = {
+			isa = PBXGroup;
+			children = (
+				A9EF323F2F38D9BE00BD8A8B /* ProfileDetailPage.swift */,
+				A9EF32412F38DC7F00BD8A8B /* ProfileDetailViewModel.swift */,
+			);
+			path = ProfileDetail;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -651,12 +708,15 @@
 				A0CDF8C62CE7D4D70015E20E /* SendMessageService.swift in Sources */,
 				A080D8C82CDA239B00920564 /* MessageView.swift in Sources */,
 				9B0BD4A72CD6951200ADE7C9 /* QRCodeView.swift in Sources */,
+				9B5600FF2D59D78D005E28F1 /* ScalingButtonStyle.swift in Sources */,
+				A9EF32422F38DC7F00BD8A8B /* ProfileDetailViewModel.swift in Sources */,
 				A0CF53272BDFD78900BA394B /* TDLibManager.swift in Sources */,
 				9BA9A4F22CE798C5005C717C /* FlowLayout.swift in Sources */,
 				9B53DD7C2C5F933A00CAA125 /* MessageBubbleView.swift in Sources */,
 				A080D8D82CDA996F00920564 /* ReactionView.swift in Sources */,
 				9B6D223F2C39BC2B008A1054 /* ChatFolder.swift in Sources */,
 				A0CA7BA62BF90FC200E66219 /* AppDelegate.swift in Sources */,
+				9B5E558B2D8165590058964B /* StickersPickerSubpage.swift in Sources */,
 				A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */,
 				A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */,
 				9B0E23522CD69FC800ED69D6 /* PreviewTrait+Mock.swift in Sources */,
@@ -686,7 +746,9 @@
 				A080D8A42CD64B1700920564 /* ChatDetailViewModel.swift in Sources */,
 				A080D8DE2CDC051300920564 /* LocationView.swift in Sources */,
 				A080D8DA2CDAADEC00920564 /* ReplyView.swift in Sources */,
+				9B470C392D81BD8D008A03D3 /* InputMessageContent+.swift in Sources */,
 				A080D8A52CD64B1700920564 /* ChatListPage.swift in Sources */,
+				9B190E622D56B19E0045D311 /* InputCtaView.swift in Sources */,
 				A080D8A62CD64B1700920564 /* HomePage.swift in Sources */,
 				A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */,
 				A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */,
@@ -694,17 +756,23 @@
 				A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */,
 				A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */,
 				4AE620222C09C6CF00722512 /* FormattedText+.swift in Sources */,
+				9B5E558E2D81657C0058964B /* StickersPickerViewModel.swift in Sources */,
 				9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */,
 				A0DF848A2CCB9A7500CC101E /* FileManager+.swift in Sources */,
 				A080D8F22CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift in Sources */,
+				9BCDA5002F5DCD1500FEBAE4 /* ReportReason+.swift in Sources */,
 				A0CDF8BE2CE78FC70015E20E /* UserCellView.swift in Sources */,
 				A05C1AC52BECCF4B00724B6E /* Message+.swift in Sources */,
-				A080D8B22CD778F700920564 /* UserDefaulsService.swift in Sources */,
 				A080D8E02CDC08FF00920564 /* PillView.swift in Sources */,
 				A080D8B82CD7843000920564 /* ChatCellView.swift in Sources */,
+				A9EF32402F38D9C100BD8A8B /* ProfileDetailPage.swift in Sources */,
 				4A4743F22BF796DF00264855 /* Color+.swift in Sources */,
+				9BB3BCB62D14379400CAFB31 /* KeypadView.swift in Sources */,
 				9B0418F02CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift in Sources */,
+				9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */,
 				9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */,
+				A06AEA132D6B854E00EF8377 /* LoadableModifier.swift in Sources */,
+				9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */,
 				A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */,
 				A081AAD52C0721C2002A265C /* Chat+.swift in Sources */,
 			);
@@ -845,7 +913,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Mercury Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				ENABLE_PREVIEWS = YES;
@@ -859,7 +927,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -877,7 +945,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Mercury Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				ENABLE_PREVIEWS = YES;
@@ -891,7 +959,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -909,11 +977,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -926,11 +994,11 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = 6MWN6EWBL2;
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

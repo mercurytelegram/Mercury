@@ -23,7 +23,7 @@ struct VoiceNoteRecordSubpage: View {
         self._isPresented = isPresented
         _vm = Mockable.state(
             value: { VoiceNoteRecordViewModel(action: action, sendService: sendService, isPresented: isPresented) },
-            mock: { VoiceNoteRecordViewModelMock() }
+            mock: { VoiceNoteRecordViewModelMock(sendService: sendService, isPresented: isPresented) }
         )
     }
     
@@ -118,7 +118,7 @@ struct VoiceNoteRecordSubpage: View {
             VoiceNoteRecordSubpage(
                 isPresented: .constant(true),
                 action: .constant(nil),
-                sendService: SendMessageServiceMock()
+                sendService: SendMessageServiceMock { _ in }
             )
         })
 }

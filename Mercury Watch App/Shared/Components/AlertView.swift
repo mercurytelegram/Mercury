@@ -9,16 +9,18 @@ import SwiftUI
 
 struct AlertView: View {
     var symbolSystemName: String
-    var symbolColor: Color = .white
+    var tint: Color = .white
     var title: String
-    var description: String = ""
+    var description: LocalizedStringKey = ""
+    var ctaTitle: String?
+    var onCtaTap: (() -> Void)?
     
     var body: some View {
         ScrollView {
             Image(systemName: symbolSystemName)
                 .resizable()
                 .scaledToFit()
-                .foregroundStyle(symbolColor)
+                .foregroundStyle(tint)
                 .symbolVariant(.fill)
                 .frame(height: 60)
                 .padding(.bottom)
@@ -33,6 +35,14 @@ struct AlertView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+            
+            if let ctaTitle {
+                Button(ctaTitle){
+                    onCtaTap?()
+                }
+                .tint(tint)
+                .padding(.top)
+            }
         }
         .scenePadding(.horizontal)
     }
@@ -40,11 +50,34 @@ struct AlertView: View {
     static func inDevelopment(_ feature: String = "this feature is") -> AlertView {
         AlertView(
             symbolSystemName: "hammer",
-            symbolColor: .blue,
+            tint: .blue,
             title: "In Development",
             description: "Sorry, \(feature) currently under development"
         )
     }
+    
+    static func termsOfService(_ completion: @escaping () -> Void) -> AlertView {
+        AlertView(
+            symbolSystemName: "person.2.shield",
+            tint: .blue,
+            title: "Terms of Service",
+            description: """
+                By using this app, you agree to not share any harmful, dangerous, or abusive content.
+                
+                All other conditions are governed by [Telegram’s Terms of Service](https://telegram.org/tos).
+                """,
+            ctaTitle: "I agree",
+            onCtaTap: completion
+        )
+    }
+}
+
+#Preview("Terms of Service") {
+    Spacer()
+        .sheet(isPresented: .constant(true), content: {
+            AlertView.termsOfService { }
+                .toolbar(.hidden, for: .navigationBar)
+        })
 }
 
 #Preview("Generic Alert") {
@@ -52,7 +85,7 @@ struct AlertView: View {
         .sheet(isPresented: .constant(true), content: {
             AlertView(
                 symbolSystemName: "exclamationmark.triangle",
-                symbolColor: .yellow,
+                tint: .yellow,
                 title: "Alert",
                 description: "Description"
             )

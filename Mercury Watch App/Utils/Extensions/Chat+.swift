@@ -24,11 +24,11 @@ extension Chat {
         return self.chatLists.contains(.chatListArchive)
     }
     
-    func toAvatarModel() -> AvatarModel {
-        let avatarImage = photo?.getAsyncModel()
+    func toAvatarModel(isFullScreen: Bool = false) -> AvatarModel {
+        let avatarImage = photo?.getAsyncModel(highRes: isFullScreen)
         let letters = "\(self.title.prefix(1))"
         
-        return AvatarModel(avatarImage: avatarImage, letters: letters)
+        return AvatarModel(avatarImage: avatarImage, letters: letters, isFullScreen: isFullScreen)
     }
     
 }
