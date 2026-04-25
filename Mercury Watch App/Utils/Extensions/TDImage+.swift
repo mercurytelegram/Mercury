@@ -69,6 +69,16 @@ extension Video: TDImage {
     }
 }
 
+extension VideoNote: TDImage {
+    var lowRes: File? {
+        return thumbnail?.file
+    }
+
+    var highRes: File? {
+        return nil
+    }
+}
+
 extension ChatPhoto: TDImage {
     var lowRes: File? {
         self.sizes.isEmpty ? nil :  self.sizes[0].photo
@@ -78,5 +88,4 @@ extension ChatPhoto: TDImage {
         return nil
     }
 }
-
 

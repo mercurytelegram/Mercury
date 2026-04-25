@@ -84,6 +84,7 @@
 		A080D8DE2CDC051300920564 /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8DD2CDC051300920564 /* LocationView.swift */; };
 		A080D8E02CDC08FF00920564 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8DF2CDC08FF00920564 /* PillView.swift */; };
 		A080D8E22CDC0B1800920564 /* VoiceNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8E12CDC0B1800920564 /* VoiceNoteView.swift */; };
+		A080D8F42CEB000000920564 /* VideoNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8F32CEB000000920564 /* VideoNoteView.swift */; };
 		A080D8EC2CDC17BD00920564 /* audio_sample.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A080D8EB2CDC17BC00920564 /* audio_sample.m4a */; };
 		A080D8EE2CDE273A00920564 /* ChatDetailViewModel+Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8ED2CDE272E00920564 /* ChatDetailViewModel+Updates.swift */; };
 		A080D8F02CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8EF2CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift */; };
@@ -200,6 +201,7 @@
 		A080D8DD2CDC051300920564 /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
 		A080D8DF2CDC08FF00920564 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
 		A080D8E12CDC0B1800920564 /* VoiceNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceNoteView.swift; sourceTree = "<group>"; };
+		A080D8F32CEB000000920564 /* VideoNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoNoteView.swift; sourceTree = "<group>"; };
 		A080D8EB2CDC17BC00920564 /* audio_sample.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = audio_sample.m4a; sourceTree = "<group>"; };
 		A080D8ED2CDE272E00920564 /* ChatDetailViewModel+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatDetailViewModel+Updates.swift"; sourceTree = "<group>"; };
 		A080D8EF2CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatDetailViewModel+Interactions.swift"; sourceTree = "<group>"; };
@@ -535,6 +537,7 @@
 			children = (
 				A080D8DD2CDC051300920564 /* LocationView.swift */,
 				A080D8DF2CDC08FF00920564 /* PillView.swift */,
+				A080D8F32CEB000000920564 /* VideoNoteView.swift */,
 				A080D8E12CDC0B1800920564 /* VoiceNoteView.swift */,
 			);
 			path = Contents;
@@ -696,6 +699,7 @@
 			files = (
 				9B0B6CBC2CD679A600BB6A94 /* StepView.swift in Sources */,
 				A080D8E22CDC0B1800920564 /* VoiceNoteView.swift in Sources */,
+				A080D8F42CEB000000920564 /* VideoNoteView.swift in Sources */,
 				A04ABE5A2CE015F800641BC1 /* VoiceNoteRecordSubpage.swift in Sources */,
 				A04ABE5B2CE015F800641BC1 /* VoiceNoteRecordViewModel.swift in Sources */,
 				9B5EBE622CE5F16F00EDCCE3 /* FitStack.swift in Sources */,
