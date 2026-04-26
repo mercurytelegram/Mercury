@@ -74,9 +74,84 @@ struct MessageView: View {
                 LocationView(model: locationModel)
             }
 
+        case .animation(let animationModel, let caption):
+            MessageBubbleView(model: model, style: .fullScreen(caption: caption ?? "")) {
+                AnimationView(model: animationModel)
+            }
+
+        case .photoAlbum(let models, let caption):
+            MessageBubbleView(model: model, style: .fullScreen(caption: caption ?? "")) {
+                PhotoAlbumView(models: models)
+            }
+
         case .pill(let title, let description):
             PillView(title: title, description: description)
         }
+    }
+}
+
+struct PhotoAlbumView: View {
+    let models: [AsyncImageModel]
+    
+    var body: some View {
+        VStack(spacing: 2) {
+            if models.count == 2 {
+                HStack(spacing: 2) {
+                    photoView(for: 0)
+                    photoView(for: 1)
+                }
+            } else if models.count == 3 {
+                HStack(spacing: 2) {
+                    photoView(for: 0)
+                    photoView(for: 1)
+                }
+                photoView(for: 2)
+            } else if models.count >= 4 {
+                HStack(spacing: 2) {
+                    photoView(for: 0)
+                    photoView(for: 1)
+                }
+                HStack(spacing: 2) {
+                    photoView(for: 2)
+                    photoView(for: 3)
+                }
+                if models.count > 4 {
+                    Text("+\(models.count - 4)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 2)
+                }
+            } else {
+                // Fallback for 1 or 0
+                if let first = models.first {
+                    photoView(for: 0)
+                }
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+    
+    @ViewBuilder
+    private func photoView(for index: Int) -> some View {
+        let model = models[index]
+        AsyncView(getData: model.getImage) {
+            Group {
+                if let thumbnail = model.thumbnail {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    Color.black.opacity(0.35)
+                }
+            }
+        } buildContent: { image in
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+        }
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+        .aspectRatio(1, contentMode: .fill)
+        .clipped()
     }
 }
 
@@ -97,6 +172,7 @@ struct MessageModel: Identifiable {
 
     var reactions: [ReactionModel] = []
     var reply: ReplyModel? = nil
+    var mediaAlbumId: TdInt64? = nil
 
     var stateStyle: StateStyle?
     enum StateStyle {
@@ -108,9 +184,11 @@ struct MessageModel: Identifiable {
         case text(AttributedString)
         case voiceNote(model: VoiceNoteModel)
         case photo(model: AsyncImageModel, caption: String?)
+        case photoAlbum(models: [AsyncImageModel], caption: String?)
         case videoNote(model: VideoNoteModel)
         case stickerImage(model: StickerImageModel)
         case location(model: LocationModel)
+        case animation(model: AnimationModel, caption: String?)
         case pill(title: String?, description: LocalizedStringKey)
 
         var isVideoNote: Bool {
@@ -146,8 +224,33 @@ extension MessageModel {
             isOutgoing: sender.isEmpty ? isOutgoing : false,
             reactions: reactions,
             reply: reply,
+            mediaAlbumId: nil,
             stateStyle: isOutgoing ? state : nil,
             content: content
         )
     }
+}
+
+// MARK: - Previews
+
+#Preview("Video Note") {
+    MessageView(model: .mock(
+        content: .videoNote(model: VideoNoteModel(
+            thumbnail: AsyncImageModel(thumbnail: UIImage(named: "astro"), getImage: { nil }),
+            duration: 15,
+            getVideoURL: { nil }
+        ))
+    ))
+}
+
+#Preview("Animation (GIF)") {
+    MessageView(model: .mock(
+        content: .animation(
+            model: AnimationModel(
+                thumbnail: AsyncImageModel(thumbnail: UIImage(named: "astro"), getImage: { nil }),
+                getVideoURL: { nil }
+            ),
+            caption: "Look at this cool GIF!"
+        )
+    ))
 }

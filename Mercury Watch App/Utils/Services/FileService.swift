@@ -16,7 +16,7 @@ class FileService {
     
     static func getImage(for photo: File) async -> UIImage? {
         
-        guard let imagePath = await FileService.getPath(for: photo) else {
+        guard let imagePath = await FileService.getPath(for: photo, priority: 32) else {
             logger.log("imagePath is nil")
             return nil
         }
@@ -31,7 +31,8 @@ class FileService {
     
     static func getFilePath(for file: File) async -> URL? {
         
-        guard let path = await FileService.getPath(for: file) else {
+        // Priority 16 for files (videos, voice notes) to avoid blocking UI/thumbnails
+        guard let path = await FileService.getPath(for: file, priority: 16) else {
             logger.log("path is nil")
             return nil
         }
@@ -39,7 +40,7 @@ class FileService {
         return URL(fileURLWithPath: path)
     }
     
-    static func getPath(for file: File) async -> String? {
+    static func getPath(for file: File, priority: Int = 16) async -> String? {
         
         var filePath = file.local.path
         
@@ -50,7 +51,7 @@ class FileService {
                     fileId: fileID,
                     limit: 0,
                     offset: 0,
-                    priority: 4,
+                    priority: priority,
                     synchronous: true
                 ) else {
                     logger.log("Unable to retrive file", level: .error)

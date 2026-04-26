@@ -26,14 +26,72 @@ extension ChatDetailViewModel {
             
             let data: [Message] = result?.messages ?? []
             
-            var newMessages: [MessageModel] = []
-            for msg in data {
-                newMessages.append(await self.messageModelFrom(msg))
+            var newMessages: [MessageModel] = await withTaskGroup(of: (Int, MessageModel).self) { group in
+                for (index, msg) in data.enumerated() {
+                    group.addTask {
+                        let model = await self.messageModelFrom(msg)
+                        return (index, model)
+                    }
+                }
+                
+                var results: [(Int, MessageModel)] = []
+                for await result in group {
+                    results.append(result)
+                }
+                
+                return results.sorted(by: { $0.0 < $1.0 }).map { $1 }
             }
             
             if newMessages.count == 1 && firstBatch {
                 newMessages += await self.requestMessages(fromId: newMessages.first?.id)
             }
+            
+            // Group messages by mediaAlbumId
+            var groupedMessages: [MessageModel] = []
+            var currentAlbumId: String? = nil
+            var currentAlbumModels: [AsyncImageModel] = []
+            var currentAlbumCaption: String? = nil
+            var currentAlbumFirstMessage: MessageModel? = nil
+            
+            let finishCurrentAlbum = {
+                if let firstMsg = currentAlbumFirstMessage {
+                    var groupedMsg = firstMsg
+                    if currentAlbumModels.count > 1 {
+                        groupedMsg.content = .photoAlbum(models: currentAlbumModels, caption: currentAlbumCaption)
+                    } else if currentAlbumModels.count == 1 {
+                        groupedMsg.content = .photo(model: currentAlbumModels[0], caption: currentAlbumCaption)
+                    }
+                    groupedMessages.append(groupedMsg)
+                    currentAlbumId = nil
+                    currentAlbumFirstMessage = nil
+                    currentAlbumModels = []
+                    currentAlbumCaption = nil
+                }
+            }
+            
+            for msg in newMessages {
+                let albumIdStr = msg.mediaAlbumId != nil ? String(describing: msg.mediaAlbumId!) : "0"
+                
+                if albumIdStr != "0", case .photo(let model, let caption) = msg.content {
+                    if currentAlbumId == albumIdStr {
+                        currentAlbumModels.append(model)
+                        if currentAlbumCaption == nil || currentAlbumCaption?.isEmpty == true {
+                            currentAlbumCaption = caption
+                        }
+                    } else {
+                        finishCurrentAlbum()
+                        currentAlbumId = albumIdStr
+                        currentAlbumFirstMessage = msg
+                        currentAlbumModels.append(model)
+                        currentAlbumCaption = caption
+                    }
+                } else {
+                    finishCurrentAlbum()
+                    groupedMessages.append(msg)
+                }
+            }
+            finishCurrentAlbum()
+            newMessages = groupedMessages
             
             // Add date pill between messages
             for (index, msg) in newMessages.enumerated() {
@@ -81,6 +139,7 @@ extension ChatDetailViewModel {
             isOutgoing: message.isOutgoing,
             reactions: reactions,
             reply: reply,
+            mediaAlbumId: message.mediaAlbumId,
             stateStyle: stateStyle,
             content: content
         )

@@ -26,6 +26,9 @@ extension ChatDetailViewModel {
         case .messagePhoto(let message):
             return .photo(model: message.getModel(), caption: message.caption.text)
 
+        case .messageAnimation(let message):
+            return .animation(model: message.getModel(), caption: message.caption.text)
+
         case .messageVideoNote(let message):
             var model = message.getModel()
             model.onPress = { self.setMessageAsOpened(msg.id) }
@@ -181,5 +184,16 @@ extension MessageVenue {
         default:
             return ("mapin", .red)
         }
+    }
+}
+
+extension MessageAnimation {
+    func getModel() -> AnimationModel {
+        return AnimationModel(
+            thumbnail: animation.getAsyncModel(),
+            getVideoURL: {
+                await FileService.getFilePath(for: animation.animation)
+            }
+        )
     }
 }

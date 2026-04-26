@@ -295,33 +295,7 @@ struct VideoNoteView: View {
 
 // MARK: - InlineMovieView
 
-private struct InlineMovieView: WKInterfaceObjectRepresentable {
-    let url: URL
-    let isPlaying: Bool
-    @Binding var movieRef: WKInterfaceInlineMovie?
 
-    func makeWKInterfaceObject(context: Context) -> WKInterfaceInlineMovie {
-        let movie = WKInterfaceInlineMovie()
-        movie.setMovieURL(url)
-        movie.setLoops(false)
-        movie.setAutoplays(false)
-        DispatchQueue.main.async {
-            movieRef = movie
-            if isPlaying {
-                movie.playFromBeginning()
-            }
-        }
-        return movie
-    }
-
-    func updateWKInterfaceObject(_ movie: WKInterfaceInlineMovie, context: Context) {
-        if isPlaying {
-            movie.play()
-        } else {
-            movie.pause()
-        }
-    }
-}
 
 // MARK: - Supporting Views
 
@@ -380,3 +354,5 @@ private struct VideoNoteThumbnailView: View {
         }
     }
 }
+
+

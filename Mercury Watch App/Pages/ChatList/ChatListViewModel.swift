@@ -105,58 +105,56 @@ class ChatListViewModel: TDLibViewModel {
                 self.isLoading = false
             }
             
-            for chat in chatsData {
-                guard let userId = chat.privateUserId,
-                      let user = try? await TDLibManager.shared.client?.getUser(userId: userId)
-                else { continue }
-                
-                var refinedType: ChatCellModel.ChatType? = nil
-                var refinedTitle: String? = nil
-                var refinedLetters: String? = nil
-                
-                switch user.type {
-                case .userTypeDeleted:
-                    refinedType = .deletedAccount
-                    refinedTitle = "Deleted Account"
-                    refinedLetters = "?"
-                case .userTypeBot:
-                    refinedType = .bot
-                default:
-                    break
+            let refinements = await withTaskGroup(of: (Int64, ChatCellModel.ChatType?, String?, String?, AttributedString?).self) { group in
+                for chat in chatsData {
+                    group.addTask {
+                        var rType: ChatCellModel.ChatType? = nil
+                        var rTitle: String? = nil
+                        var rLetters: String? = nil
+                        var rDesc: AttributedString? = nil
+                        
+                        if let userId = chat.privateUserId,
+                           let user = try? await TDLibManager.shared.client?.getUser(userId: userId) {
+                            switch user.type {
+                            case .userTypeDeleted:
+                                rType = .deletedAccount
+                                rTitle = "Deleted Account"
+                                rLetters = "?"
+                            case .userTypeBot:
+                                rType = .bot
+                            default:
+                                break
+                            }
+                        }
+                        
+                        if chat.isGroup {
+                            if let message = chat.lastMessage,
+                               let username = await message.senderId.username() {
+                                var attributedUsername = AttributedString(username + ": ")
+                                attributedUsername.foregroundColor = .white
+                                rDesc = attributedUsername + message.description
+                            }
+                        }
+                        
+                        return (chat.id, rType, rTitle, rLetters, rDesc)
+                    }
                 }
                 
-                guard let refinedType else { continue }
-                
-                await MainActor.run {
-                    guard let index = self.chats.firstIndex(where: { $0.id == chat.id })
-                    else { return }
-                    self.chats[index].chatType = refinedType
-                    if let title = refinedTitle {
-                        self.chats[index].title = title
-                    }
-                    if let letters = refinedLetters {
-                        self.chats[index].avatar.letters = letters
-                    }
+                var results: [(Int64, ChatCellModel.ChatType?, String?, String?, AttributedString?)] = []
+                for await result in group {
+                    results.append(result)
                 }
+                return results
             }
             
-            for chat in chatsData {
-                if chat.isGroup {
-                    guard let message = chat.lastMessage,
-                          let username = await message.senderId.username()
-                    else { continue }
+            await MainActor.run {
+                for (id, rType, rTitle, rLetters, rDesc) in refinements {
+                    guard let index = self.chats.firstIndex(where: { $0.id == id }) else { continue }
                     
-                    var attributedUsername = AttributedString(username + ": ")
-                    attributedUsername.foregroundColor = .white
-                    let chatDescription = attributedUsername + message.description
-                    
-                    await MainActor.run {
-                        guard let index = self.chats.firstIndex(where: { $0.id == chat.id })
-                        else { return }
-                        withAnimation {
-                            self.chats[index].messageStyle = .message(chatDescription)
-                        }
-                    }
+                    if let rType { self.chats[index].chatType = rType }
+                    if let rTitle { self.chats[index].title = rTitle }
+                    if let rLetters { self.chats[index].avatar.letters = rLetters }
+                    if let rDesc { self.chats[index].messageStyle = .message(rDesc) }
                 }
             }
         }
@@ -287,6 +285,36 @@ class ChatListViewModelMock: ChatListViewModel {
                 isPinned: false,
                 chatType: .deletedAccount
             ),
+            .init(
+                id: 5,
+                title: "NotificationBot",
+                time: "08:00",
+                avatar: .marco,
+                isMuted: true,
+                isPinned: false,
+                messageStyle: .message("Your order has shipped!"),
+                chatType: .bot
+            ),
+            .init(
+                id: 6,
+                title: "Secret Mission",
+                time: "07:30",
+                avatar: .alessandro,
+                isMuted: false,
+                isPinned: false,
+                messageStyle: .message("This is encrypted 🔒"),
+                chatType: .secretChat
+            ),
+            .init(
+                id: 7,
+                title: "Design Team",
+                time: "Mon",
+                avatar: .marco,
+                isMuted: false,
+                isPinned: false,
+                messageStyle: .message("Alessandro: I'll review the mockups."),
+                chatType: .group
+            )
         ]
     }
     
