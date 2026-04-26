@@ -119,7 +119,13 @@ extension ChatListViewModel {
                     desc = attributedUsername + message.description
                 }
                 
-                await MainActor.run { [desc] in
+                var rIsForum: Bool? = nil
+                if case .chatTypeSupergroup(let data) = chat.type,
+                   let supergroup = try? await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
+                    rIsForum = supergroup.isForum
+                }
+                
+                await MainActor.run { [desc, rIsForum] in
                     
                     let index = self.chats.firstIndex { c in c.id == chatId }
                     
@@ -130,7 +136,8 @@ extension ChatListViewModel {
                         
                     } else {
                         // Chat not shown, add to chat list
-                        let model = self.chatCellModelFrom(chat)
+                        var model = self.chatCellModelFrom(chat)
+                        if let rIsForum { model.isForum = rIsForum }
                         self.chats.append(model)
                     }
                     
@@ -204,7 +211,11 @@ extension ChatListViewModel {
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
                 else { return }
                 
-                let model = self.chatCellModelFrom(chat)
+                var model = self.chatCellModelFrom(chat)
+                if case .chatTypeSupergroup(let data) = chat.type,
+                   let supergroup = try? await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
+                    model.isForum = supergroup.isForum
+                }
                 
                 await MainActor.run {
                     
@@ -237,6 +248,7 @@ extension ChatListViewModel {
         let index = self.chats.firstIndex { c in c.id == chatId }
         guard let index, index != -1 else { return }
         
+        // Check if any of the provided counts are > 0 to set a new badge
         var badgeStyle: ChatCellModel.UnreadStyle? = nil
         if let reactionCount, reactionCount != 0 {
             badgeStyle = .reaction
@@ -251,6 +263,27 @@ extension ChatListViewModel {
         if let badgeStyle {
             withAnimation {
                 self.chats[index].unreadBadgeStyle = badgeStyle
+            }
+            return
+        }
+        
+        // If we reach here, it means all provided counts were either nil or 0.
+        // If we received an explicit 0 for the currently active badge type, we should clear it.
+        var shouldClear = false
+        switch self.chats[index].unreadBadgeStyle {
+        case .reaction:
+            if let reactionCount, reactionCount == 0 { shouldClear = true }
+        case .mention:
+            if let mentionCount, mentionCount == 0 { shouldClear = true }
+        case .message:
+            if let unreadCount, unreadCount == 0 { shouldClear = true }
+        case .none:
+            shouldClear = true // Already clear
+        }
+        
+        if shouldClear {
+            withAnimation {
+                self.chats[index].unreadBadgeStyle = nil
             }
             return
         }

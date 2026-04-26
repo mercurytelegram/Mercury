@@ -19,9 +19,9 @@ struct ChatDetailPage: View {
         activeVideoNote != nil
     }
 
-    init(chatId: Int64) {
+    init(chatId: Int64, messageThreadId: Int64? = nil) {
         _vm = Mockable.state(
-            value: { ChatDetailViewModel(chatId: chatId) },
+            value: { ChatDetailViewModel(chatId: chatId, messageThreadId: messageThreadId) },
             mock: { ChatDetailViewModelMock() }
         )
     }

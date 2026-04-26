@@ -183,6 +183,7 @@ struct ChatCellView: View {
 struct ChatCellModel: Identifiable {
     
     var id: Int64?
+    var messageThreadId: Int64?
     var position: Int64?
     
     var title: String
@@ -195,6 +196,7 @@ struct ChatCellModel: Identifiable {
     var unreadBadgeStyle: UnreadStyle?
     
     var chatType: ChatType = .unknown
+    var isForum: Bool? = nil
     
     // MARK: ChatType
     
@@ -234,6 +236,7 @@ extension ChatCellModel: Hashable {
 
     static func == (lhs: ChatCellModel, rhs: ChatCellModel) -> Bool {
         return lhs.id == rhs.id &&
+               lhs.messageThreadId == rhs.messageThreadId &&
                lhs.position == rhs.position &&
                lhs.title == rhs.title &&
                lhs.time == rhs.time &&
@@ -241,7 +244,8 @@ extension ChatCellModel: Hashable {
                lhs.isMuted == rhs.isMuted &&
                lhs.messageStyle == rhs.messageStyle &&
                lhs.unreadBadgeStyle == rhs.unreadBadgeStyle &&
-               lhs.chatType == rhs.chatType
+               lhs.chatType == rhs.chatType &&
+               lhs.isForum == rhs.isForum
     }
 }
 

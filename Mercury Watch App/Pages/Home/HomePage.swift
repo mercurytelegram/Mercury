@@ -40,11 +40,15 @@ struct HomePage: View {
             }
             .navigationTitle("Mercury")
             .navigationDestination(for: ChatFolder.self) { folder in
-                return ChatListPage(folder: folder)
+                ChatListPage(folder: folder)
             }
             .navigationDestination(for: ChatCellModel.self) { chat in
                 if let id = chat.id {
-                    ChatDetailPage(chatId: id)
+                    if chat.isForum! {
+                        ForumTopicsPage(chatId: id)
+                    } else {
+                        ChatDetailPage(chatId: id, messageThreadId: chat.messageThreadId)
+                    }
                 }
             }
         }
@@ -54,4 +58,51 @@ struct HomePage: View {
 
 #Preview(traits: .mock()) {
     HomePage()
+}
+
+import TDLibKit
+
+struct ChatRouterPage: View {
+    let chatId: Int64
+    let messageThreadId: Int64?
+    @State private var isForum: Bool?
+    
+    init(chatId: Int64, messageThreadId: Int64?, isForum: Bool? = nil) {
+        self.chatId = chatId
+        self.messageThreadId = messageThreadId
+        _isForum = State(initialValue: isForum)
+    }
+    
+    var body: some View {
+        Group {
+            if let isForum {
+                if isForum {
+                    ForumTopicsPage(chatId: chatId)
+                } else {
+                    ChatDetailPage(chatId: chatId, messageThreadId: messageThreadId)
+                }
+            } else {
+                VStack {
+                    ProgressView()
+                }
+                .navigationTitle("Loading...")
+                .task {
+                    do {
+                        guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId) else {
+                            self.isForum = false
+                            return
+                        }
+                        if case .chatTypeSupergroup(let data) = chat.type,
+                           let supergroup = try await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
+                            self.isForum = supergroup.isForum
+                        } else {
+                            self.isForum = false
+                        }
+                    } catch {
+                        self.isForum = false
+                    }
+                }
+            }
+        }
+    }
 }

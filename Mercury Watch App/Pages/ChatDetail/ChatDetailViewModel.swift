@@ -15,6 +15,7 @@ class ChatDetailViewModel: TDLibViewModel {
     enum InsertAt { case first, last, index(_ value: Int)}
     
     var chatId: Int64
+    var messageThreadId: Int64?
     
     var chatName: String?
     var isLoadingInitialMessages: Bool = false
@@ -48,8 +49,9 @@ class ChatDetailViewModel: TDLibViewModel {
     var chatType: ChatType?
     var isChatBlocked: Bool = false
     
-    init(chatId: Int64) {
+    init(chatId: Int64, messageThreadId: Int64? = nil) {
         self.chatId = chatId
+        self.messageThreadId = messageThreadId
         super.init()
         
         self.chatActionTimer = Timer.scheduledTimer(

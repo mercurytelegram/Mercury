@@ -16,13 +16,24 @@ extension ChatDetailViewModel {
         
         do {
             
-            let result = try await TDLibManager.shared.client?.getChatHistory(
-                chatId: self.chatId,
-                fromMessageId: fromId,
-                limit: limit,
-                offset: 0,
-                onlyLocal: false
-            )
+            let result: Messages?
+            if let threadId = self.messageThreadId {
+                result = try await TDLibManager.shared.client?.getMessageThreadHistory(
+                    chatId: self.chatId,
+                    fromMessageId: fromId ?? 0,
+                    limit: limit,
+                    messageId: threadId,
+                    offset: 0
+                )
+            } else {
+                result = try await TDLibManager.shared.client?.getChatHistory(
+                    chatId: self.chatId,
+                    fromMessageId: fromId,
+                    limit: limit,
+                    offset: 0,
+                    onlyLocal: false
+                )
+            }
             
             let data: [Message] = result?.messages ?? []
             

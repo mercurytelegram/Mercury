@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TDLibKit
 
 extension ChatDetailViewModel {
     func onPressLoadMore(_ proxy: ScrollViewProxy) {
@@ -109,17 +110,20 @@ extension ChatDetailViewModel {
     }
     
     func onMessageAppear(_ message: MessageModel) {
-        
-        // Pill messages doesn't need to be marked as seen
-        if case .pill(_,_) = message.content { return }
+        if case .pill(_, _) = message.content { return }
         
         Task.detached(priority: .background) {
             do {
+                // Forum topics require messageSourceForumTopicHistory
+                let source: MessageSource? = self.messageThreadId != nil
+                    ? .messageSourceForumTopicHistory
+                    : nil
+                
                 try await TDLibManager.shared.client?.viewMessages(
                     chatId: self.chatId,
                     forceRead: true,
                     messageIds: [message.id],
-                    source: nil
+                    source: source
                 )
             } catch {
                 self.logger.log(error, level: .error)

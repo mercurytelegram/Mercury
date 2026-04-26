@@ -66,9 +66,78 @@ extension ChatDetailViewModel {
                 text: "changed group photo"
             )
 
+        case .messageVideoChatScheduled(_):
+            return await getPillModel(message: msg, text: "scheduled a video chat")
+            
+        case .messageVideoChatStarted(_):
+            return await getPillModel(message: msg, text: "started a video chat")
+            
+        case .messageVideoChatEnded(let message):
+            let duration = message.duration
+            let formatString = duration > 0 ? "ended the video chat (\(duration)s)" : "ended the video chat"
+            return await getPillModel(message: msg, text: LocalizedStringKey(formatString))
+            
+        case .messageInviteVideoChatParticipants(_):
+            return await getPillModel(message: msg, text: "invited to video chat")
+            
+        case .messageCall(_):
+            return await getPillModel(message: msg, text: "Call")
+            
+        case .messageDocument(_):
+            return .text("📄 Document")
+            
+        case .messageAudio(_):
+            return .text("🎵 Audio")
+            
+        case .messagePoll(let message):
+            return .text(AttributedString("📊 \(message.poll.question.text)"))
+            
+        case .messageContact(_):
+            return .text("👤 Contact")
+            
+        case .messageChatAddMembers(_):
+            return await getPillModel(message: msg, text: "joined the group")
+            
+        case .messageChatJoinByLink:
+            return await getPillModel(message: msg, text: "joined by invite link")
+            
+        case .messageChatDeleteMember(_):
+            return await getPillModel(message: msg, text: "left the group")
+            
+        case .messageBasicGroupChatCreate(_):
+            return await getPillModel(message: msg, text: "created the group")
+            
+        case .messageSupergroupChatCreate(_):
+            return await getPillModel(message: msg, text: "created the supergroup")
+            
+        case .messageChatUpgradeTo(_):
+            return await getPillModel(message: msg, text: "upgraded to supergroup")
+            
+        case .messageChatUpgradeFrom(_):
+            return await getPillModel(message: msg, text: "upgraded from basic group")
+            
+        case .messageForumTopicCreated(_):
+            return await getPillModel(message: msg, text: "created a topic")
+            
+        case .messageForumTopicEdited(_):
+            return await getPillModel(message: msg, text: "edited the topic")
+            
+        case .messageForumTopicIsClosedToggled(_):
+            return await getPillModel(message: msg, text: "toggled topic closed state")
+            
+        case .messageForumTopicIsHiddenToggled(_):
+            return await getPillModel(message: msg, text: "toggled topic visibility")
+            
+            
+        case .messageUnsupported:
+            return .pill(title: nil, description: "Message not supported")
 
         default:
-            return .text(msg.description)
+            let text = msg.description
+            if text.characters.isEmpty {
+                return .pill(title: nil, description: "Unsupported message")
+            }
+            return .text(text)
         }
 
     }

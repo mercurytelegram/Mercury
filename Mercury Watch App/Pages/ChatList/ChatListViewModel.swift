@@ -105,13 +105,14 @@ class ChatListViewModel: TDLibViewModel {
                 self.isLoading = false
             }
             
-            let refinements = await withTaskGroup(of: (Int64, ChatCellModel.ChatType?, String?, String?, AttributedString?).self) { group in
+            let refinements = await withTaskGroup(of: (Int64, ChatCellModel.ChatType?, String?, String?, AttributedString?, Bool?).self) { group in
                 for chat in chatsData {
                     group.addTask {
                         var rType: ChatCellModel.ChatType? = nil
                         var rTitle: String? = nil
                         var rLetters: String? = nil
                         var rDesc: AttributedString? = nil
+                        var rIsForum: Bool? = nil
                         
                         if let userId = chat.privateUserId,
                            let user = try? await TDLibManager.shared.client?.getUser(userId: userId) {
@@ -136,11 +137,16 @@ class ChatListViewModel: TDLibViewModel {
                             }
                         }
                         
-                        return (chat.id, rType, rTitle, rLetters, rDesc)
+                        if case .chatTypeSupergroup(let data) = chat.type,
+                           let supergroup = try? await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
+                            rIsForum = supergroup.isForum
+                        }
+                        
+                        return (chat.id, rType, rTitle, rLetters, rDesc, rIsForum)
                     }
                 }
                 
-                var results: [(Int64, ChatCellModel.ChatType?, String?, String?, AttributedString?)] = []
+                var results: [(Int64, ChatCellModel.ChatType?, String?, String?, AttributedString?, Bool?)] = []
                 for await result in group {
                     results.append(result)
                 }
@@ -148,13 +154,14 @@ class ChatListViewModel: TDLibViewModel {
             }
             
             await MainActor.run {
-                for (id, rType, rTitle, rLetters, rDesc) in refinements {
+                for (id, rType, rTitle, rLetters, rDesc, rIsForum) in refinements {
                     guard let index = self.chats.firstIndex(where: { $0.id == id }) else { continue }
                     
                     if let rType { self.chats[index].chatType = rType }
                     if let rTitle { self.chats[index].title = rTitle }
                     if let rLetters { self.chats[index].avatar.letters = rLetters }
                     if let rDesc { self.chats[index].messageStyle = .message(rDesc) }
+                    if let rIsForum { self.chats[index].isForum = rIsForum }
                 }
             }
         }

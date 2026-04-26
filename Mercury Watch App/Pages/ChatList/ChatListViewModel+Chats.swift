@@ -116,7 +116,7 @@ extension ChatListViewModel {
             isPinned: isPinned,
             messageStyle: messageStyle,
             unreadBadgeStyle: unreadBadgeStyle,
-            chatType: chatType
+            chatType: chatType,
         )
     }
     

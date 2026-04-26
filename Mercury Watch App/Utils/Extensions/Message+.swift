@@ -45,15 +45,59 @@ extension MessageContent {
         case .messageVoiceNote(_):
             stringMessage = "🎤 Voice message"
         case .messageCall(let message):
-            let isVideo = message.isVideo
-            stringMessage = isVideo ? "📹" : "📞" + " Call"
+            stringMessage = message.isVideo ? "📹 Video call" : "📞 Call"
         case .messageSticker(let sticker):
             let emoji = sticker.sticker.emoji
             stringMessage = emoji.isEmpty ? "Sticker" : emoji
         case .messagePinMessage(_):
             stringMessage = "📌 Pinned a message"
+        case .messageAudio(let message):
+            let title = message.audio.title
+            stringMessage = "🎵 \(title.isEmpty ? "Audio" : title)"
+        case .messageChatAddMembers(_):
+            stringMessage = "👥 joined the group"
+        case .messageChatJoinByLink:
+            stringMessage = "👥 joined by invite link"
+        case .messageChatDeleteMember(_):
+            stringMessage = "👤 left the group"
+        case .messageForumTopicCreated(let msg):
+            stringMessage = "Created topic \"\(msg.name)\""
+        case .messageForumTopicEdited(_):
+            stringMessage = "Edited topic"
+        case .messageForumTopicIsClosedToggled(_):
+            stringMessage = "Toggled topic closed state"
+        case .messageForumTopicIsHiddenToggled(_):
+            stringMessage = "Toggled topic visibility"
+        case .messageChatUpgradeFrom(_):
+            stringMessage = "Upgraded to supergroup"
+        case .messageChatUpgradeTo(_):
+            stringMessage = "Upgraded to supergroup"
+        case .messageSupergroupChatCreate(_):
+            stringMessage = "Created supergroup"
+        case .messageBasicGroupChatCreate(_):
+            stringMessage = "Created group"
+        case .messageVideoChatScheduled(_):
+            stringMessage = "📅 Scheduled a video chat"
+        case .messageVideoChatStarted(_):
+            stringMessage = "📹 Video chat started"
+        case .messageVideoChatEnded(_):
+            stringMessage = "📹 Video chat ended"
+        case .messageInviteVideoChatParticipants(_):
+            stringMessage = "📹 Invited to video chat"
+        case .messageGiftedPremium(_):
+            stringMessage = "🎁 Gifted Telegram Premium"
+        case .messageChatSetMessageAutoDeleteTime(_):
+            stringMessage = "⏱ Auto-delete timer changed"
+        case .messageContactRegistered:
+            stringMessage = "👤 Joined Telegram"
+        case .messageScreenshotTaken:
+            stringMessage = "📸 Screenshot taken"
+        case .messageChatBoost(_):
+            stringMessage = "🚀 Boosted the channel"
+        case .messageUnsupported:
+            stringMessage = "Unsupported message"
         default:
-            stringMessage = "\(self)"
+            stringMessage = ""
         }
         
         return AttributedString(stringMessage)
