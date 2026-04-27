@@ -30,8 +30,8 @@ class ForumTopicsViewModel {
                     chatId: self.chatId,
                     limit: 100,
                     offsetDate: 0,
+                    offsetForumTopicId: 0,
                     offsetMessageId: 0,
-                    offsetMessageThreadId: 0,
                     query: ""
                 )
                 
@@ -44,22 +44,21 @@ class ForumTopicsViewModel {
                 for topic in forumTopics {
                     let title = topic.info.name
                     let time = Date(fromUnixTimestamp: topic.lastMessage?.date ?? 0).stringDescription
+                    let forumTopicId = Int64(topic.info.forumTopicId)
                     
-                    // ✅ Используем уже существующий Message.description -> AttributedString
                     var messageStyle: ChatCellModel.MessageStyle? = nil
                     if let lastMessage = topic.lastMessage {
                         messageStyle = .message(lastMessage.description)
                     }
                     
-                    // ✅ Корректный счётчик непрочитанных
                     var unreadBadgeStyle: ChatCellModel.UnreadStyle? = nil
                     if topic.unreadCount > 0 {
                         unreadBadgeStyle = .message(count: topic.unreadCount)
                     }
                     
                     let model = ChatCellModel(
-                        id: self.chatId, // ✅ chatId супергруппы для открытия чата
-                        messageThreadId: topic.info.messageThreadId,
+                        id: self.chatId,
+                        messageThreadId: forumTopicId,
                         position: Int64(newTopics.count),
                         title: title,
                         time: time,

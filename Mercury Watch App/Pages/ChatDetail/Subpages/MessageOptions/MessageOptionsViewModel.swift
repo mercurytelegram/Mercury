@@ -107,7 +107,12 @@ class MessageOptionsViewModel {
         
         Task {
             do {
-                try await TDLibManager.shared.client?.reportChat(chatId: chatId, messageIds: [messageId], reason: reason, text: nil)
+                try await TDLibManager.shared.client?.reportChat(
+                    chatId: chatId,
+                    messageIds: [messageId],
+                    optionId: Data(reason.description.utf8),
+                    text: nil
+                )
             } catch {
                 logger.log(error)
             }

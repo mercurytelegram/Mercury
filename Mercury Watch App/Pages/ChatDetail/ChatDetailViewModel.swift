@@ -145,11 +145,15 @@ class ChatDetailViewModel: TDLibViewModel {
     fileprivate func setChatAction(_ action: ChatAction?) {
         Task.detached(priority: .background) {
             do {
+                let topicId: MessageTopic? = self.messageThreadId.map {
+                    .messageTopicForum(MessageTopicForum(forumTopicId: Int($0)))
+                }
+                
                 try await TDLibManager.shared.client?.sendChatAction(
                     action: action,
                     businessConnectionId: nil,
                     chatId: self.chatId,
-                    messageThreadId: 0
+                    topicId: topicId
                 )
             } catch {
                 self.logger.log(error, level: .error)

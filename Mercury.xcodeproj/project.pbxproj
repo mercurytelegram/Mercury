@@ -10,6 +10,7 @@
 		4A4743F22BF796DF00264855 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4743F12BF796DF00264855 /* Color+.swift */; };
 		4AE620222C09C6CF00722512 /* FormattedText+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE620212C09C6CF00722512 /* FormattedText+.swift */; };
 		4AF90D692BEE65BA00435355 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF90D682BEE65BA00435355 /* Date+.swift */; };
+		652615042F9F1F1B000E179C /* TDLibFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 652615032F9F1F1B000E179C /* TDLibFramework */; };
 		65413AAF2F9E0B3F00625ECA /* AnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65413AAE2F9E0B3F00625ECA /* AnimationView.swift */; };
 		65413AB12F9E0BE200625ECA /* InlineMovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65413AB02F9E0BE200625ECA /* InlineMovieView.swift */; };
 		65413AB52F9E414100625ECA /* ForumTopicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65413AB32F9E414100625ECA /* ForumTopicsViewModel.swift */; };
@@ -239,6 +240,7 @@
 			files = (
 				A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */,
 				A07D48E12CC93D9900DC34EF /* DSWaveformImageViews in Frameworks */,
+				652615042F9F1F1B000E179C /* TDLibFramework in Frameworks */,
 				9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */,
 				A0524FAE2CC8EC4E0021D3FA /* DSWaveformImage in Frameworks */,
 				A0524FB02CC8EC4E0021D3FA /* DSWaveformImageViews in Frameworks */,
@@ -640,6 +642,7 @@
 				A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */,
 				9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */,
 				9BAA75E32CD4F1620007B4E2 /* Gzip */,
+				652615032F9F1F1B000E179C /* TDLibFramework */,
 			);
 			productName = "Mercury Watch App";
 			productReference = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */;
@@ -680,6 +683,7 @@
 				A06AE85D2CCAB812003282B2 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 				9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */,
 				9BAA75E22CD4F1620007B4E2 /* XCRemoteSwiftPackageReference "GzipSwift" */,
+				652615022F9F1F1B000E179C /* XCRemoteSwiftPackageReference "TDLibFramework" */,
 			);
 			productRefGroup = A07438E72BD10D2D00945CB5 /* Products */;
 			projectDirPath = "";
@@ -956,7 +960,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dmytrom.mercury.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1068,6 +1072,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		652615022F9F1F1B000E179C /* XCRemoteSwiftPackageReference "TDLibFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swiftgram/TDLibFramework";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageLottieCoder?tab=readme-ov-file";
@@ -1088,8 +1100,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swiftgram/TDLibKit";
 			requirement = {
-				kind = revision;
-				revision = 9aa7ba777c6c21fd4bf0710c47c2f6f3beb9c8c9;
+				branch = main;
+				kind = branch;
 			};
 		};
 		A06AE8582CCAB6EE003282B2 /* XCRemoteSwiftPackageReference "DSWaveformImage" */ = {
@@ -1127,6 +1139,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		652615032F9F1F1B000E179C /* TDLibFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 652615022F9F1F1B000E179C /* XCRemoteSwiftPackageReference "TDLibFramework" */;
+			productName = TDLibFramework;
+		};
 		9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */;

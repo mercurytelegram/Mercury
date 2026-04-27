@@ -31,10 +31,10 @@ class SendMessageService {
                 let result = try await TDLibManager.shared.client?.sendMessage(
                     chatId: self.chat?.id,
                     inputMessageContent: messageContent,
-                    messageThreadId: nil,
                     options: nil,
                     replyMarkup: nil,
-                    replyTo: nil
+                    replyTo: nil,
+                    topicId: nil
                 )
                 self.logger.log(result)
             } catch {
@@ -78,10 +78,10 @@ class SendMessageService {
                 let result = try await TDLibManager.shared.client?.sendMessage(
                     chatId: self.chat?.id,
                     inputMessageContent: .inputMessageVoiceNote(audio),
-                    messageThreadId: nil,
                     options: nil,
                     replyMarkup: nil,
-                    replyTo: nil
+                    replyTo: nil,
+                    topicId: nil
                 )
     
                 self.logger.log(result)
@@ -99,10 +99,10 @@ class SendMessageService {
                 let result = try await TDLibManager.shared.client?.sendMessage(
                     chatId: self.chat?.id,
                     inputMessageContent: .from(sticker: sticker),
-                    messageThreadId: nil,
                     options: nil,
                     replyMarkup: nil,
-                    replyTo: nil
+                    replyTo: nil,
+                    topicId: nil
                 )
     
                 self.logger.log(result)

@@ -44,7 +44,7 @@ struct HomePage: View {
             }
             .navigationDestination(for: ChatCellModel.self) { chat in
                 if let id = chat.id {
-                    if chat.isForum! {
+                    if chat.isForum == true {
                         ForumTopicsPage(chatId: id)
                     } else {
                         ChatDetailPage(chatId: id, messageThreadId: chat.messageThreadId)

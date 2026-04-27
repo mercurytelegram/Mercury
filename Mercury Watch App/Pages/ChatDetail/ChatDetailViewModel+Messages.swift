@@ -18,13 +18,24 @@ extension ChatDetailViewModel {
             
             let result: Messages?
             if let threadId = self.messageThreadId {
-                result = try await TDLibManager.shared.client?.getMessageThreadHistory(
+                let threadHistory = try? await TDLibManager.shared.client?.getMessageThreadHistory(
                     chatId: self.chatId,
                     fromMessageId: fromId ?? 0,
                     limit: limit,
                     messageId: threadId,
                     offset: 0
                 )
+                if let threadHistory {
+                    result = threadHistory
+                } else {
+                    result = try await TDLibManager.shared.client?.getChatHistory(
+                        chatId: self.chatId,
+                        fromMessageId: fromId,
+                        limit: limit,
+                        offset: 0,
+                        onlyLocal: false
+                    )
+                }
             } else {
                 result = try await TDLibManager.shared.client?.getChatHistory(
                     chatId: self.chatId,
@@ -64,7 +75,7 @@ extension ChatDetailViewModel {
             var currentAlbumCaption: String? = nil
             var currentAlbumFirstMessage: MessageModel? = nil
             
-            let finishCurrentAlbum = {
+            let finishCurrentAlbum: () -> Void = {
                 if let firstMsg = currentAlbumFirstMessage {
                     var groupedMsg = firstMsg
                     if currentAlbumModels.count > 1 {

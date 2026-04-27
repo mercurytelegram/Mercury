@@ -29,23 +29,18 @@ extension ChatListViewModel {
     
     /// This function given a set of Ids return the ``Chat`` data downloaded with ``loadChatIds``
     func loadChats(ids: [Int64]) async -> [Chat] {
-        do {
-            return try await withThrowingTaskGroup(of: Chat?.self) { group in
-                for id in ids {
-                    group.addTask {
-                        try await TDLibManager.shared.client?.getChat(chatId: id)
-                    }
+        var chats: [Chat] = []
+        await withTaskGroup(of: Chat?.self) { group in
+            for id in ids {
+                group.addTask {
+                    return try? await TDLibManager.shared.client?.getChat(chatId: id)
                 }
-                var chats: [Chat] = []
-                for try await chat in group {
-                    if let chat { chats.append(chat) }
-                }
-                return chats
             }
-        } catch {
-            self.logger.log(error, level: .error)
+            for await chat in group {
+                if let chat { chats.append(chat) }
+            }
         }
-        return []
+        return chats
     }
     
     // MARK: - Build ChatCellModel

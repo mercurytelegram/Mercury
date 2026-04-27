@@ -243,8 +243,7 @@ class LoginViewModel: TDLibViewModel {
     func updateChatFolders(_ update: UpdateChatFolders) {
         for chatFolderInfo in update.chatFolders {
             let chatList = ChatList.chatListFolder(ChatListFolder(chatFolderId: chatFolderInfo.id))
-            let folder = ChatFolder(title: chatFolderInfo.title, chatList: chatList)
-            AppState.shared.insertFolder(folder)
+            let folder = ChatFolder(title: chatFolderInfo.name.text.text, chatList: chatList);        AppState.shared.insertFolder(folder)
         }
     }
     
