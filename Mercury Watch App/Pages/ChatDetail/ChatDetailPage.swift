@@ -136,6 +136,12 @@ struct ChatDetailPage: View {
                 )
             }
         }
+        .sheet(isPresented: $vm.showQuickRepliesView) {
+            QuickRepliesSubpage(
+                replies: vm.quickReplyTemplates,
+                onSelectReply: vm.sendQuickReply
+            )
+        }
         .sheet(isPresented: $vm.showOptionsView) {
             if let messageId = vm.selectedMessage?.id, let sendService = vm.sendService {
                 MessageOptionsSubpage(
@@ -193,8 +199,12 @@ struct ChatDetailPage: View {
     @ViewBuilder
     func toolbarActions() -> some View {
         if vm.canSendText ?? false {
-            Button("Stickers", systemImage: "keyboard.fill") {
+            Button("Text", systemImage: "keyboard.fill") {
                 vm.onPressTextInsert()
+            }
+            
+            Button("Replies", systemImage: "text.bubble.fill") {
+                vm.onPressQuickReplies()
             }
         }
 
@@ -300,6 +310,27 @@ private struct VideoNoteViewerOverlay: View {
             .padding(.top, 42)
         }
         .transition(.opacity.combined(with: .scale(scale: 0.92)))
+    }
+}
+
+private struct QuickRepliesSubpage: View {
+    let replies: [String]
+    let onSelectReply: (String) -> Void
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            List(replies, id: \.self) { reply in
+                Button {
+                    onSelectReply(reply)
+                    dismiss()
+                } label: {
+                    Label(reply, systemImage: "arrow.up.message.fill")
+                }
+            }
+            .navigationTitle("Quick Replies")
+        }
     }
 }
 

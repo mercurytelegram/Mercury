@@ -23,6 +23,19 @@ struct HomePage: View {
                     UserCellView(model: vm.userCellModel)
                 }
                 
+                Button {
+                    vm.openSavedMessages()
+                } label: {
+                    Label {
+                        Text("Saved Messages")
+                    } icon: {
+                        Image(systemName: "bookmark.fill")
+                            .font(.caption)
+                            .foregroundStyle(.green)
+                    }
+                }
+                .listItemTint(.green)
+                
                 Section {
                     ForEach(AppState.shared.folders, id: \.self) { folder in
                         NavigationLink(value: folder) {

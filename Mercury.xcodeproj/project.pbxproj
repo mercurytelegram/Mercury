@@ -76,6 +76,8 @@
 		A080D8A62CD64B1700920564 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8982CD64B1700920564 /* HomePage.swift */; };
 		A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89F2CD64B1700920564 /* SettingsViewModel.swift */; };
 		A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89E2CD64B1700920564 /* SettingsPage.swift */; };
+		B10000012F00000000000001 /* QuickRepliesSettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000032F00000000000003 /* QuickRepliesSettingsPage.swift */; };
+		B10000022F00000000000002 /* StorageUsagePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000042F00000000000004 /* StorageUsagePage.swift */; };
 		A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89B2CD64B1700920564 /* LoginPage.swift */; };
 		A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8962CD64B1700920564 /* ChatListViewModel.swift */; };
 		A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8992CD64B1700920564 /* HomeViewModel.swift */; };
@@ -200,6 +202,8 @@
 		A080D89C2CD64B1700920564 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A080D89E2CD64B1700920564 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		A080D89F2CD64B1700920564 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		B10000032F00000000000003 /* QuickRepliesSettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRepliesSettingsPage.swift; sourceTree = "<group>"; };
+		B10000042F00000000000004 /* StorageUsagePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUsagePage.swift; sourceTree = "<group>"; };
 		A080D8B72CD7842A00920564 /* ChatCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellView.swift; sourceTree = "<group>"; };
 		A080D8BE2CD78CED00920564 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatNotificationSettings+.swift"; sourceTree = "<group>"; };
@@ -472,10 +476,20 @@
 		A080D8A02CD64B1700920564 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				B10000052F00000000000005 /* Subviews */,
 				A080D89E2CD64B1700920564 /* SettingsPage.swift */,
 				A080D89F2CD64B1700920564 /* SettingsViewModel.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		B10000052F00000000000005 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				B10000032F00000000000003 /* QuickRepliesSettingsPage.swift */,
+				B10000042F00000000000004 /* StorageUsagePage.swift */,
+			);
+			path = Subviews;
 			sourceTree = "<group>";
 		};
 		A080D8A12CD64B1700920564 /* Pages */ = {
@@ -782,6 +796,8 @@
 				A080D8A62CD64B1700920564 /* HomePage.swift in Sources */,
 				A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */,
 				A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */,
+				B10000012F00000000000001 /* QuickRepliesSettingsPage.swift in Sources */,
+				B10000022F00000000000002 /* StorageUsagePage.swift in Sources */,
 				A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */,
 				A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */,
 				A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */,

@@ -16,6 +16,12 @@ struct SettingsPage: View {
     var body: some View {
         ScrollView {
             avatarHeader()
+            appInfo()
+                .padding(.horizontal)
+                .padding(.top, 4)
+            settingsLinks()
+                .padding(.horizontal)
+                .padding(.top, 4)
             Spacer()
             Button("Logout", role: .destructive) {
                 vm.logout()
@@ -56,6 +62,44 @@ struct SettingsPage: View {
         .frame(height: 120)
     }
     
+    @ViewBuilder
+    func appInfo() -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Label("Version", systemImage: "info.circle")
+                Spacer()
+                Text(vm.appVersion)
+                    .foregroundStyle(.secondary)
+            }
+            
+            HStack {
+                Label("Telegram", systemImage: "paperplane.circle")
+                Spacer()
+                Text(vm.telegramSessionStatus)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.trailing)
+            }
+        }
+        .font(.footnote)
+    }
+    
+    @ViewBuilder
+    func settingsLinks() -> some View {
+        VStack(spacing: 8) {
+            NavigationLink {
+                StorageUsagePage()
+            } label: {
+                Label("Storage Usage", systemImage: "internaldrive")
+            }
+            
+            NavigationLink {
+                QuickRepliesSettingsPage(vm: vm)
+            } label: {
+                Label("Quick Replies", systemImage: "text.bubble")
+            }
+        }
+    }
+
     @ViewBuilder
     func credits() -> some View {
         VStack {

@@ -31,6 +31,8 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     var showOptionsView: Bool = false
     var showChatInfoView: Bool = false
+    var showQuickRepliesView: Bool = false
+    var quickReplyTemplates: [String] { QuickReplyTemplatesStore.templates }
     
     var canSendVoiceNotes: Bool?
     var canSendText: Bool?

@@ -56,6 +56,15 @@ extension ChatDetailViewModel {
             }
     }
     
+    func onPressQuickReplies() {
+        self.showQuickRepliesView = true
+    }
+    
+    func sendQuickReply(_ text: String) {
+        self.showQuickRepliesView = false
+        self.sendService?.sendTextMessage(text)
+    }
+    
     func onPressVoiceRecording() {
         self.chatAction = .chatActionRecordingVoiceNote
         self.showAudioMessageView = true

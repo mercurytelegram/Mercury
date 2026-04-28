@@ -85,6 +85,25 @@ class HomeViewModel: TDLibViewModel {
     func openChat(_ chatId: Int64) {
         self.navigationPath.append(chatId)
     }
+    
+    func openSavedMessages() {
+        Task.detached(priority: .userInitiated) {
+            do {
+                guard let me = try await TDLibManager.shared.client?.getMe(),
+                      let chat = try await TDLibManager.shared.client?.createPrivateChat(
+                        force: false,
+                        userId: me.id
+                      )
+                else { return }
+                
+                await MainActor.run {
+                    self.openChat(chat.id)
+                }
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
 
     func openURL(_ url: URL) -> OpenURLAction.Result {
         Task {

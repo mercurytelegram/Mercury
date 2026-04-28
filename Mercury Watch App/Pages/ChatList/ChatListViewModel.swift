@@ -11,6 +11,32 @@ import SwiftUI
 
 @Observable
 class ChatListViewModel: TDLibViewModel {
+    enum MuteDuration: CaseIterable, Identifiable {
+        case oneHour
+        case eightHours
+        case twoDays
+        case forever
+        
+        var id: Self { self }
+        
+        var title: String {
+            switch self {
+            case .oneHour: "1 hour"
+            case .eightHours: "8 hours"
+            case .twoDays: "2 days"
+            case .forever: "Forever"
+            }
+        }
+        
+        var seconds: Int {
+            switch self {
+            case .oneHour: 60 * 60
+            case .eightHours: 8 * 60 * 60
+            case .twoDays: 2 * 24 * 60 * 60
+            case .forever: 367 * 24 * 60 * 60
+            }
+        }
+    }
     
     var folder: ChatFolder
     
@@ -18,6 +44,16 @@ class ChatListViewModel: TDLibViewModel {
     var senders: [Int64:String] = [:]
     var isLoading: Bool = false
     var showNewMessage: Bool = false
+    var searchText: String = ""
+    var muteOptionsChat: ChatCellModel?
+    
+    var filteredChats: [ChatCellModel] {
+        chats.filter { chat in
+            let matchesSearch = searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                || chat.title.localizedCaseInsensitiveContains(searchText)
+            return matchesSearch
+        }
+    }
     
     init(folder: ChatFolder) {
         self.folder = folder
@@ -31,12 +67,23 @@ class ChatListViewModel: TDLibViewModel {
     }
     
     func didPressMute(on chat: ChatCellModel) {
-        guard let id = chat.id else { return }
-        muteChat(id)
+        muteOptionsChat = chat
     }
     
     func didPressOnNewMessage() {
         self.showNewMessage = true
+    }
+    
+    func didSelectMuteDuration(_ duration: MuteDuration, for chat: ChatCellModel) {
+        guard let id = chat.id else { return }
+        muteOptionsChat = nil
+        muteChat(id, muteFor: duration.seconds)
+    }
+    
+    func didPressUnmute(on chat: ChatCellModel) {
+        guard let id = chat.id else { return }
+        muteOptionsChat = nil
+        muteChat(id, muteFor: 0)
     }
     
     // MARK: - Update Handler
@@ -196,23 +243,17 @@ class ChatListViewModel: TDLibViewModel {
     
     // MARK: - Mute
     
-    private func muteChat(_ chatId: Int64) {
+    private func muteChat(_ chatId: Int64, muteFor: Int) {
         Task.detached {
             do {
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
                 else { return }
                 
                 let currentNotificationSettings = chat.notificationSettings
-                let currentIsMuted = currentNotificationSettings.muteFor != 0
-                
-                let oneHour = 60 * 60
-                let oneDay = 24 * oneHour
-                let oneYear = oneDay * 365
-                let unmute = 0
-                let foreverMute = oneYear + (oneDay * 2)
                 
                 let newNotificationSettings = currentNotificationSettings.copyWith(
-                    muteFor: currentIsMuted ? unmute : foreverMute
+                    muteFor: muteFor,
+                    useDefaultMuteFor: false
                 )
                 
                 try await TDLibManager.shared.client?.setChatNotificationSettings(
@@ -224,7 +265,7 @@ class ChatListViewModel: TDLibViewModel {
                     let index = self.chats.firstIndex { c in c.id == chatId }
                     guard let index, index != -1 else { return }
                     withAnimation {
-                        self.chats[index].isMuted = !currentIsMuted
+                        self.chats[index].isMuted = muteFor != 0
                     }
                 }
                 
