@@ -16,8 +16,7 @@ struct ChatCellView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                AvatarView(model: model.avatar)
-                    .frame(width: 50, height: 50)
+                avatar()
                 VStack(alignment: .leading) {
                     title()
                     HStack {
@@ -50,6 +49,12 @@ struct ChatCellView: View {
     }
     
     @ViewBuilder
+    func avatar() -> some View {
+        AvatarView(model: model.avatar)
+            .frame(width: 50, height: 50)
+    }
+    
+    @ViewBuilder
     func title() -> some View {
         
         let isMutedText = model.isMuted
@@ -57,7 +62,7 @@ struct ChatCellView: View {
             : Text("")
         
         let typeText: Text = switch model.chatType {
-        case .savedMessages:  Text(Image(systemName: "bookmark.fill"))
+        case .savedMessages:  Text("")
         case .secretChat:     Text(Image(systemName: "lock.fill"))
         case .channel:        Text(Image(systemName: "megaphone.fill"))
         case .bot:            Text(Image(systemName: "cpu"))
@@ -68,6 +73,7 @@ struct ChatCellView: View {
         let hasTypeIcon = model.chatType != .unknown
             && model.chatType != .privateUser
             && model.chatType != .group
+            && model.chatType != .savedMessages
         
         Group {
             if hasTypeIcon {

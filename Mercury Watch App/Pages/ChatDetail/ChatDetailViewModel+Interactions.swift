@@ -72,18 +72,23 @@ extension ChatDetailViewModel {
     }
     
     func onMessageListAppear(_ proxy: ScrollViewProxy) {
-        #warning("disabling automatic scroll until future development")
-        return
+        guard didScrollToInitialMessage == false else { return }
+        didScrollToInitialMessage = true
         guard let lastReadInboxMessageId else { return }
         
-        // Scroll to the first unread message
-        for message in messages {
-            
-            if case .pill(_,_) = message.content { continue }
-            
-            if message.id >= lastReadInboxMessageId {
-                proxy.scrollTo(message.id)
-                break
+        let messageIds = messages.compactMap { message -> Int64? in
+            if case .pill(_, _) = message.content { return nil }
+            return message.id
+        }
+        
+        let targetMessageId = messageIds.first { $0 > lastReadInboxMessageId }
+            ?? messageIds.first { $0 >= lastReadInboxMessageId }
+        
+        guard let targetMessageId else { return }
+        
+        DispatchQueue.main.async {
+            withAnimation {
+                proxy.scrollTo(targetMessageId, anchor: .top)
             }
         }
     }

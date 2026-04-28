@@ -12,7 +12,7 @@ struct MessageBubbleView<Content> : View where Content : View {
     
     enum BubbleStyle: Equatable {
         case plain
-        case fullScreen(caption: String? = nil)
+        case fullScreen(caption: AttributedString? = nil)
         case clearBackground
     }
     
@@ -35,8 +35,8 @@ struct MessageBubbleView<Content> : View where Content : View {
         }
     }
     
-    func shouldShowCaptionBackgroud(_ caption: String?) -> Bool {
-        model.reactions.count > 1 || caption?.isEmpty == false
+    func shouldShowCaptionBackgroud(_ caption: AttributedString?) -> Bool {
+        model.reactions.count > 1 || caption?.characters.isEmpty == false
     }
     
     var body: some View {
@@ -320,4 +320,3 @@ struct MessageBubbleView<Content> : View where Content : View {
         
     }
 }
-

@@ -124,19 +124,20 @@ extension ChatListViewModel {
                    let supergroup = try? await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
                     rIsForum = supergroup.isForum
                 }
+                let myId = try? await TDLibManager.shared.client?.getMe().id
                 
-                await MainActor.run { [desc, rIsForum] in
+                await MainActor.run { [desc, rIsForum, myId] in
                     
                     let index = self.chats.firstIndex { c in c.id == chatId }
                     
                     if let index, index != -1 {
                         // Chat already shown, update content
-                        self.chats[index].messageStyle = .message(desc)
+                        self.chats[index].messageStyle = .message(desc.removingLinks)
                         self.chats[index].time = date.stringDescription
                         
                     } else {
                         // Chat not shown, add to chat list
-                        var model = self.chatCellModelFrom(chat)
+                        var model = self.chatCellModelFrom(chat, currentUserId: myId)
                         if let rIsForum { model.isForum = rIsForum }
                         self.chats.append(model)
                     }
@@ -211,7 +212,8 @@ extension ChatListViewModel {
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId)
                 else { return }
                 
-                var model = self.chatCellModelFrom(chat)
+                let myId = try? await TDLibManager.shared.client?.getMe().id
+                var model = self.chatCellModelFrom(chat, currentUserId: myId)
                 if case .chatTypeSupergroup(let data) = chat.type,
                    let supergroup = try? await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
                     model.isForum = supergroup.isForum

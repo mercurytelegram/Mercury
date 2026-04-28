@@ -12,6 +12,7 @@ struct ChatDetailPage: View {
     @State
     @Mockable
     var vm: ChatDetailViewModel
+    let onOpenURL: ((URL) -> OpenURLAction.Result)?
     @State private var activeVideoNoteId: Int64? = nil
     @State private var activeVideoNote: VideoNoteModel? = nil
 
@@ -19,7 +20,12 @@ struct ChatDetailPage: View {
         activeVideoNote != nil
     }
 
-    init(chatId: Int64, messageThreadId: Int64? = nil) {
+    init(
+        chatId: Int64,
+        messageThreadId: Int64? = nil,
+        onOpenURL: ((URL) -> OpenURLAction.Result)? = nil
+    ) {
+        self.onOpenURL = onOpenURL
         _vm = Mockable.state(
             value: { ChatDetailViewModel(chatId: chatId, messageThreadId: messageThreadId) },
             mock: { ChatDetailViewModelMock() }
@@ -143,6 +149,9 @@ struct ChatDetailPage: View {
                 )
             }
         }
+        .environment(\.openURL, OpenURLAction { url in
+            onOpenURL?(url) ?? .systemAction
+        })
     }
 
     @ViewBuilder

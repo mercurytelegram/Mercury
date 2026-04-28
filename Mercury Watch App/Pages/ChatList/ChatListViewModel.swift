@@ -248,7 +248,7 @@ class ChatListViewModelMock: ChatListViewModel {
                 id: 0,
                 title: "Saved Messages",
                 time: "10:00",
-                avatar: .alessandro,
+                avatar: .savedMessages(),
                 isMuted: false,
                 isPinned: true,
                 messageStyle: .message("Your cloud storage"),

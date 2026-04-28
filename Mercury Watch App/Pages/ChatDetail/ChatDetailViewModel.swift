@@ -39,6 +39,7 @@ class ChatDetailViewModel: TDLibViewModel {
     var messages: [MessageModel] = []
     var selectedMessage: MessageModel?
     var avatar: AvatarModel?
+    var isSavedMessages: Bool = false
     
     var sendService: SendMessageService?
     var lastReadInboxMessageId: Int64?
@@ -48,6 +49,7 @@ class ChatDetailViewModel: TDLibViewModel {
     
     var chatType: ChatType?
     var isChatBlocked: Bool = false
+    var didScrollToInitialMessage = false
     
     init(chatId: Int64, messageThreadId: Int64? = nil) {
         self.chatId = chatId
@@ -80,17 +82,25 @@ class ChatDetailViewModel: TDLibViewModel {
              
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: self.chatId)
                 else { return }
+                let myId = try? await TDLibManager.shared.client?.getMe().id
+                let isSavedMessages: Bool
+                if case .chatTypePrivate(let data) = chat.type {
+                    isSavedMessages = data.userId == myId
+                } else {
+                    isSavedMessages = false
+                }
                 
                 await MainActor.run {
                     self.sendService = SendMessageService(chat: chat)
-                    self.chatName = chat.title
+                    self.chatName = isSavedMessages ? "Saved Messages" : chat.title
                     self.canSendVoiceNotes = chat.permissions.canSendVoiceNotes
                     self.canSendText = chat.permissions.canSendBasicMessages
                     self.canSendStickers = chat.permissions.canSendOtherMessages
                     self.lastReadInboxMessageId = chat.lastReadInboxMessageId
-                    self.avatar = chat.toAvatarModel()
+                    self.avatar = isSavedMessages ? .savedMessages() : chat.toAvatarModel()
                     self.chatType = chat.type
                     self.isChatBlocked = chat.blockList != nil
+                    self.isSavedMessages = isSavedMessages
                 }
                 
                 let newMessages = await self.requestMessages(firstBatch: true)
@@ -162,6 +172,9 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     public func getProfileDetailPageType() -> ProfileDetailPageType? {
+        if isSavedMessages {
+            return .savedMessages
+        }
         
         switch self.chatType {
         case .chatTypePrivate(let chatTypePrivate):
@@ -178,9 +191,11 @@ class ChatDetailViewModel: TDLibViewModel {
                 groupId: superGroupId.supergroupId,
                 chatId: self.chatId
             )
+
+        case .chatTypeSecret(let chatTypeSecret):
+            return .user(userId: chatTypeSecret.userId)
             
         default:
-            // TODO: Implement all cases (missing .chatTypeSecret)
             return nil
         }
     }

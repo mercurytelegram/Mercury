@@ -54,3 +54,11 @@ extension Chat {
         return AvatarModel(avatarImage: avatarImage, letters: letters, isFullScreen: isFullScreen)
     }
 }
+
+extension Supergroup {
+    
+    var mainUserName: String? {
+        guard let name = usernames?.activeUsernames.first else { return nil }
+        return "@" + name
+    }
+}

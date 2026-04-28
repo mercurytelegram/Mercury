@@ -75,6 +75,9 @@ extension ChatListViewModel {
         // MARK: Avatar
         var avatar = chat.toAvatarModel()
         avatar.userId = userId
+        if chatType == .savedMessages {
+            avatar = .savedMessages()
+        }
         
         // MARK: Position
         let position = chat.positions.first(where: { $0.list == folder.chatList })
@@ -88,7 +91,7 @@ extension ChatListViewModel {
         // MARK: Message style
         var messageStyle: ChatCellModel.MessageStyle? = nil
         if let message = chat.lastMessage?.description {
-            messageStyle = .message(message)
+            messageStyle = .message(message.removingLinks)
         }
         
         // MARK: Unread badge

@@ -30,7 +30,7 @@ struct MessageView: View {
             }
 
         case .photo(let imageModel, let caption):
-            MessageBubbleView(model: model, style: .fullScreen(caption: caption ?? "")) {
+            MessageBubbleView(model: model, style: .fullScreen(caption: caption)) {
                 AsyncView(getData: imageModel.getImage) {
                     Group {
                         if let thumbnail = imageModel.thumbnail {
@@ -70,17 +70,17 @@ struct MessageView: View {
             }
 
         case .location(let locationModel):
-            MessageBubbleView(model: model, style: .fullScreen(caption: "")) {
+            MessageBubbleView(model: model, style: .fullScreen()) {
                 LocationView(model: locationModel)
             }
 
         case .animation(let animationModel, let caption):
-            MessageBubbleView(model: model, style: .fullScreen(caption: caption ?? "")) {
+            MessageBubbleView(model: model, style: .fullScreen(caption: caption)) {
                 AnimationView(model: animationModel)
             }
 
         case .photoAlbum(let models, let caption):
-            MessageBubbleView(model: model, style: .fullScreen(caption: caption ?? "")) {
+            MessageBubbleView(model: model, style: .fullScreen(caption: caption)) {
                 PhotoAlbumView(models: models)
             }
 
@@ -183,12 +183,12 @@ struct MessageModel: Identifiable {
     enum MessageContent {
         case text(AttributedString)
         case voiceNote(model: VoiceNoteModel)
-        case photo(model: AsyncImageModel, caption: String?)
-        case photoAlbum(models: [AsyncImageModel], caption: String?)
+        case photo(model: AsyncImageModel, caption: AttributedString?)
+        case photoAlbum(models: [AsyncImageModel], caption: AttributedString?)
         case videoNote(model: VideoNoteModel)
         case stickerImage(model: StickerImageModel)
         case location(model: LocationModel)
-        case animation(model: AnimationModel, caption: String?)
+        case animation(model: AnimationModel, caption: AttributedString?)
         case pill(title: String?, description: LocalizedStringKey)
 
         var isVideoNote: Bool {

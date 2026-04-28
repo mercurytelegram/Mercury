@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TDLibKit
+import WatchKit
 
 @Observable
 class HomeViewModel: TDLibViewModel {
@@ -14,6 +15,9 @@ class HomeViewModel: TDLibViewModel {
     var navigationPath = NavigationPath()
     
     var userCellModel: UserCellModel?
+    var showNewChat: Bool = false
+    var webLinkNotice: WebLinkNotice?
+    private let linkLogger = LoggerService(HomeViewModel.self)
     
     override init() {
         super.init()
@@ -74,6 +78,129 @@ class HomeViewModel: TDLibViewModel {
         }
     }
     
+    func didPressNewChat() {
+        self.showNewChat = true
+    }
+    
+    func openChat(_ chatId: Int64) {
+        self.navigationPath.append(chatId)
+    }
+
+    func openURL(_ url: URL) -> OpenURLAction.Result {
+        Task {
+            await self.handleURL(url)
+        }
+        return .handled
+    }
+
+    private func handleURL(_ url: URL) async {
+        if url.isTelegramLink {
+            do {
+                guard let type = try await TDLibManager.shared.client?.getInternalLinkType(link: url.absoluteString) else {
+                    return
+                }
+                try await openTelegramLink(type)
+            } catch {
+                linkLogger.log(error, level: .error)
+            }
+            return
+        }
+
+        if url.isWebLink {
+            await MainActor.run {
+                self.webLinkNotice = WebLinkNotice(url: url)
+            }
+            return
+        }
+
+        await MainActor.run {
+            WKExtension.shared().openSystemURL(url)
+        }
+    }
+
+    private func openTelegramLink(_ type: InternalLinkType) async throws {
+        switch type {
+        case .internalLinkTypePublicChat(let data):
+            let chat = try await TDLibManager.shared.client?.searchPublicChat(username: data.chatUsername)
+            if let chatId = chat?.id {
+                await openChat(chatId: chatId)
+            }
+
+        case .internalLinkTypeBotStart(let data):
+            let chat = try await TDLibManager.shared.client?.searchPublicChat(username: data.botUsername)
+            if let chatId = chat?.id {
+                await openChat(chatId: chatId)
+            }
+
+        case .internalLinkTypeMessage(let data):
+            let info = try await TDLibManager.shared.client?.getMessageLinkInfo(url: data.url)
+            if let info, info.chatId != 0 {
+                await openChat(
+                    chatId: info.chatId,
+                    messageThreadId: info.topicId?.forumTopicId
+                )
+            }
+
+        case .internalLinkTypeChatInvite(let data):
+            let info = try await TDLibManager.shared.client?.checkChatInviteLink(inviteLink: data.inviteLink)
+            if let chatId = info?.chatId, chatId != 0 {
+                await openChat(chatId: chatId)
+            }
+
+        default:
+            break
+        }
+    }
+
+    @MainActor
+    private func openChat(chatId: Int64, messageThreadId: Int64? = nil) {
+        self.navigationPath.append(ChatNavigationTarget(
+            chatId: chatId,
+            messageThreadId: messageThreadId
+        ))
+    }
+    
+}
+
+struct WebLinkNotice: Identifiable {
+    let id = UUID()
+    let url: URL
+
+    var host: String {
+        url.host ?? url.absoluteString
+    }
+}
+
+private extension URL {
+    var isTelegramLink: Bool {
+        guard let scheme else { return false }
+        if scheme == "tg" {
+            return true
+        }
+
+        guard scheme == "http" || scheme == "https",
+              let host = host?.lowercased() else {
+            return false
+        }
+
+        return host == "t.me"
+            || host == "telegram.me"
+            || host == "telegram.dog"
+            || host.hasSuffix(".t.me")
+    }
+
+    var isWebLink: Bool {
+        scheme == "http" || scheme == "https"
+    }
+}
+
+private extension MessageTopic {
+    var forumTopicId: Int64? {
+        if case .messageTopicForum(let data) = self {
+            return Int64(data.forumTopicId)
+        }
+        return nil
+    }
 }
 
 // MARK: - Mock

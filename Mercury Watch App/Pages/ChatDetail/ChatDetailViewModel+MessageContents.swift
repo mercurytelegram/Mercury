@@ -24,10 +24,10 @@ extension ChatDetailViewModel {
             return .voiceNote(model: model)
 
         case .messagePhoto(let message):
-            return .photo(model: message.getModel(), caption: message.caption.text)
+            return .photo(model: message.getModel(), caption: message.caption.attributedString)
 
         case .messageAnimation(let message):
-            return .animation(model: message.getModel(), caption: message.caption.text)
+            return .animation(model: message.getModel(), caption: message.caption.attributedString)
 
         case .messageVideoNote(let message):
             var model = message.getModel()
@@ -159,7 +159,7 @@ extension MessageVideoNote {
             isSecret: isSecret,
             isViewed: isViewed,
             getVideoURL: {
-                await FileService.getFilePath(for: videoNote.video)
+                await FileService.getStreamingFilePath(for: videoNote.video)
             }
         )
     }

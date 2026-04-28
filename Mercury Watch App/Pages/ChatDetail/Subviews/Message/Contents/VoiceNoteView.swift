@@ -135,7 +135,8 @@ struct VoiceNoteView: View {
             
             let elapsed = player.elapsedTime == 0 ? player.audioDuration : player.elapsedTime
             let duration = player.audioDuration
-            let width = proxy.size.width * (elapsed / duration)
+            let progress = duration > 0 ? elapsed / duration : 0
+            let width = proxy.size.width * progress
             
             ZStack(alignment: .leading) {
                 Rectangle()
@@ -146,9 +147,10 @@ struct VoiceNoteView: View {
                     .frame(width: width)
             }
             .mask {
-                WaveformView(
+                SafeWaveformView(
                     audioURL: player.filePath,
-                    configuration: waveformConfig
+                    configuration: waveformConfig,
+                    fallbackSamples: fallbackWaveformSamples
                 )
             }
         }
@@ -157,23 +159,21 @@ struct VoiceNoteView: View {
     @ViewBuilder
     func waveformPlaceholder() -> some View {
         
-        let sampleCount = 320
-        
         // Adjust speed for faster or slower oscillation
         let oscillationSpeed = 1.0
         
         // Width of the waveform "peak" region
-        let peakWidth = sampleCount / 4
+        let peakWidth = Self.placeholderSampleCount / 4
         
         TimelineView(.periodic(from: .now, by: 1/10)) { time in
             
             // Calculate the oscillating position based on time
             let timeInterval = time.date.timeIntervalSinceReferenceDate
             let sinValue = sin(timeInterval * oscillationSpeed)
-            let position = Int((sinValue + 1) / 2 * Double(sampleCount - 1))
+            let position = Int((sinValue + 1) / 2 * Double(Self.placeholderSampleCount - 1))
             
             // Generate the samples array with a smooth gradient moving back and forth
-            let samples: [Float] = (0..<sampleCount).map { i in
+            let samples: [Float] = (0..<Self.placeholderSampleCount).map { i in
                 // Calculate the distance from the peak position
                 let distance = abs(i - position)
                 
@@ -191,6 +191,41 @@ struct VoiceNoteView: View {
                 samples: samples,
                 configuration: waveformConfig
             )
+        }
+    }
+    
+    private static let placeholderSampleCount = 320
+    
+    private var fallbackWaveformSamples: [Float] {
+        return (0..<Self.placeholderSampleCount).map { index in
+            let position = Float(index) / Float(Self.placeholderSampleCount)
+            return 0.35 + 0.45 * abs(sin(position * .pi * 8))
+        }
+    }
+}
+
+private struct SafeWaveformView: View {
+    
+    let audioURL: URL
+    let configuration: Waveform.Configuration
+    let fallbackSamples: [Float]
+    
+    @State private var samples: [Float]?
+    
+    var body: some View {
+        GeometryReader { proxy in
+            WaveformLiveCanvas(
+                samples: samples ?? fallbackSamples,
+                configuration: configuration
+            )
+            .task(id: audioURL) {
+                let samplesNeeded = max(Int(proxy.size.width * configuration.scale), 1)
+                guard let analyzedSamples = try? await WaveformAnalyzer().samples(
+                    fromAudioAt: audioURL,
+                    count: samplesNeeded
+                ) else { return }
+                self.samples = analyzedSamples
+            }
         }
     }
 }

@@ -31,8 +31,47 @@ extension FormattedText {
                 resultString[range].underlineStyle = .single
             case .textEntityTypeStrikethrough:
                 resultString[range].strikethroughStyle = .single
+            case .textEntityTypeUrl:
+                guard let textRange = Range(nsRange, in: text),
+                      let url = URL.fromTelegramEntity(String(text[textRange])) else {
+                    break
+                }
+                resultString[range].link = url
+                resultString[range].foregroundColor = .blue
+                resultString[range].underlineStyle = .single
+            case .textEntityTypeEmailAddress:
+                guard let textRange = Range(nsRange, in: text),
+                      let url = URL(string: "mailto:\(text[textRange])") else {
+                    break
+                }
+                resultString[range].link = url
+                resultString[range].foregroundColor = .blue
+                resultString[range].underlineStyle = .single
+            case .textEntityTypePhoneNumber:
+                guard let textRange = Range(nsRange, in: text),
+                      let url = URL(string: "tel:\(text[textRange])") else {
+                    break
+                }
+                resultString[range].link = url
+                resultString[range].foregroundColor = .blue
+                resultString[range].underlineStyle = .single
+            case .textEntityTypeTextUrl(let data):
+                guard let url = URL.fromTelegramEntity(data.url) else {
+                    break
+                }
+                resultString[range].link = url
+                resultString[range].foregroundColor = .blue
+                resultString[range].underlineStyle = .single
             case .textEntityTypeMention:
                 resultString[range].foregroundColor = .blue
+                guard let textRange = Range(nsRange, in: text) else {
+                    break
+                }
+                let username = text[textRange].dropFirst()
+                if !username.isEmpty {
+                    resultString[range].link = URL(string: "https://t.me/\(username)")
+                    resultString[range].underlineStyle = .single
+                }
             case .textEntityTypeSpoiler:
                 resultString.characters.replaceSubrange(range, with: getRandomBraille(length: entity.length))
             case .textEntityTypeBlockQuote:
@@ -63,4 +102,26 @@ extension FormattedText {
         return NSRange(start..<end, in: text)
     }
     
+}
+
+extension AttributedString {
+    var removingLinks: AttributedString {
+        var result = self
+        for run in result.runs where run.link != nil {
+            result[run.range].link = nil
+            result[run.range].underlineStyle = nil
+            result[run.range].foregroundColor = nil
+        }
+        return result
+    }
+}
+
+private extension URL {
+    static func fromTelegramEntity(_ value: String) -> URL? {
+        guard !value.isEmpty else { return nil }
+        if let url = URL(string: value), url.scheme != nil {
+            return url
+        }
+        return URL(string: "https://\(value)")
+    }
 }

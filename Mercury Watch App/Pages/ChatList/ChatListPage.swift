@@ -37,7 +37,6 @@ struct ChatListPage: View {
             }
             .listStyle(.carousel)
             .navigationTitle(vm.folder.title)
-#if DEBUG
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("New Chat", systemImage: "square.and.pencil") {
@@ -46,9 +45,10 @@ struct ChatListPage: View {
                 }
             }
             .sheet(isPresented: $vm.showNewMessage) {
-                AlertView.inDevelopment("new messages are")
+                NewChatPage { _ in
+                    vm.initChatList()
+                }
             }
-#endif
         }
     }
 }

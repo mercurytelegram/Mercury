@@ -72,7 +72,7 @@ extension ChatDetailViewModel {
             var groupedMessages: [MessageModel] = []
             var currentAlbumId: String? = nil
             var currentAlbumModels: [AsyncImageModel] = []
-            var currentAlbumCaption: String? = nil
+            var currentAlbumCaption: AttributedString? = nil
             var currentAlbumFirstMessage: MessageModel? = nil
             
             let finishCurrentAlbum: () -> Void = {
@@ -97,7 +97,7 @@ extension ChatDetailViewModel {
                 if albumIdStr != "0", case .photo(let model, let caption) = msg.content {
                     if currentAlbumId == albumIdStr {
                         currentAlbumModels.append(model)
-                        if currentAlbumCaption == nil || currentAlbumCaption?.isEmpty == true {
+                        if currentAlbumCaption == nil || currentAlbumCaption?.characters.isEmpty == true {
                             currentAlbumCaption = caption
                         }
                     } else {
