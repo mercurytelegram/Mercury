@@ -15,11 +15,11 @@ extension ChatDetailViewModel {
         switch msg.content {
 
         case .messageText(let message):
-            return .text(message.text.attributedString)
+            return textContentOrFallback(message.text.attributedString, message: msg)
 
         case .messageVoiceNote(let message):
             guard var model = await message.getModel()
-            else { return .text(msg.description) }
+            else { return textContentOrFallback(msg.description, message: msg) }
             model.onPress = { self.setMessageAsOpened(msg.id) }
             return .voiceNote(model: model)
 
@@ -40,9 +40,9 @@ extension ChatDetailViewModel {
             case .stickerFormatWebp:
                 return .stickerImage(model: message.getImageModel())
             case .stickerFormatTgs:
-                return .text(msg.description)
+                return unsupportedContent(msg, fallback: "Animated sticker not supported")
             case .stickerFormatWebm:
-                return .text(msg.description)
+                return unsupportedContent(msg, fallback: "Video sticker not supported")
             }
 
         case .messageLocation(let message):
@@ -84,16 +84,28 @@ extension ChatDetailViewModel {
             return await getPillModel(message: msg, text: "Call")
             
         case .messageDocument(_):
-            return .text("📄 Document")
+            return textContentOrFallback(msg.description, message: msg)
             
         case .messageAudio(_):
-            return .text("🎵 Audio")
+            return textContentOrFallback(msg.description, message: msg)
             
         case .messagePoll(let message):
-            return .text(AttributedString("📊 \(message.poll.question.text)"))
+            return textContentOrFallback(message.previewText, message: msg)
             
         case .messageContact(_):
-            return .text("👤 Contact")
+            return textContentOrFallback(msg.description, message: msg)
+
+        case .messageVideo(_):
+            return textContentOrFallback(msg.description, message: msg)
+
+        case .messageAnimatedEmoji(_):
+            return textContentOrFallback(msg.description, message: msg)
+
+        case .messageDice(_):
+            return textContentOrFallback(msg.description, message: msg)
+
+        case .messageStakeDice(_):
+            return textContentOrFallback(msg.description, message: msg)
             
         case .messageChatAddMembers(_):
             return await getPillModel(message: msg, text: "joined the group")
@@ -103,6 +115,26 @@ extension ChatDetailViewModel {
             
         case .messageChatDeleteMember(_):
             return await getPillModel(message: msg, text: "left the group")
+
+        case .messageChatDeletePhoto:
+            return await getPillModel(message: msg, text: "deleted group photo")
+
+        case .messageChatOwnerLeft(_):
+            return await getPillModel(message: msg, text: "left ownership of the chat")
+
+        case .messageChatOwnerChanged(_):
+            return await getPillModel(message: msg, text: "changed chat owner")
+
+        case .messageChatHasProtectedContentToggled(let message):
+            let text = message.newHasProtectedContent ? "enabled protected content" : "disabled protected content"
+            return await getPillModel(message: msg, text: LocalizedStringKey(text))
+
+        case .messageChatHasProtectedContentDisableRequested(let message):
+            let text = message.isExpired ? "protected content request expired" : "requested to disable protected content"
+            return await getPillModel(message: msg, text: LocalizedStringKey(text))
+
+        case .messageChatJoinByRequest:
+            return await getPillModel(message: msg, text: "joined by request")
             
         case .messageBasicGroupChatCreate(_):
             return await getPillModel(message: msg, text: "created the group")
@@ -119,27 +151,179 @@ extension ChatDetailViewModel {
         case .messageForumTopicCreated(_):
             return await getPillModel(message: msg, text: "created a topic")
             
-        case .messageForumTopicEdited(_):
-            return await getPillModel(message: msg, text: "edited the topic")
+        case .messageForumTopicEdited(let message):
+            if message.name.isEmpty {
+                return await getPillModel(message: msg, text: "edited the topic")
+            }
+            return await getPillModel(message: msg, text: "renamed the topic to _\(message.name)_")
             
-        case .messageForumTopicIsClosedToggled(_):
-            return await getPillModel(message: msg, text: "toggled topic closed state")
+        case .messageForumTopicIsClosedToggled(let message):
+            return await getPillModel(message: msg, text: message.isClosed ? "closed the topic" : "reopened the topic")
             
-        case .messageForumTopicIsHiddenToggled(_):
-            return await getPillModel(message: msg, text: "toggled topic visibility")
+        case .messageForumTopicIsHiddenToggled(let message):
+            return await getPillModel(message: msg, text: message.isHidden ? "hid the General topic" : "unhid the General topic")
+
+        case .messageScreenshotTaken:
+            return await getPillModel(message: msg, text: "took a screenshot")
+
+        case .messageChatSetBackground(_):
+            return await getPillModel(message: msg, text: "changed chat background")
+
+        case .messageChatSetTheme(let message):
+            return await getPillModel(message: msg, text: message.theme == nil ? "reset chat theme" : "changed chat theme")
+
+        case .messageChatSetMessageAutoDeleteTime(let message):
+            let text = message.messageAutoDeleteTime == 0 ? "disabled auto-delete timer" : "changed auto-delete timer"
+            return await getPillModel(message: msg, text: LocalizedStringKey(text))
+
+        case .messageChatBoost(let message):
+            return await getPillModel(message: msg, text: "boosted the chat \(message.boostCount)x")
+
+        case .messageSuggestProfilePhoto(_):
+            return await getPillModel(message: msg, text: "suggested a profile photo")
+
+        case .messageSuggestBirthdate(_):
+            return await getPillModel(message: msg, text: "suggested a birthdate")
+
+        case .messageCustomServiceAction(let message):
+            return await getPillModel(message: msg, text: LocalizedStringKey(message.text))
+
+        case .messageGameScore(let message):
+            return await getPillModel(message: msg, text: "scored \(message.score) in a game")
+
+        case .messageManagedBotCreated(_):
+            return await getPillModel(message: msg, text: "created a managed bot")
+
+        case .messagePaymentSuccessful(_):
+            return await getPillModel(message: msg, text: "completed a payment")
+
+        case .messagePaymentSuccessfulBot(_):
+            return await getPillModel(message: msg, text: "received a payment")
+
+        case .messagePaymentRefunded(_):
+            return await getPillModel(message: msg, text: "refunded a payment")
+
+        case .messageGiftedPremium(_):
+            return await getPillModel(message: msg, text: "gifted Telegram Premium")
+
+        case .messagePremiumGiftCode(_):
+            return await getPillModel(message: msg, text: "created a Premium gift code")
+
+        case .messageGiveawayCreated(_):
+            return await getPillModel(message: msg, text: "created a giveaway")
+
+        case .messageGiveaway(_):
+            return await getPillModel(message: msg, text: "started a giveaway")
+
+        case .messageGiveawayCompleted(_):
+            return await getPillModel(message: msg, text: "completed a giveaway")
+
+        case .messageGiveawayWinners(_):
+            return await getPillModel(message: msg, text: "announced giveaway winners")
+
+        case .messageGiftedStars(_):
+            return await getPillModel(message: msg, text: "gifted Telegram Stars")
+
+        case .messageGiftedTon(_):
+            return await getPillModel(message: msg, text: "gifted TON")
+
+        case .messageGiveawayPrizeStars(_):
+            return await getPillModel(message: msg, text: "shared giveaway prize Stars")
+
+        case .messageGift(_):
+            return await getPillModel(message: msg, text: "sent a gift")
+
+        case .messageUpgradedGift(_):
+            return await getPillModel(message: msg, text: "upgraded a gift")
+
+        case .messageRefundedUpgradedGift(_):
+            return await getPillModel(message: msg, text: "refunded an upgraded gift")
+
+        case .messageUpgradedGiftPurchaseOffer(_):
+            return await getPillModel(message: msg, text: "sent a gift purchase offer")
+
+        case .messageUpgradedGiftPurchaseOfferRejected(_):
+            return await getPillModel(message: msg, text: "rejected a gift purchase offer")
+
+        case .messagePaidMessagesRefunded(_):
+            return await getPillModel(message: msg, text: "refunded paid messages")
+
+        case .messagePaidMessagePriceChanged(_):
+            return await getPillModel(message: msg, text: "changed paid message price")
+
+        case .messageDirectMessagePriceChanged(_):
+            return await getPillModel(message: msg, text: "changed direct message price")
+
+        case .messageChecklistTasksDone(_):
+            return await getPillModel(message: msg, text: "completed checklist tasks")
+
+        case .messageChecklistTasksAdded(_):
+            return await getPillModel(message: msg, text: "added checklist tasks")
+
+        case .messageSuggestedPostApprovalFailed(_):
+            return await getPillModel(message: msg, text: "suggested post approval failed")
+
+        case .messageSuggestedPostApproved(_):
+            return await getPillModel(message: msg, text: "approved a suggested post")
+
+        case .messageSuggestedPostDeclined(_):
+            return await getPillModel(message: msg, text: "declined a suggested post")
+
+        case .messageSuggestedPostPaid(_):
+            return await getPillModel(message: msg, text: "paid for a suggested post")
+
+        case .messageSuggestedPostRefunded(_):
+            return await getPillModel(message: msg, text: "refunded a suggested post")
+
+        case .messageContactRegistered:
+            return await getPillModel(message: msg, text: "joined Telegram")
+
+        case .messageUsersShared(_):
+            return await getPillModel(message: msg, text: "shared users")
+
+        case .messageChatShared(_):
+            return await getPillModel(message: msg, text: "shared a chat")
+
+        case .messageBotWriteAccessAllowed(_):
+            return await getPillModel(message: msg, text: "allowed bot write access")
+
+        case .messageWebAppDataSent(_):
+            return await getPillModel(message: msg, text: "sent web app data")
+
+        case .messageWebAppDataReceived(_):
+            return await getPillModel(message: msg, text: "received web app data")
+
+        case .messagePassportDataSent(_):
+            return await getPillModel(message: msg, text: "sent Telegram Passport data")
+
+        case .messagePassportDataReceived(_):
+            return await getPillModel(message: msg, text: "received Telegram Passport data")
+
+        case .messageProximityAlertTriggered(_):
+            return await getPillModel(message: msg, text: "triggered a proximity alert")
             
             
         case .messageUnsupported:
             return .pill(title: nil, description: "Message not supported")
 
         default:
-            let text = msg.description
-            if text.characters.isEmpty {
-                return .pill(title: nil, description: "Unsupported message")
-            }
-            return .text(text)
+            return unsupportedContent(msg)
         }
 
+    }
+
+    func textContentOrFallback(_ text: AttributedString, message: Message) -> MessageModel.MessageContent {
+        if text.isBlank {
+            return .text("📊 Poll")
+        }
+
+        return .text(text)
+    }
+
+    func unsupportedContent(_ message: Message, fallback: String = "Unsupported message") -> MessageModel.MessageContent {
+        let text = message.description
+        let description = text.isBlank ? fallback : String(text.characters)
+        return .pill(title: nil, description: LocalizedStringKey(description))
     }
 
     func getPillModel(message: Message, text: LocalizedStringKey) async ->  MessageModel.MessageContent {
@@ -148,6 +332,12 @@ extension ChatDetailViewModel {
             title: sender.name,
             description: text
         )
+    }
+}
+
+private extension AttributedString {
+    var isBlank: Bool {
+        String(characters).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
 
