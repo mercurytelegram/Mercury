@@ -16,6 +16,8 @@ class SettingsViewModel: TDLibViewModel {
     var user: UserModel?
     var telegramSessionStatus: String = "Unknown"
     var quickReplyTemplates: [String] = QuickReplyTemplatesStore.templates
+    var accounts: [TelegramAccount] = TelegramAccountStore.accounts
+    var activeAccountId: String = TelegramAccountStore.activeAccountId
     
     var appVersion: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
@@ -41,6 +43,16 @@ class SettingsViewModel: TDLibViewModel {
     
     func logout() {
         LoginViewModel.logout()
+    }
+    
+    func addAccount() {
+        TDLibManager.shared.addAccount()
+        refreshAccounts()
+    }
+    
+    func switchAccount(to account: TelegramAccount) {
+        TDLibManager.shared.switchAccount(to: account.id)
+        refreshAccounts()
     }
     
     func editQuickReply(at index: Int) {
@@ -93,10 +105,12 @@ class SettingsViewModel: TDLibViewModel {
             do {
                 guard let user = try await TDLibManager.shared.client?.getMe()
                 else { return }
+                TelegramAccountStore.updateActiveAccount(with: user)
                 
                 await MainActor.run {
                     withAnimation {
                         self.user = user.toUserModel()
+                        self.refreshAccounts()
                     }
                 }
                 
@@ -104,6 +118,11 @@ class SettingsViewModel: TDLibViewModel {
                 self.logger.log(error, level: .error)
             }
         }
+    }
+    
+    private func refreshAccounts() {
+        accounts = TelegramAccountStore.accounts
+        activeAccountId = TelegramAccountStore.activeAccountId
     }
 }
 

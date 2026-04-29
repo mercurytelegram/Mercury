@@ -45,6 +45,7 @@
 		9BCDA5002F5DCD1500FEBAE4 /* ReportReason+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCDA4FF2F5DCD1500FEBAE4 /* ReportReason+.swift */; };
 		9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD9F9E32CDD044900833C48 /* AsyncView.swift */; };
 		9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF303552D3A70EB00309992 /* TextDivider.swift */; };
+		9BF900022F9FE00000CAFE01 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF900012F9FE00000CAFE01 /* AccountStore.swift */; };
 		A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0054EA52BF3E12F009F2CEB /* TDLibKit */; };
 		A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */; };
 		A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE512CE00F1600641BC1 /* MessageOptionsViewModel.swift */; };
@@ -231,6 +232,7 @@
 		A0CF53262BDFD78900BA394B /* TDLibManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManager.swift; sourceTree = "<group>"; };
 		A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManagerProtocols.swift; sourceTree = "<group>"; };
 		A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibViewModel.swift; sourceTree = "<group>"; };
+		9BF900012F9FE00000CAFE01 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
 		A0DF84892CCB9A6F00CC101E /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		A0F63BD82BD63B0500F7135E /* Mercury-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mercury-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A9EF323F2F38D9BE00BD8A8B /* ProfileDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailPage.swift; sourceTree = "<group>"; };
@@ -595,6 +597,7 @@
 			isa = PBXGroup;
 			children = (
 				A0CF53262BDFD78900BA394B /* TDLibManager.swift */,
+				9BF900012F9FE00000CAFE01 /* AccountStore.swift */,
 				A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */,
 				A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */,
 			);
@@ -768,6 +771,7 @@
 				A081AAD32C071C82002A265C /* ChatAction+.swift in Sources */,
 				A080D88F2CD64A7C00920564 /* SecretService-sample.swift in Sources */,
 				9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */,
+				9BF900022F9FE00000CAFE01 /* AccountStore.swift in Sources */,
 				A080D8902CD64A7C00920564 /* SecretService.swift in Sources */,
 				9B0B6CB52CD64DB800BB6A94 /* Mockable.swift in Sources */,
 				A080D8F02CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift in Sources */,

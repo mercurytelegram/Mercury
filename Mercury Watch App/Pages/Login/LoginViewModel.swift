@@ -35,8 +35,11 @@ class LoginViewModel: TDLibViewModel {
     var isLoading: Bool = true
     var showFullscreenQR: Bool = false
     var showTermsOfService: Bool = !UserDefaults.standard.bool(forKey: "hasAcceptedTermsOfService")
+    var showAccounts: Bool = false
     var qrCodeLink: String? = nil
     var lastInputCta: String? = nil
+    var accounts: [TelegramAccount] = TelegramAccountStore.accounts
+    var activeAccountId: String = TelegramAccountStore.activeAccountId
     
     let tutorialSteps = [
         "Open Telegram on your phone",
@@ -91,9 +94,20 @@ class LoginViewModel: TDLibViewModel {
         self.state = .phoneNumberLogin
     }
     
+    func didPressAccountsButton() {
+        refreshAccounts()
+        showAccounts = true
+    }
+    
     func didPressAcceptTermsOfService() {
         showTermsOfService = false
         UserDefaults.standard.set(true, forKey: "hasAcceptedTermsOfService")
+    }
+    
+    func switchAccount(to account: TelegramAccount) {
+        showAccounts = false
+        TDLibManager.shared.switchAccount(to: account.id)
+        refreshAccounts()
     }
     
     // MARK: - TDLib
@@ -106,6 +120,7 @@ class LoginViewModel: TDLibViewModel {
     override func authorizationStateUpdate(state: AuthorizationState) {
         
         self.logger.log(state, level: .debug)
+        Task { @MainActor in self.refreshAccounts() }
         
         switch state {
             
@@ -259,26 +274,13 @@ class LoginViewModel: TDLibViewModel {
     }
     
     static func logout() {
-        
-        let logger = LoggerService(LoginViewModel.self)
-        
         if AppState.shared.isMock {
             AppState.shared.isMock = false
             return
         }
         
         AppState.shared.clear()
-        
-        Task.detached {
-            do {
-                let result = try await TDLibManager.shared.client?.logOut()
-                logger.log(result)
-            } catch {
-                logger.log(error, level: .error)
-            }
-            
-            TDLibManager.shared.close()
-        }
+        TDLibManager.shared.logOutActiveAccount()
     }
     
     static func setOnlineStatus(online: Bool = true) {
@@ -352,6 +354,11 @@ class LoginViewModel: TDLibViewModel {
                 if !$0 { self.state = .phoneNumberLogin }
             }
         )
+    }
+    
+    private func refreshAccounts() {
+        accounts = TelegramAccountStore.accounts
+        activeAccountId = TelegramAccountStore.activeAccountId
     }
     
 }

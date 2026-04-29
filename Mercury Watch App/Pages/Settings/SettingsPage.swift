@@ -16,6 +16,9 @@ struct SettingsPage: View {
     var body: some View {
         ScrollView {
             avatarHeader()
+            accountsSection()
+                .padding(.horizontal)
+                .padding(.top, 4)
             appInfo()
                 .padding(.horizontal)
                 .padding(.top, 4)
@@ -81,6 +84,41 @@ struct SettingsPage: View {
             }
         }
         .font(.footnote)
+    }
+    
+    @ViewBuilder
+    func accountsSection() -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Accounts")
+                .font(.headline)
+            
+            ForEach(vm.accounts) { account in
+                Button {
+                    vm.switchAccount(to: account)
+                } label: {
+                    HStack {
+                        Image(systemName: account.id == vm.activeAccountId ? "checkmark.circle.fill" : "person.circle")
+                            .foregroundStyle(account.id == vm.activeAccountId ? .green : .secondary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(account.title)
+                                .font(.footnote)
+                                .fontWeight(.semibold)
+                            Text(account.subtitle)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                    }
+                }
+                .disabled(account.id == vm.activeAccountId)
+            }
+            
+            Button {
+                vm.addAccount()
+            } label: {
+                Label("Add Account", systemImage: "plus.circle")
+            }
+        }
     }
     
     @ViewBuilder

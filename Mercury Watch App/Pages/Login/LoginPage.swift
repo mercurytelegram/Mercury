@@ -37,6 +37,17 @@ struct LoginPage: View {
                     )
                     .opacity(vm.showFullscreenQR ? 0 : 1)
                 }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    if vm.accounts.count > 1 {
+                        Button(
+                            "Accounts",
+                            systemImage: "person.2",
+                            action: vm.didPressAccountsButton
+                        )
+                        .opacity(vm.showFullscreenQR ? 0 : 1)
+                    }
+                }
             }
             .loadable(isLoading: vm.isLoading)
             .sheet(isPresented: .constant(vm.showTermsOfService)) {
@@ -67,6 +78,7 @@ struct LoginPage: View {
                 )
                 .loadable(isLoading: vm.isLoading)
             }
+            .sheet(isPresented: $vm.showAccounts, content: accountsView)
         }
     }
     
@@ -97,6 +109,31 @@ struct LoginPage: View {
         }
         .navigationTitle("Info")
         .scenePadding(.horizontal)
+    }
+    
+    @ViewBuilder
+    func accountsView() -> some View {
+        NavigationStack {
+            List(vm.accounts) { account in
+                Button {
+                    vm.switchAccount(to: account)
+                } label: {
+                    Label {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(account.title)
+                            Text(account.subtitle)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    } icon: {
+                        Image(systemName: account.id == vm.activeAccountId ? "checkmark.circle.fill" : "person.circle")
+                            .foregroundStyle(account.id == vm.activeAccountId ? .green : .secondary)
+                    }
+                }
+                .disabled(account.id == vm.activeAccountId)
+            }
+            .navigationTitle("Accounts")
+        }
     }
     
     @ViewBuilder

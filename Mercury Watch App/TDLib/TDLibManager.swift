@@ -19,13 +19,16 @@ final class TDLibManager {
     public var client: TDLibClient?
     public var connectionState: ConnectionState?
     public var authorizationState: AuthorizationState?
+    public var activeAccountId: String {
+        TelegramAccountStore.activeAccountId
+    }
     
     private var isClosing = false
-    private let tdlibPath = FileManager.default
-        .urls(for: .cachesDirectory, in: .userDomainMask)
-        .first?
-        .appendingPathComponent("tdlib", isDirectory: true)
-        .path
+    private var pendingAccountId: String?
+    private var accountIdBeingLoggedOut: String?
+    private var tdlibPath: String? {
+        TelegramAccountStore.directoryPath(for: TelegramAccountStore.activeAccountId)
+    }
     
     // Delegate
     private var delegatesObj = NSHashTable<AnyObject>.weakObjects()
@@ -57,7 +60,40 @@ final class TDLibManager {
     }
     
     public func createClient() {
+        self.connectionState = nil
+        self.authorizationState = nil
         self.client = self.manager.createClient(updateHandler: updateHandler)
+    }
+    
+    public func addAccount() {
+        let account = TelegramAccountStore.createAccount()
+        switchAccount(to: account.id)
+    }
+    
+    public func switchAccount(to accountId: String) {
+        guard accountId != TelegramAccountStore.activeAccountId else { return }
+        guard TelegramAccountStore.accounts.contains(where: { $0.id == accountId }) else { return }
+        
+        pendingAccountId = accountId
+        AppState.shared.clear()
+        DispatchQueue.main.async {
+            AppState.shared.isAuthenticated = nil
+        }
+        close()
+    }
+    
+    public func logOutActiveAccount() {
+        accountIdBeingLoggedOut = TelegramAccountStore.activeAccountId
+        
+        Task.detached {
+            do {
+                _ = try await self.client?.logOut()
+            } catch {
+                LoggerService(TDLibManager.self).log(error, level: .error)
+            }
+            
+            self.close()
+        }
     }
     
     private func updateHandler(data: Data, client: TDLibClient) {
@@ -92,6 +128,9 @@ final class TDLibManager {
         case .authorizationStateWaitTdlibParameters:
             setTdlibParameters()
             break
+        case .authorizationStateReady:
+            refreshActiveAccount()
+            break
         case .authorizationStateLoggingOut:
             if !isClosing { self.close() }
             break
@@ -102,7 +141,20 @@ final class TDLibManager {
             }
             break
         case .authorizationStateClosed:
-            try? FileManager.default.removeItem(atPath: tdlibPath!)
+            let accountToRemove = accountIdBeingLoggedOut
+            let accountToActivate = pendingAccountId
+            accountIdBeingLoggedOut = nil
+            pendingAccountId = nil
+            
+            if let accountToRemove {
+                if let path = TelegramAccountStore.directoryPath(for: accountToRemove) {
+                    try? FileManager.default.removeItem(atPath: path)
+                }
+                _ = TelegramAccountStore.removeAccount(id: accountToRemove)
+            } else if let accountToActivate {
+                TelegramAccountStore.setActiveAccount(id: accountToActivate)
+            }
+            
             TDLibManager.shared.createClient()
             DispatchQueue.main.async {
                 self.isClosing = false
@@ -164,6 +216,17 @@ final class TDLibManager {
         
             } catch {
                 logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    private func refreshActiveAccount() {
+        Task {
+            do {
+                guard let user = try await self.client?.getMe() else { return }
+                TelegramAccountStore.updateActiveAccount(with: user)
+            } catch {
+                LoggerService(TDLibManager.self).log(error, level: .error)
             }
         }
     }
