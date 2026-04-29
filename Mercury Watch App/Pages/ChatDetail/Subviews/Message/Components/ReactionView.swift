@@ -12,6 +12,7 @@ struct ReactionView: View {
     var reaction: ReactionModel
     var avatarMaxNumber = 3
     var blurredBg: Bool = false
+    var onTap: (() -> Void)? = nil
     @State private var images: [AsyncImageModel] = []
     
     var shouldShowAvatars: Bool {
@@ -54,6 +55,13 @@ struct ReactionView: View {
                 await loadUserImages()
             }
         }
+        .contentShape(Capsule())
+        .highPriorityGesture(
+            TapGesture()
+                .onEnded {
+                    onTap?()
+                }
+        )
     }
     
     @ViewBuilder
@@ -110,6 +118,4 @@ struct ReactionModel: Hashable {
     }
     .scaleEffect(1.5)
 }
-
-
 

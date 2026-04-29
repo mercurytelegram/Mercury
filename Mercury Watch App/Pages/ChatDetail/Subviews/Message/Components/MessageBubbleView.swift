@@ -18,6 +18,7 @@ struct MessageBubbleView<Content> : View where Content : View {
     
     let model: MessageModel
     var style: BubbleStyle = .plain
+    var onReactionTap: ((ReactionModel) -> Void)? = nil
     
     @ViewBuilder var content: () -> Content
     
@@ -53,6 +54,10 @@ struct MessageBubbleView<Content> : View where Content : View {
                     
                     if let reply = model.reply {
                         ReplyView(model: reply)
+                    }
+                    
+                    if let forward = model.forward {
+                        ForwardView(model: forward)
                     }
                     
                     content()
@@ -94,6 +99,9 @@ struct MessageBubbleView<Content> : View where Content : View {
                     
                     if shouldShowCaptionBackgroud(caption) {
                         VStack(alignment: .leading) {
+                            if let forward = model.forward {
+                                ForwardView(model: forward)
+                            }
                             if let caption {
                                 Text(caption)
                             }
@@ -187,7 +195,10 @@ struct MessageBubbleView<Content> : View where Content : View {
                 ReactionView(
                     reaction: reaction,
                     avatarMaxNumber: model.reactions.count > 1 ? 2 : 3,
-                    blurredBg: blurredBg
+                    blurredBg: blurredBg,
+                    onTap: {
+                        onReactionTap?(reaction)
+                    }
                 )
                 .transition(.opacity
                     .combined(with: .scale(0.5, anchor: .leading))
@@ -217,6 +228,28 @@ struct MessageBubbleView<Content> : View where Content : View {
         }
     }
     
+}
+
+private struct ForwardView: View {
+    let model: ForwardModel
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "arrowshape.turn.up.right.fill")
+                .font(.system(size: 8, weight: .semibold))
+                .foregroundStyle(.secondary)
+            
+            Text("Forwarded from")
+                .foregroundStyle(.secondary)
+            Text(model.title)
+                .fontWeight(.semibold)
+                .foregroundStyle(model.color)
+        }
+        .font(.caption2)
+        .lineLimit(1)
+        .padding(.bottom, 1)
+        .frame(maxWidth: 150, alignment: .leading)
+    }
 }
 
 

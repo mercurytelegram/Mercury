@@ -137,6 +137,12 @@ struct ProfileDetailPage: View {
                 }
             }
             
+            if vm.canJoinChat {
+                profileSection {
+                    joinButton()
+                }
+            }
+            
             if vm.isLoadingMembers {
                 profileSection {
                     ProgressView()
@@ -254,6 +260,17 @@ struct ProfileDetailPage: View {
         } label: {
             Label("Message", systemImage: "message.fill")
         }
+    }
+    
+    @ViewBuilder
+    private func joinButton() -> some View {
+        Button {
+            vm.joinChat()
+        } label: {
+            Label(vm.isJoiningChat ? "Joining..." : "Join", systemImage: "person.badge.plus.fill")
+        }
+        .disabled(vm.isJoiningChat)
+        .tint(.blue)
     }
     
     @ViewBuilder

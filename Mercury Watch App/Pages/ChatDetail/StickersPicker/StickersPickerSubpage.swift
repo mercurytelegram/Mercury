@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TDLibKit
 
 struct StickersPickerSubpage: View {
     @State
@@ -13,6 +14,8 @@ struct StickersPickerSubpage: View {
     var vm: StickersPickerViewModel
     
     @Binding var isPresented: Bool
+    private let replyTo: InputMessageReplyTo?
+    private let onSent: (() -> Void)?
     
     let columns = [
         GridItem(.adaptive(minimum: 50)),
@@ -21,8 +24,10 @@ struct StickersPickerSubpage: View {
 
     ]
     
-    init(isPresented: Binding<Bool>, sendService: SendMessageService?) {
+    init(isPresented: Binding<Bool>, sendService: SendMessageService?, replyTo: InputMessageReplyTo? = nil, onSent: (() -> Void)? = nil) {
         _isPresented = isPresented
+        self.replyTo = replyTo
+        self.onSent = onSent
         _vm = Mockable.state(
             value: { StickersPickerViewModel(sendService: sendService) },
             mock: { StickersPickerViewModelMock(sendService: sendService) }
@@ -78,7 +83,8 @@ struct StickersPickerSubpage: View {
                 .clipped()
         }
         .onTapGesture {
-            vm.sendService?.sendSticker(model)
+            vm.sendService?.sendSticker(model, replyTo: replyTo)
+            onSent?()
             isPresented = false
         }
         .clipShape(.rect(cornerRadius: 7))

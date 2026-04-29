@@ -12,81 +12,120 @@ import TDLibKit
 struct MessageView: View {
     let model: MessageModel
     var onVideoNoteOpen: ((VideoNoteModel) -> Void)? = nil
+    var onOpenOptions: (() -> Void)? = nil
+    var onReactionTap: ((ReactionModel) -> Void)? = nil
+    @State private var horizontalDrag: CGFloat = 0
 
     var body: some View {
-        switch model.content {
+        Group {
+            switch model.content {
 
-        case .text(let text):
-            MessageBubbleView(model: model) {
-                Text(text)
-            }
+            case .text(let text):
+                MessageBubbleView(model: model, onReactionTap: onReactionTap) {
+                    Text(text)
+                }
 
-        case .voiceNote(let voiceModel):
-            MessageBubbleView(model: model) {
-                VoiceNoteView(
-                    model: voiceModel,
-                    isOutgoing: model.isOutgoing
-                )
-            }
+            case .voiceNote(let voiceModel):
+                MessageBubbleView(model: model, onReactionTap: onReactionTap) {
+                    VoiceNoteView(
+                        model: voiceModel,
+                        isOutgoing: model.isOutgoing
+                    )
+                }
 
-        case .photo(let imageModel, let caption):
-            MessageBubbleView(model: model, style: .fullScreen(caption: caption)) {
-                AsyncView(getData: imageModel.getImage) {
-                    Group {
-                        if let thumbnail = imageModel.thumbnail {
-                            Image(uiImage: thumbnail)
-                                .resizable()
-                                .scaledToFill()
+            case .photo(let imageModel, let caption):
+                MessageBubbleView(model: model, style: .fullScreen(caption: caption), onReactionTap: onReactionTap) {
+                    AsyncView(getData: imageModel.getImage) {
+                        Group {
+                            if let thumbnail = imageModel.thumbnail {
+                                Image(uiImage: thumbnail)
+                                    .resizable()
+                                    .scaledToFill()
+                            }
+                            if imageModel.thumbnail == nil {
+                                ProgressView()
+                            }
                         }
-                        if imageModel.thumbnail == nil {
-                            ProgressView()
-                        }
+                    } buildContent: { image in
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
                     }
-                } buildContent: { image in
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFill()
                 }
-            }
 
-        case .videoNote(let videoNoteModel):
-            MessageBubbleView(model: model, style: .clearBackground) {
-                VideoNotePreviewView(model: videoNoteModel) {
-                    onVideoNoteOpen?(videoNoteModel)
+            case .videoNote(let videoNoteModel):
+                MessageBubbleView(model: model, style: .clearBackground, onReactionTap: onReactionTap) {
+                    VideoNotePreviewView(model: videoNoteModel) {
+                        onVideoNoteOpen?(videoNoteModel)
+                    }
                 }
-            }
 
-        case .stickerImage(let stickerModel):
-            MessageBubbleView(model: model, style: .clearBackground) {
-                AsyncView(getData: stickerModel.getImage) {
-                    Text(stickerModel.emoji)
-                        .font(.largeTitle)
-                } buildContent: { image in
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100)
+            case .stickerImage(let stickerModel):
+                MessageBubbleView(model: model, style: .clearBackground, onReactionTap: onReactionTap) {
+                    AsyncView(getData: stickerModel.getImage) {
+                        Text(stickerModel.emoji)
+                            .font(.largeTitle)
+                    } buildContent: { image in
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100)
+                    }
                 }
-            }
 
-        case .location(let locationModel):
-            MessageBubbleView(model: model, style: .fullScreen()) {
-                LocationView(model: locationModel)
-            }
+            case .location(let locationModel):
+                MessageBubbleView(model: model, style: .fullScreen(), onReactionTap: onReactionTap) {
+                    LocationView(model: locationModel)
+                }
 
-        case .animation(let animationModel, let caption):
-            MessageBubbleView(model: model, style: .fullScreen(caption: caption)) {
-                AnimationView(model: animationModel)
-            }
+            case .animation(let animationModel, let caption):
+                MessageBubbleView(model: model, style: .fullScreen(caption: caption), onReactionTap: onReactionTap) {
+                    AnimationView(model: animationModel)
+                }
 
-        case .photoAlbum(let models, let caption):
-            MessageBubbleView(model: model, style: .fullScreen(caption: caption)) {
-                PhotoAlbumView(models: models)
-            }
+            case .photoAlbum(let models, let caption):
+                MessageBubbleView(model: model, style: .fullScreen(caption: caption), onReactionTap: onReactionTap) {
+                    PhotoAlbumView(models: models)
+                }
 
-        case .pill(let title, let description):
-            PillView(title: title, description: description)
+            case .pill(let title, let description):
+                PillView(title: title, description: description)
+            }
         }
+        .offset(x: dragOffset)
+        .animation(.snappy(duration: 0.18), value: horizontalDrag)
+        .gesture(optionsDragGesture)
+    }
+    
+    private var dragOffset: CGFloat {
+        guard !model.content.isPill else { return 0 }
+        let allowedDirection: CGFloat = model.isOutgoing ? -1 : 1
+        guard horizontalDrag.directionSign == allowedDirection.directionSign else { return 0 }
+        return max(-28, min(28, horizontalDrag * 0.22))
+    }
+    
+    private var optionsDragGesture: some Gesture {
+        DragGesture(minimumDistance: 18, coordinateSpace: .local)
+            .onChanged { value in
+                guard onOpenOptions != nil, !model.content.isPill else { return }
+                guard abs(value.translation.width) > abs(value.translation.height) else { return }
+                horizontalDrag = value.translation.width
+            }
+            .onEnded { value in
+                defer { horizontalDrag = 0 }
+                guard onOpenOptions != nil, !model.content.isPill else { return }
+                let opensForOutgoing = model.isOutgoing && value.translation.width < -42
+                let opensForIncoming = !model.isOutgoing && value.translation.width > 42
+                if opensForOutgoing || opensForIncoming {
+                    onOpenOptions?()
+                }
+            }
+    }
+}
+
+private extension FloatingPoint {
+    var directionSign: Self {
+        self < 0 ? -1 : 1
     }
 }
 
@@ -160,6 +199,7 @@ struct MessageModel: Identifiable {
     var id: Int64
 
     var sender: String?
+    var senderId: Int64?
     var senderColor: Color?
     var isSenderHidden: Bool = false
 
@@ -172,6 +212,7 @@ struct MessageModel: Identifiable {
 
     var reactions: [ReactionModel] = []
     var reply: ReplyModel? = nil
+    var forward: ForwardModel? = nil
     var mediaAlbumId: TdInt64? = nil
 
     var stateStyle: StateStyle?
@@ -197,6 +238,13 @@ struct MessageModel: Identifiable {
             }
             return false
         }
+        
+        var isPill: Bool {
+            if case .pill = self {
+                return true
+            }
+            return false
+        }
     }
 }
 
@@ -218,12 +266,14 @@ extension MessageModel {
         .init(
             id: Int64(id),
             sender: sender,
+            senderId: nil,
             senderColor: .blue,
             isSenderHidden: sender.isEmpty,
             date: .now,
             isOutgoing: sender.isEmpty ? isOutgoing : false,
             reactions: reactions,
             reply: reply,
+            forward: nil,
             mediaAlbumId: nil,
             stateStyle: isOutgoing ? state : nil,
             content: content

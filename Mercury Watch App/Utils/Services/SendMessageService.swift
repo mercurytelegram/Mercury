@@ -20,7 +20,7 @@ class SendMessageService {
         self.logger = LoggerService(SendMessageService.self)
     }
     
-    func sendTextMessage(_ text: String) {
+    func sendTextMessage(_ text: String, replyTo: InputMessageReplyTo? = nil) {
         
         let formattedText: FormattedText = .init(entities: [], text: text)
         let message: InputMessageText = .init(clearDraft: true, linkPreviewOptions: nil, text: formattedText)
@@ -33,7 +33,7 @@ class SendMessageService {
                     inputMessageContent: messageContent,
                     options: nil,
                     replyMarkup: nil,
-                    replyTo: nil,
+                    replyTo: replyTo,
                     topicId: nil
                 )
                 self.logger.log(result)
@@ -43,7 +43,7 @@ class SendMessageService {
         }
     }
     
-    func sendVoiceNote(_ filePath: URL, _ duration: Int, didProcessAudio: @escaping () -> Void) {
+    func sendVoiceNote(_ filePath: URL, _ duration: Int, replyTo: InputMessageReplyTo? = nil, didProcessAudio: @escaping () -> Void) {
         
         Task.detached {
             do {
@@ -80,7 +80,7 @@ class SendMessageService {
                     inputMessageContent: .inputMessageVoiceNote(audio),
                     options: nil,
                     replyMarkup: nil,
-                    replyTo: nil,
+                    replyTo: replyTo,
                     topicId: nil
                 )
     
@@ -92,7 +92,7 @@ class SendMessageService {
         }
     }
     
-    func sendSticker(_ model: StickerModel) {
+    func sendSticker(_ model: StickerModel, replyTo: InputMessageReplyTo? = nil) {
         guard let sticker = model.sticker else { return }
         Task.detached {
             do {
@@ -101,7 +101,7 @@ class SendMessageService {
                     inputMessageContent: .from(sticker: sticker),
                     options: nil,
                     replyMarkup: nil,
-                    replyTo: nil,
+                    replyTo: replyTo,
                     topicId: nil
                 )
     
@@ -137,6 +137,25 @@ class SendMessageService {
         }
     }
     
+    func removeReaction(_ emoji: String, chatId: Int64, messageId: Int64) {
+        Task.detached {
+            do {
+                let emoji = ReactionTypeEmoji(emoji: emoji)
+                let reaction: ReactionType = .reactionTypeEmoji(emoji)
+                
+                let result = try await TDLibManager.shared.client?.removeMessageReaction(
+                    chatId: chatId,
+                    messageId: messageId,
+                    reactionType: reaction
+                )
+                
+                self.logger.log(result)
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
 }
 
 class SendMessageServiceMock: SendMessageService {
@@ -147,19 +166,20 @@ class SendMessageServiceMock: SendMessageService {
         super.init(chat: nil)
     }
     
-    override func sendTextMessage(_ text: String) {
+    override func sendTextMessage(_ text: String, replyTo: InputMessageReplyTo? = nil) {
         self.onSendMessage(.text(AttributedString(text)))
     }
     
-    override func sendVoiceNote(_ filePath: URL, _ duration: Int, didProcessAudio: @escaping () -> Void) {
+    override func sendVoiceNote(_ filePath: URL, _ duration: Int, replyTo: InputMessageReplyTo? = nil, didProcessAudio: @escaping () -> Void) {
         didProcessAudio()
         self.onSendMessage(.voiceNote(model: VoiceNoteModel(getPlayer: {
             return PlayerServiceMock()
         })))
     }
     
-    override func sendSticker(_ sticker: StickerModel) {
+    override func sendSticker(_ sticker: StickerModel, replyTo: InputMessageReplyTo? = nil) {
         self.onSendMessage(.stickerImage(model: .init(emoji: "😃", getImage: sticker.getImage)))
     }
     override func sendReaction(_ emoji: String, chatId: Int64, messageId: Int64) {}
+    override func removeReaction(_ emoji: String, chatId: Int64, messageId: Int64) {}
 }

@@ -40,6 +40,7 @@ extension ChatDetailViewModel {
     func onPressTextInsert() {
         
         self.chatAction = .chatActionTyping
+        let replyTo = self.inputReplyToMessage()
         
         WKExtension.shared()
             .visibleInterfaceController?
@@ -51,7 +52,8 @@ extension ChatDetailViewModel {
                       let text = result.first
                 else { return }
                 
-                self.sendService?.sendTextMessage(text)
+                self.sendService?.sendTextMessage(text, replyTo: replyTo)
+                self.replyToMessage = nil
                 
             }
     }
@@ -62,7 +64,8 @@ extension ChatDetailViewModel {
     
     func sendQuickReply(_ text: String) {
         self.showQuickRepliesView = false
-        self.sendService?.sendTextMessage(text)
+        self.sendService?.sendTextMessage(text, replyTo: inputReplyToMessage())
+        self.replyToMessage = nil
     }
     
     func onPressVoiceRecording() {
@@ -76,8 +79,83 @@ extension ChatDetailViewModel {
     }
     
     func onDublePressOf(_ message: MessageModel) {
+        sendFavoriteReaction(to: message)
+    }
+    
+    func openMessageOptions(for message: MessageModel) {
         selectedMessage = message
         showOptionsView = true
+    }
+    
+    func sendFavoriteReaction(to message: MessageModel) {
+        if let selectedReaction = message.reactions.first(where: { $0.isSelected }) {
+            sendService?.removeReaction(
+                selectedReaction.emoji,
+                chatId: chatId,
+                messageId: message.id
+            )
+            return
+        }
+        
+        Task.detached(priority: .userInitiated) {
+            let fallbackEmoji = "❤️"
+            let reactions = try? await TDLibManager.shared.client?.getMessageAvailableReactions(
+                chatId: self.chatId,
+                messageId: message.id,
+                rowSize: 8
+            )
+            
+            let availableEmojis = reactions?.topReactions.compactMap { reaction -> String? in
+                if case .reactionTypeEmoji(let emojiReaction) = reaction.type {
+                    return emojiReaction.emoji
+                }
+                return nil
+            } ?? []
+            
+            guard let emoji = availableEmojis.first(where: { $0 == fallbackEmoji }) ?? availableEmojis.first
+            else { return }
+            
+            self.sendService?.sendReaction(
+                emoji,
+                chatId: self.chatId,
+                messageId: message.id
+            )
+        }
+    }
+    
+    func toggleReaction(_ reaction: ReactionModel, on message: MessageModel) {
+        if reaction.isSelected {
+            sendService?.removeReaction(
+                reaction.emoji,
+                chatId: chatId,
+                messageId: message.id
+            )
+        } else {
+            sendService?.sendReaction(
+                reaction.emoji,
+                chatId: chatId,
+                messageId: message.id
+            )
+        }
+    }
+    
+    func didSelectReply(to message: MessageModel) {
+        replyToMessage = message
+        showOptionsView = false
+    }
+    
+    func clearReply() {
+        replyToMessage = nil
+    }
+    
+    func inputReplyToMessage() -> InputMessageReplyTo? {
+        guard let messageId = replyToMessage?.id else { return nil }
+        return .inputMessageReplyToMessage(.init(
+            checklistTaskId: 0,
+            messageId: messageId,
+            pollOptionId: "",
+            quote: nil
+        ))
     }
     
     func onMessageListAppear(_ proxy: ScrollViewProxy) {
@@ -141,6 +219,49 @@ extension ChatDetailViewModel {
                 )
             } catch {
                 self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func loadPinnedMessage() async {
+        do {
+            guard let message = try await TDLibManager.shared.client?.getChatPinnedMessage(chatId: chatId)
+            else { return }
+            let model = await messageModelFrom(message)
+            await MainActor.run {
+                self.pinnedMessage = model
+            }
+        } catch {
+            self.logger.log(error, level: .debug)
+        }
+    }
+    
+    func scrollToPinnedMessage(_ proxy: ScrollViewProxy) {
+        guard let pinnedMessage else { return }
+        withAnimation {
+            proxy.scrollTo(pinnedMessage.id, anchor: .top)
+        }
+    }
+    
+    func joinChat() {
+        guard !isJoiningChat else { return }
+        isJoiningChat = true
+        Task.detached(priority: .userInitiated) {
+            do {
+                try await TDLibManager.shared.client?.joinChat(chatId: self.chatId)
+                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: self.chatId) else { return }
+                await MainActor.run {
+                    self.canJoinChat = false
+                    self.canSendText = chat.permissions.canSendBasicMessages
+                    self.canSendVoiceNotes = chat.permissions.canSendVoiceNotes
+                    self.canSendStickers = chat.permissions.canSendOtherMessages
+                    self.isJoiningChat = false
+                }
+            } catch {
+                self.logger.log(error, level: .error)
+                await MainActor.run {
+                    self.isJoiningChat = false
+                }
             }
         }
     }

@@ -68,6 +68,19 @@ struct ChatDetailPage: View {
                         onDismiss: { closeVideoNote() }
                     )
                 }
+                
+                if !isVideoNoteViewerPresented {
+                    VStack {
+                        if let pinnedMessage = vm.pinnedMessage {
+                            pinnedMessageBanner(pinnedMessage, proxy: proxy)
+                        }
+                        Spacer()
+                        if let replyToMessage = vm.replyToMessage {
+                            replyComposerBanner(replyToMessage)
+                        }
+                    }
+                    .padding(.horizontal, 4)
+                }
             }
             .navigationBarBackButtonHidden(isVideoNoteViewerPresented)
             .toolbar {
@@ -114,6 +127,8 @@ struct ChatDetailPage: View {
         .overlay {
             if vm.isChatBlocked {
                 blockView()
+            } else if vm.canJoinChat {
+                joinView()
             }
         }
         .sheet(isPresented: $vm.showChatInfoView) {
@@ -124,7 +139,9 @@ struct ChatDetailPage: View {
         .sheet(isPresented: $vm.showStickersView) {
             StickersPickerSubpage(
                 isPresented: $vm.showStickersView,
-                sendService: vm.sendService
+                sendService: vm.sendService,
+                replyTo: vm.inputReplyToMessage(),
+                onSent: vm.clearReply
             )
         }
         .sheet(isPresented: $vm.showAudioMessageView) {
@@ -132,7 +149,9 @@ struct ChatDetailPage: View {
                 VoiceNoteRecordSubpage(
                     isPresented: $vm.showAudioMessageView,
                     action: $vm.chatAction,
-                    sendService: sendService
+                    sendService: sendService,
+                    replyTo: vm.inputReplyToMessage(),
+                    onSent: vm.clearReply
                 )
             }
         }
@@ -150,7 +169,20 @@ struct ChatDetailPage: View {
                         chatId: vm.chatId,
                         messageId: messageId,
                         sendService: sendService,
-                        chatType: vm.chatType
+                        chatType: vm.chatType,
+                        onReply: {
+                            if let selectedMessage = vm.selectedMessage {
+                                vm.didSelectReply(to: selectedMessage)
+                            }
+                        },
+                        onDeleted: {
+                            if let selectedMessage = vm.selectedMessage {
+                                vm.messages.removeAll { $0.id == selectedMessage.id }
+                            }
+                        },
+                        onPinned: {
+                            Task { await vm.loadPinnedMessage() }
+                        }
                     )
                 )
             }
@@ -167,6 +199,12 @@ struct ChatDetailPage: View {
                 model: message,
                 onVideoNoteOpen: { videoNote in
                     openVideoNote(videoNote, messageId: message.id)
+                },
+                onOpenOptions: {
+                    vm.openMessageOptions(for: message)
+                },
+                onReactionTap: { reaction in
+                    vm.toggleReaction(reaction, on: message)
                 }
             )
                 .id(message.id)
@@ -183,6 +221,13 @@ struct ChatDetailPage: View {
                 .onTapGesture(count: 2) {
                     vm.onDublePressOf(message)
                 }
+                .contentShape(Rectangle())
+                .simultaneousGesture(
+                    LongPressGesture(minimumDuration: 0.45)
+                        .onEnded { _ in
+                            vm.openMessageOptions(for: message)
+                        }
+                )
         }
     }
 
@@ -194,6 +239,48 @@ struct ChatDetailPage: View {
     private func closeVideoNote() {
         activeVideoNoteId = nil
         activeVideoNote = nil
+    }
+    
+    @ViewBuilder
+    private func pinnedMessageBanner(_ message: MessageModel, proxy: ScrollViewProxy) -> some View {
+        Button {
+            vm.scrollToPinnedMessage(proxy)
+        } label: {
+            HStack(spacing: 4) {
+                Image(systemName: "pin.fill")
+                    .font(.system(size: 8, weight: .semibold))
+                Text(message.content.previewText)
+                    .lineLimit(1)
+                    .font(.system(size: 9, weight: .medium))
+            }
+            .frame(maxWidth: 96)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(.thinMaterial)
+            .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+    
+    @ViewBuilder
+    private func replyComposerBanner(_ message: MessageModel) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "arrowshape.turn.up.left.fill")
+                .foregroundStyle(.blue)
+            Text(message.content.previewText)
+                .font(.caption2)
+                .lineLimit(1)
+            Spacer(minLength: 4)
+            Button("Cancel", systemImage: "xmark") {
+                vm.clearReply()
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 5)
+        .background(.thinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 
     @ViewBuilder
@@ -260,6 +347,28 @@ struct ChatDetailPage: View {
         }
 
     }
+    
+    @ViewBuilder
+    private func joinView() -> some View {
+        VStack {
+            Spacer()
+            Button {
+                vm.joinChat()
+            } label: {
+                Label(vm.isJoiningChat ? "Joining..." : "Join", systemImage: "person.badge.plus.fill")
+            }
+            .disabled(vm.isJoiningChat)
+            .controlSize(.large)
+            .tint(.blue)
+            .padding(.bottom)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            Rectangle()
+                .fill(.thinMaterial)
+                .ignoresSafeArea()
+        }
+    }
 
     @ViewBuilder
     private func viewerBackButtonLabel() -> some View {
@@ -280,6 +389,31 @@ struct ChatDetailPage: View {
         }
     }
 
+}
+
+private extension MessageModel.MessageContent {
+    var previewText: AttributedString {
+        switch self {
+        case .text(let text):
+            return text
+        case .voiceNote:
+            return "Voice message"
+        case .photo(_, let caption):
+            return caption ?? "Photo"
+        case .photoAlbum(_, let caption):
+            return caption ?? "Photo album"
+        case .videoNote:
+            return "Video message"
+        case .stickerImage(let model):
+            return model.emoji.isEmpty ? "Sticker" : AttributedString(model.emoji)
+        case .location:
+            return "Location"
+        case .animation(_, let caption):
+            return caption ?? "GIF"
+        case .pill(_, _):
+            return "Service message"
+        }
+    }
 }
 
 private struct VideoNoteViewerOverlay: View {

@@ -32,14 +32,23 @@ struct ChatListPage: View {
                             vm.didPressPin(on: chat)
                         } onPressMuteButton: {
                             vm.didPressMute(on: chat)
+                        } onPressReadButton: {
+                            vm.didPressRead(on: chat)
                         }
                     }
                     .listItemTint(chat.isPinned ? .blue : nil)
+                }
+                
+                if vm.isSearchingGlobally {
+                    ProgressView()
                 }
             }
             .listStyle(.carousel)
             .navigationTitle(vm.folder.title)
             .searchable(text: $vm.searchText, prompt: "Search chats")
+            .onChange(of: vm.searchText) { _, newValue in
+                vm.didUpdateSearchText(newValue)
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("New Chat", systemImage: "square.and.pencil") {

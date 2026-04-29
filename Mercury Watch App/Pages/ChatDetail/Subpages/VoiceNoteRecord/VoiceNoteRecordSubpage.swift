@@ -19,10 +19,10 @@ struct VoiceNoteRecordSubpage: View {
     
     @Binding var isPresented: Bool
     
-    init(isPresented: Binding<Bool>, action: Binding<ChatAction?>, sendService: SendMessageService) {
+    init(isPresented: Binding<Bool>, action: Binding<ChatAction?>, sendService: SendMessageService, replyTo: InputMessageReplyTo? = nil, onSent: (() -> Void)? = nil) {
         self._isPresented = isPresented
         _vm = Mockable.state(
-            value: { VoiceNoteRecordViewModel(action: action, sendService: sendService, isPresented: isPresented) },
+            value: { VoiceNoteRecordViewModel(action: action, sendService: sendService, isPresented: isPresented, replyTo: replyTo, onSent: onSent) },
             mock: { VoiceNoteRecordViewModelMock(sendService: sendService, isPresented: isPresented) }
         )
     }

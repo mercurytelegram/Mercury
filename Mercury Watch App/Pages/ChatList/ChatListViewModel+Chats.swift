@@ -112,6 +112,7 @@ extension ChatListViewModel {
             avatar: avatar,
             isMuted: isMuted,
             isPinned: isPinned,
+            isMarkedAsUnread: chat.isMarkedAsUnread,
             messageStyle: messageStyle,
             unreadBadgeStyle: unreadBadgeStyle,
             chatType: chatType,

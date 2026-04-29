@@ -18,11 +18,14 @@ class ProfileDetailViewModel: TDLibViewModel {
     var members: [ProfileMemberModel] = []
     var isLoadingMembers: Bool = false
     var isSavedMessages: Bool = false
+    var canJoinChat: Bool = false
+    var isJoiningChat: Bool = false
     var canMessageUser: Bool { return userIdToMessage != nil }
     var isBlockEnabled: Bool { return idToBlock != nil }
     
     private var userIdToMessage: Int64? = nil
     private var idToBlock: Int64? = nil
+    private var chatIdToJoin: Int64? = nil
     
     init(type: ProfileDetailPageType) {
         super.init()
@@ -46,6 +49,8 @@ class ProfileDetailViewModel: TDLibViewModel {
             self.members = []
             self.userIdToMessage = nil
             self.idToBlock = nil
+            self.chatIdToJoin = nil
+            self.canJoinChat = false
             
         case .user(let id):
             let user = try await TDLibManager.shared.client?.getUser(userId: id)
@@ -62,6 +67,8 @@ class ProfileDetailViewModel: TDLibViewModel {
             self.members = []
             self.userIdToMessage = id
             self.idToBlock = id
+            self.chatIdToJoin = nil
+            self.canJoinChat = false
             
         case .basicGroup(let groupId, let chatId):
             let group = try await TDLibManager.shared.client?.getBasicGroup(basicGroupId: groupId)
@@ -77,6 +84,8 @@ class ProfileDetailViewModel: TDLibViewModel {
             self.isSavedMessages = false
             self.userIdToMessage = nil
             self.idToBlock = nil
+            self.chatIdToJoin = nil
+            self.canJoinChat = false
             await self.loadMembers(fullInfo?.members ?? [])
             
         case .superGroup(groupId: let groupId, chatId: let chatId):
@@ -94,6 +103,12 @@ class ProfileDetailViewModel: TDLibViewModel {
             self.isSavedMessages = false
             self.userIdToMessage = nil
             self.idToBlock = nil
+            self.chatIdToJoin = chatId
+            if case .chatMemberStatusLeft = group?.status {
+                self.canJoinChat = true
+            } else {
+                self.canJoinChat = false
+            }
             if fullInfo?.canGetMembers == true {
                 let members = try? await TDLibManager.shared.client?.getSupergroupMembers(
                     filter: nil,
@@ -158,6 +173,25 @@ class ProfileDetailViewModel: TDLibViewModel {
                 blockList: .blockListMain,
                 senderId: .messageSenderUser(.init(userId: id))
             )
+        }
+    }
+    
+    public func joinChat() {
+        guard let chatId = chatIdToJoin, !isJoiningChat else { return }
+        isJoiningChat = true
+        Task.detached {
+            do {
+                try await TDLibManager.shared.client?.joinChat(chatId: chatId)
+                await MainActor.run {
+                    self.canJoinChat = false
+                    self.isJoiningChat = false
+                }
+            } catch {
+                self.logger.log(error, level: .error)
+                await MainActor.run {
+                    self.isJoiningChat = false
+                }
+            }
         }
     }
     

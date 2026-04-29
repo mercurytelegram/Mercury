@@ -304,6 +304,7 @@ extension ChatListViewModel {
                     withAnimation {
                         if chat.unreadCount == 0 {
                             self.chats[index].unreadBadgeStyle = nil
+                            self.chats[index].isMarkedAsUnread = chat.isMarkedAsUnread
                         } else {
                             self.chats[index].unreadBadgeStyle = .message(count: chat.unreadCount)
                         }
@@ -326,6 +327,17 @@ extension ChatListViewModel {
         
         withAnimation {
             self.chats[index].isMuted = isMuted
+        }
+    }
+    
+    @MainActor
+    func updateChatIsMarkedAsUnread(_ update: UpdateChatIsMarkedAsUnread) {
+        let chatId = update.chatId
+        let index = self.chats.firstIndex { c in c.id == chatId }
+        guard let index, index != -1 else { return }
+        
+        withAnimation {
+            self.chats[index].isMarkedAsUnread = update.isMarkedAsUnread
         }
     }
     

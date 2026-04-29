@@ -33,6 +33,9 @@ class ChatDetailViewModel: TDLibViewModel {
     var showChatInfoView: Bool = false
     var showQuickRepliesView: Bool = false
     var quickReplyTemplates: [String] { QuickReplyTemplatesStore.templates }
+    var replyToMessage: MessageModel?
+    var pinnedMessage: MessageModel?
+    var isJoiningChat: Bool = false
     
     var canSendVoiceNotes: Bool?
     var canSendText: Bool?
@@ -51,6 +54,7 @@ class ChatDetailViewModel: TDLibViewModel {
     
     var chatType: ChatType?
     var isChatBlocked: Bool = false
+    var canJoinChat: Bool = false
     var didScrollToInitialMessage = false
     
     init(chatId: Int64, messageThreadId: Int64? = nil) {
@@ -103,7 +107,23 @@ class ChatDetailViewModel: TDLibViewModel {
                     self.chatType = chat.type
                     self.isChatBlocked = chat.blockList != nil
                     self.isSavedMessages = isSavedMessages
+                    self.canJoinChat = false
                 }
+                
+                if case .chatTypeSupergroup(let data) = chat.type,
+                   let supergroup = try? await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
+                    let canJoin: Bool
+                    if case .chatMemberStatusLeft = supergroup.status {
+                        canJoin = true
+                    } else {
+                        canJoin = false
+                    }
+                    await MainActor.run {
+                        self.canJoinChat = canJoin
+                    }
+                }
+                
+                await self.loadPinnedMessage()
                 
                 let newMessages = await self.requestMessages(firstBatch: true)
                 await MainActor.run {

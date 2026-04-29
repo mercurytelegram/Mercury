@@ -45,13 +45,26 @@ class ChatListViewModel: TDLibViewModel {
     var isLoading: Bool = false
     var showNewMessage: Bool = false
     var searchText: String = ""
+    var globalSearchResults: [ChatCellModel] = []
+    var isSearchingGlobally: Bool = false
     var muteOptionsChat: ChatCellModel?
+    private var searchTask: Task<Void, Never>?
     
     var filteredChats: [ChatCellModel] {
-        chats.filter { chat in
+        let localResults = chats.filter { chat in
             let matchesSearch = searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 || chat.title.localizedCaseInsensitiveContains(searchText)
             return matchesSearch
+        }
+        
+        guard !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return localResults
+        }
+        
+        let localIds = Set(localResults.compactMap(\.id))
+        return localResults + globalSearchResults.filter { result in
+            guard let id = result.id else { return true }
+            return !localIds.contains(id)
         }
     }
     
@@ -68,6 +81,31 @@ class ChatListViewModel: TDLibViewModel {
     
     func didPressMute(on chat: ChatCellModel) {
         muteOptionsChat = chat
+    }
+    
+    func didPressRead(on chat: ChatCellModel) {
+        guard let id = chat.id else { return }
+        if chat.isUnread {
+            markChatAsRead(id)
+        } else {
+            markChatAsUnread(id)
+        }
+    }
+    
+    func didUpdateSearchText(_ text: String) {
+        searchTask?.cancel()
+        let query = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else {
+            globalSearchResults = []
+            isSearchingGlobally = false
+            return
+        }
+        
+        searchTask = Task {
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            guard !Task.isCancelled else { return }
+            await searchGlobally(query)
+        }
     }
     
     func didPressOnNewMessage() {
@@ -110,6 +148,8 @@ class ChatListViewModel: TDLibViewModel {
                 self.updateChatPosition(update)
             case .updateChatNotificationSettings(let update):
                 self.updateChatNotificationSettings(update)
+            case .updateChatIsMarkedAsUnread(let update):
+                self.updateChatIsMarkedAsUnread(update)
 
             // Chat Counters update
             case .updateChatReadInbox(let update):
@@ -274,6 +314,77 @@ class ChatListViewModel: TDLibViewModel {
                 self.logger.log(error, level: .error)
             }
         }
+    }
+    
+    private func markChatAsUnread(_ chatId: Int64) {
+        Task { await updateMarkedAsUnread(chatId: chatId, isMarkedAsUnread: true) }
+        Task.detached {
+            do {
+                try await TDLibManager.shared.client?.toggleChatIsMarkedAsUnread(
+                    chatId: chatId,
+                    isMarkedAsUnread: true
+                )
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    private func markChatAsRead(_ chatId: Int64) {
+        Task { await updateMarkedAsUnread(chatId: chatId, isMarkedAsUnread: false) }
+        Task.detached {
+            do {
+                guard let chat = try await TDLibManager.shared.client?.getChat(chatId: chatId) else { return }
+                if let messageId = chat.lastMessage?.id {
+                    try await TDLibManager.shared.client?.viewMessages(
+                        chatId: chatId,
+                        forceRead: true,
+                        messageIds: [messageId],
+                        source: nil
+                    )
+                }
+                try await TDLibManager.shared.client?.toggleChatIsMarkedAsUnread(
+                    chatId: chatId,
+                    isMarkedAsUnread: false
+                )
+            } catch {
+                self.logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    @MainActor
+    private func updateMarkedAsUnread(chatId: Int64, isMarkedAsUnread: Bool) {
+        guard let index = chats.firstIndex(where: { $0.id == chatId }) else { return }
+        withAnimation {
+            chats[index].isMarkedAsUnread = isMarkedAsUnread
+            if !isMarkedAsUnread {
+                chats[index].unreadBadgeStyle = nil
+            }
+        }
+    }
+    
+    private func searchGlobally(_ query: String) async {
+        await MainActor.run { self.isSearchingGlobally = true }
+        let localIds = (try? await TDLibManager.shared.client?.searchChats(limit: 20, query: query))?.chatIds ?? []
+        let serverIds = (try? await TDLibManager.shared.client?.searchChatsOnServer(limit: 20, query: query))?.chatIds ?? []
+        let publicIds = (try? await TDLibManager.shared.client?.searchPublicChats(query: query))?.chatIds ?? []
+        let ids = uniqueChatIds(localIds + serverIds + publicIds)
+        let chatsData = await loadChats(ids: ids)
+        let myId = try? await TDLibManager.shared.client?.getMe().id
+        let models = chatsData
+            .map { self.chatCellModelFrom($0, currentUserId: myId) }
+            .sorted(by: self.chatSortingLogic)
+        
+        await MainActor.run {
+            self.globalSearchResults = models
+            self.isSearchingGlobally = false
+        }
+    }
+    
+    private func uniqueChatIds(_ ids: [Int64]) -> [Int64] {
+        var seen = Set<Int64>()
+        return ids.filter { seen.insert($0).inserted }
     }
 }
 

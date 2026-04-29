@@ -12,6 +12,7 @@ struct ChatCellView: View {
     let model: ChatCellModel
     let onPressPinButton: () -> Void
     let onPressMuteButton: () -> Void
+    var onPressReadButton: () -> Void = {}
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -44,7 +45,7 @@ struct ChatCellView: View {
         .swipeActions(
             edge: .trailing,
             allowsFullSwipe: false,
-            content: muteButton
+            content: trailingButtons
         )
     }
     
@@ -182,6 +183,22 @@ struct ChatCellView: View {
         }
         .tint(.orange)
     }
+    
+    @ViewBuilder
+    func readButton() -> some View {
+        Button(action: onPressReadButton) {
+            model.isUnread
+                ? Label("Read", systemImage: "envelope.open.fill")
+                : Label("Unread", systemImage: "envelope.badge.fill")
+        }
+        .tint(.blue)
+    }
+    
+    @ViewBuilder
+    func trailingButtons() -> some View {
+        muteButton()
+        readButton()
+    }
 }
 
 // MARK: - Model
@@ -197,12 +214,17 @@ struct ChatCellModel: Identifiable {
     var avatar: AvatarModel
     var isMuted: Bool
     var isPinned: Bool
+    var isMarkedAsUnread: Bool = false
     
     var messageStyle: MessageStyle?
     var unreadBadgeStyle: UnreadStyle?
     
     var chatType: ChatType = .unknown
     var isForum: Bool? = nil
+    
+    var isUnread: Bool {
+        isMarkedAsUnread || unreadBadgeStyle != nil
+    }
     
     // MARK: ChatType
     
@@ -248,6 +270,7 @@ extension ChatCellModel: Hashable {
                lhs.time == rhs.time &&
                lhs.avatar == rhs.avatar &&
                lhs.isMuted == rhs.isMuted &&
+               lhs.isMarkedAsUnread == rhs.isMarkedAsUnread &&
                lhs.messageStyle == rhs.messageStyle &&
                lhs.unreadBadgeStyle == rhs.unreadBadgeStyle &&
                lhs.chatType == rhs.chatType &&
