@@ -29,6 +29,9 @@ extension ChatDetailViewModel {
         case .messageAnimation(let message):
             return .animation(model: message.getModel(), caption: message.caption.attributedString)
 
+        case .messageVideo(let message):
+            return .video(model: message.getModel(), caption: message.caption.attributedString)
+
         case .messageVideoNote(let message):
             var model = message.getModel()
             model.onPress = { self.setMessageAsOpened(msg.id) }
@@ -83,8 +86,8 @@ extension ChatDetailViewModel {
         case .messageCall(_):
             return await getPillModel(message: msg, text: "Call")
             
-        case .messageDocument(_):
-            return textContentOrFallback(msg.description, message: msg)
+        case .messageDocument(let message):
+            return .document(model: message.getModel(), caption: message.caption.attributedString)
             
         case .messageAudio(_):
             return textContentOrFallback(msg.description, message: msg)
@@ -93,9 +96,6 @@ extension ChatDetailViewModel {
             return textContentOrFallback(message.previewText, message: msg)
             
         case .messageContact(_):
-            return textContentOrFallback(msg.description, message: msg)
-
-        case .messageVideo(_):
             return textContentOrFallback(msg.description, message: msg)
 
         case .messageAnimatedEmoji(_):
@@ -386,6 +386,34 @@ extension MessagePhoto {
     }
 }
 
+extension MessageVideo {
+    func getModel() -> VideoModel {
+        return VideoModel(
+            thumbnail: video.getAsyncModel(),
+            duration: video.duration,
+            aspectRatio: video.aspectRatio,
+            isSecret: isSecret,
+            getVideoURL: {
+                await FileService.getStreamingFilePath(for: video.video)
+            }
+        )
+    }
+}
+
+extension MessageDocument {
+    func getModel() -> DocumentModel {
+        return DocumentModel(
+            fileName: document.fileName,
+            mimeType: document.mimeType,
+            size: document.document.size > 0 ? document.document.size : document.document.expectedSize,
+            thumbnail: document.getAsyncModel(),
+            getFileURL: {
+                await FileService.getFilePath(for: document.document)
+            }
+        )
+    }
+}
+
 extension MessageSticker {
     func getImageModel() -> StickerImageModel {
         return StickerImageModel(
@@ -454,5 +482,48 @@ extension MessageAnimation {
                 await FileService.getFilePath(for: animation.animation)
             }
         )
+    }
+}
+
+private extension Video {
+    var aspectRatio: CGFloat? {
+        guard width > 0, height > 0 else { return nil }
+        return CGFloat(width) / CGFloat(height)
+    }
+
+    func getAsyncModel() -> AsyncImageModel {
+        let embeddedThumbnail = minithumbnail?.image
+        let thumbnailFile = thumbnail?.file
+
+        return AsyncImageModel(
+            thumbnail: embeddedThumbnail,
+            getImage: {
+                guard let thumbnailFile else { return embeddedThumbnail }
+                return await FileService.getImage(for: thumbnailFile)
+            }
+        )
+    }
+}
+
+private extension Document {
+    func getAsyncModel() -> AsyncImageModel? {
+        guard minithumbnail != nil || thumbnail != nil else { return nil }
+
+        let embeddedThumbnail = minithumbnail?.image
+        let thumbnailFile = thumbnail?.file
+
+        return AsyncImageModel(
+            thumbnail: embeddedThumbnail,
+            getImage: {
+                guard let thumbnailFile else { return embeddedThumbnail }
+                return await FileService.getImage(for: thumbnailFile)
+            }
+        )
+    }
+}
+
+private extension Minithumbnail {
+    var image: UIImage? {
+        UIImage(data: data)
     }
 }

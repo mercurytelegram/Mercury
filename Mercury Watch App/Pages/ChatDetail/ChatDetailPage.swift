@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WatchKit
 
 struct ChatDetailPage: View {
 
@@ -15,9 +16,10 @@ struct ChatDetailPage: View {
     let onOpenURL: ((URL) -> OpenURLAction.Result)?
     @State private var activeVideoNoteId: Int64? = nil
     @State private var activeVideoNote: VideoNoteModel? = nil
+    @State private var activeMediaViewer: ActiveMediaViewer? = nil
 
-    private var isVideoNoteViewerPresented: Bool {
-        activeVideoNote != nil
+    private var isViewerPresented: Bool {
+        activeVideoNote != nil || activeMediaViewer != nil
     }
 
     init(
@@ -59,10 +61,10 @@ struct ChatDetailPage: View {
                             }
                         }
                         .defaultScrollAnchor(.bottom)
-                        .scrollDisabled(isVideoNoteViewerPresented)
+                        .scrollDisabled(isViewerPresented)
                     }
                 }
-                .blur(radius: isVideoNoteViewerPresented ? 8 : 0)
+                .blur(radius: isViewerPresented ? 8 : 0)
 
                 if let activeVideoNote {
                     VideoNoteViewerOverlay(
@@ -70,8 +72,15 @@ struct ChatDetailPage: View {
                         onDismiss: { closeVideoNote() }
                     )
                 }
+
+                if let activeMediaViewer {
+                    MediaViewerOverlay(
+                        viewer: activeMediaViewer,
+                        onDismiss: { closeMediaViewer() }
+                    )
+                }
                 
-                if !isVideoNoteViewerPresented {
+                if !isViewerPresented {
                     VStack {
                         if let pinnedMessage = vm.pinnedMessage {
                             pinnedMessageBanner(pinnedMessage, proxy: proxy)
@@ -84,13 +93,13 @@ struct ChatDetailPage: View {
                     .padding(.horizontal, 4)
                 }
             }
-            .navigationBarBackButtonHidden(isVideoNoteViewerPresented)
+            .navigationBarBackButtonHidden(isViewerPresented)
             .toolbar {
 
                 ToolbarItem(placement: .topBarLeading) {
-                    if isVideoNoteViewerPresented {
+                    if isViewerPresented {
                         Button {
-                            closeVideoNote()
+                            closeActiveViewer()
                         } label: {
                             viewerBackButtonLabel()
                         }
@@ -98,7 +107,7 @@ struct ChatDetailPage: View {
                     }
                 }
 
-                if !isVideoNoteViewerPresented, let avatar = vm.avatar {
+                if !isViewerPresented, let avatar = vm.avatar {
                     ToolbarItem(placement: .topBarTrailing) {
                         AvatarView(model: avatar)
                             .onTapGesture {
@@ -115,12 +124,12 @@ struct ChatDetailPage: View {
                 background()
             }
             .navigationTitle {
-                Text(isVideoNoteViewerPresented ? "" : vm.chatName ?? "")
+                Text(isViewerPresented ? "" : vm.chatName ?? "")
                     .foregroundStyle(.white)
             }
             .toolbarForegroundStyle(.white, for: .navigationBar)
             .toolbar(
-                isVideoNoteViewerPresented ? .hidden : .automatic,
+                isViewerPresented ? .hidden : .automatic,
                 for: .bottomBar
             )
             .onAppear(perform: vm.onOpenChat)
@@ -199,6 +208,12 @@ struct ChatDetailPage: View {
         ForEach(vm.messages) { message in
             MessageView(
                 model: message,
+                onPhotoOpen: { imageModel in
+                    openPhoto(imageModel, messageId: message.id)
+                },
+                onVideoOpen: { videoModel in
+                    openVideo(videoModel, messageId: message.id)
+                },
                 onVideoNoteOpen: { videoNote in
                     openVideoNote(videoNote, messageId: message.id)
                 },
@@ -270,9 +285,26 @@ struct ChatDetailPage: View {
         activeVideoNote = model
     }
 
+    private func openPhoto(_ model: AsyncImageModel, messageId: Int64) {
+        activeMediaViewer = .photo(id: messageId, model: model)
+    }
+
+    private func openVideo(_ model: VideoModel, messageId: Int64) {
+        activeMediaViewer = .video(id: messageId, model: model)
+    }
+
     private func closeVideoNote() {
         activeVideoNoteId = nil
         activeVideoNote = nil
+    }
+
+    private func closeMediaViewer() {
+        activeMediaViewer = nil
+    }
+
+    private func closeActiveViewer() {
+        closeVideoNote()
+        closeMediaViewer()
     }
     
     @ViewBuilder
@@ -440,8 +472,12 @@ private extension MessageModel.MessageContent {
             return caption ?? "Photo"
         case .photoAlbum(_, let caption):
             return caption ?? "Photo album"
+        case .video(_, let caption):
+            return caption ?? "Video"
         case .videoNote:
             return "Video message"
+        case .document(let model, let caption):
+            return caption ?? AttributedString(model.fileName.isEmpty ? "Document" : model.fileName)
         case .stickerImage(let model):
             return model.emoji.isEmpty ? "Sticker" : AttributedString(model.emoji)
         case .location:
@@ -451,6 +487,160 @@ private extension MessageModel.MessageContent {
         case .pill(_, _):
             return "Service message"
         }
+    }
+}
+
+private enum ActiveMediaViewer: Identifiable {
+    case photo(id: Int64, model: AsyncImageModel)
+    case video(id: Int64, model: VideoModel)
+
+    var id: String {
+        switch self {
+        case .photo(let id, _):
+            return "photo-\(id)"
+        case .video(let id, _):
+            return "video-\(id)"
+        }
+    }
+}
+
+private struct MediaViewerOverlay: View {
+    let viewer: ActiveMediaViewer
+    let onDismiss: () -> Void
+
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(.black.opacity(0.88))
+                .ignoresSafeArea()
+
+            switch viewer {
+            case .photo(_, let model):
+                FullScreenPhotoView(model: model)
+                    .onTapGesture(perform: onDismiss)
+            case .video(_, let model):
+                FullScreenVideoView(model: model)
+            }
+        }
+        .transition(.opacity.combined(with: .scale(scale: 0.96)))
+    }
+}
+
+private struct FullScreenPhotoView: View {
+    let model: AsyncImageModel
+
+    @FocusState private var isFocused: Bool
+    @State private var zoom: Double = 1
+
+    var body: some View {
+        GeometryReader { proxy in
+            AsyncView(getData: model.getImage) {
+                Group {
+                    if let thumbnail = model.thumbnail {
+                        Image(uiImage: thumbnail)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        ProgressView()
+                            .tint(.white)
+                    }
+                }
+            } buildContent: { image in
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            }
+            .frame(width: proxy.size.width, height: proxy.size.height)
+            .scaleEffect(zoom)
+            .clipped()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .focusable()
+        .focused($isFocused)
+        .digitalCrownRotation(
+            $zoom,
+            from: 1,
+            through: 4,
+            by: 0.08,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
+        .onAppear {
+            isFocused = true
+        }
+        .animation(.snappy(duration: 0.16), value: zoom)
+    }
+}
+
+private struct FullScreenVideoView: View {
+    let model: VideoModel
+
+    @State private var videoURL: URL? = nil
+    @State private var movieRef: WKInterfaceInlineMovie? = nil
+    @State private var isLoading = false
+
+    var body: some View {
+        ZStack {
+            if let videoURL {
+                InlineMovieView(
+                    url: videoURL,
+                    isPlaying: true,
+                    loops: false,
+                    autoplays: true,
+                    movieRef: $movieRef
+                )
+                .aspectRatio(model.aspectRatio, contentMode: .fit)
+            } else {
+                FullScreenVideoPlaceholder(model: model)
+            }
+
+            if isLoading {
+                ProgressView()
+                    .tint(.white)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 4)
+        .task {
+            await loadVideo()
+        }
+    }
+
+    private func loadVideo() async {
+        guard videoURL == nil && !isLoading else { return }
+
+        await MainActor.run { isLoading = true }
+        let url = try? await model.getVideoURL()
+        await MainActor.run {
+            videoURL = url
+            isLoading = false
+        }
+    }
+}
+
+private struct FullScreenVideoPlaceholder: View {
+    let model: VideoModel
+
+    var body: some View {
+        AsyncView(getData: model.thumbnail.getImage) {
+            Group {
+                if let thumbnail = model.thumbnail.thumbnail {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFit()
+                } else {
+                    Image(systemName: "video.fill")
+                        .font(.system(size: 40, weight: .semibold))
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+            }
+        } buildContent: { image in
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFit()
+        }
+        .blur(radius: model.isSecret ? 8 : 0)
     }
 }
 

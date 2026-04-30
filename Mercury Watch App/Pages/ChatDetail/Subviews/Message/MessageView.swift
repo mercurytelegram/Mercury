@@ -8,9 +8,12 @@
 import MapKit
 import SwiftUI
 import TDLibKit
+import WatchKit
 
 struct MessageView: View {
     let model: MessageModel
+    var onPhotoOpen: ((AsyncImageModel) -> Void)? = nil
+    var onVideoOpen: ((VideoModel) -> Void)? = nil
     var onVideoNoteOpen: ((VideoNoteModel) -> Void)? = nil
     var onOpenOptions: (() -> Void)? = nil
     var onReactionTap: ((ReactionModel) -> Void)? = nil
@@ -51,6 +54,17 @@ struct MessageView: View {
                             .resizable()
                             .scaledToFill()
                     }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        onPhotoOpen?(imageModel)
+                    }
+                }
+
+            case .video(let videoModel, let caption):
+                MessageBubbleView(model: model, style: .fullScreen(caption: caption), onReactionTap: onReactionTap) {
+                    VideoPreviewView(model: videoModel) {
+                        onVideoOpen?(videoModel)
+                    }
                 }
 
             case .videoNote(let videoNoteModel):
@@ -85,7 +99,15 @@ struct MessageView: View {
 
             case .photoAlbum(let models, let caption):
                 MessageBubbleView(model: model, style: .fullScreen(caption: caption), onReactionTap: onReactionTap) {
-                    PhotoAlbumView(models: models)
+                    PhotoAlbumView(models: models, onPhotoOpen: onPhotoOpen)
+                }
+
+            case .document(let documentModel, let caption):
+                MessageBubbleView(model: model, onReactionTap: onReactionTap) {
+                    DocumentView(model: documentModel)
+                    if let caption, !caption.characters.isEmpty {
+                        Text(caption)
+                    }
                 }
 
             case .pill(let title, let description):
@@ -131,6 +153,7 @@ private extension FloatingPoint {
 
 struct PhotoAlbumView: View {
     let models: [AsyncImageModel]
+    var onPhotoOpen: ((AsyncImageModel) -> Void)? = nil
     
     var body: some View {
         VStack(spacing: 2) {
@@ -190,6 +213,10 @@ struct PhotoAlbumView: View {
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .aspectRatio(1, contentMode: .fill)
         .clipped()
+        .contentShape(Rectangle())
+        .onTapGesture {
+            onPhotoOpen?(model)
+        }
     }
 }
 
@@ -225,7 +252,9 @@ struct MessageModel: Identifiable {
         case voiceNote(model: VoiceNoteModel)
         case photo(model: AsyncImageModel, caption: AttributedString?)
         case photoAlbum(models: [AsyncImageModel], caption: AttributedString?)
+        case video(model: VideoModel, caption: AttributedString?)
         case videoNote(model: VideoNoteModel)
+        case document(model: DocumentModel, caption: AttributedString?)
         case stickerImage(model: StickerImageModel)
         case location(model: LocationModel)
         case animation(model: AnimationModel, caption: AttributedString?)
@@ -250,6 +279,195 @@ struct MessageModel: Identifiable {
 struct StickerImageModel {
     let emoji: String
     let getImage: () async -> UIImage?
+}
+
+struct VideoModel {
+    let thumbnail: AsyncImageModel
+    let duration: Int
+    let aspectRatio: CGFloat?
+    var isSecret: Bool = false
+    let getVideoURL: () async throws -> URL?
+}
+
+struct DocumentModel {
+    let fileName: String
+    let mimeType: String
+    let size: Int64
+    let thumbnail: AsyncImageModel?
+    let getFileURL: () async -> URL?
+}
+
+private struct VideoPreviewView: View {
+    let model: VideoModel
+    let onOpen: () -> Void
+
+    private var aspectRatio: CGFloat {
+        model.aspectRatio ?? 1
+    }
+
+    var body: some View {
+        Button(action: onOpen) {
+            ZStack {
+                MediaThumbnailView(model: model.thumbnail, fallbackSystemImage: "video.fill")
+
+                Image(systemName: "play.fill")
+                    .font(.system(size: 26, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .shadow(radius: 3)
+
+                VideoDurationBadge(duration: model.duration)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            }
+            .aspectRatio(aspectRatio, contentMode: .fit)
+            .frame(maxWidth: 170, maxHeight: 130)
+            .blur(radius: model.isSecret ? 8 : 0)
+            .clipped()
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct DocumentView: View {
+    let model: DocumentModel
+
+    @State private var isLoading = false
+    @State private var isDownloaded = false
+
+    var body: some View {
+        Button {
+            downloadDocument()
+        } label: {
+            HStack(spacing: 8) {
+                thumbnail()
+                    .frame(width: 38, height: 38)
+                    .clipShape(RoundedRectangle(cornerRadius: 7))
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(model.fileName.isEmpty ? "Document" : model.fileName)
+                        .font(.system(size: 14, weight: .semibold))
+                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+
+                    HStack(spacing: 4) {
+                        Text(documentInfo)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+
+                        if isDownloaded {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.green)
+                        }
+                    }
+                }
+
+                if isLoading {
+                    ProgressView()
+                        .controlSize(.small)
+                } else {
+                    Image(systemName: isDownloaded ? "doc.fill" : "arrow.down.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .frame(maxWidth: 170, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func thumbnail() -> some View {
+        if let thumbnail = model.thumbnail {
+            MediaThumbnailView(model: thumbnail, fallbackSystemImage: "doc.fill")
+        } else {
+            ZStack {
+                RoundedRectangle(cornerRadius: 7)
+                    .fill(.white.opacity(0.18))
+                Image(systemName: "doc.fill")
+                    .foregroundStyle(.white.opacity(0.75))
+            }
+        }
+    }
+
+    private var documentInfo: String {
+        [shortMimeType, formattedSize]
+            .filter { !$0.isEmpty }
+            .joined(separator: " / ")
+    }
+
+    private var shortMimeType: String {
+        guard !model.mimeType.isEmpty else { return "File" }
+        return model.mimeType
+            .replacingOccurrences(of: "application/", with: "")
+            .replacingOccurrences(of: "image/", with: "")
+            .replacingOccurrences(of: "text/", with: "")
+    }
+
+    private var formattedSize: String {
+        guard model.size > 0 else { return "" }
+        return ByteCountFormatter.string(fromByteCount: model.size, countStyle: .file)
+    }
+
+    private func downloadDocument() {
+        guard !isLoading else { return }
+
+        isLoading = true
+        Task {
+            let url = await model.getFileURL()
+            await MainActor.run {
+                isDownloaded = url != nil
+                isLoading = false
+            }
+        }
+    }
+}
+
+private struct MediaThumbnailView: View {
+    let model: AsyncImageModel
+    let fallbackSystemImage: String
+
+    var body: some View {
+        AsyncView(getData: model.getImage) {
+            Group {
+                if let thumbnail = model.thumbnail {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    ZStack {
+                        Color.black.opacity(0.35)
+                        Image(systemName: fallbackSystemImage)
+                            .font(.system(size: 28, weight: .semibold))
+                            .foregroundStyle(.white.opacity(0.65))
+                    }
+                }
+            }
+        } buildContent: { image in
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+        }
+    }
+}
+
+private struct VideoDurationBadge: View {
+    let duration: Int
+
+    var body: some View {
+        Text(formattedDuration)
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
+            .background(.ultraThinMaterial, in: Capsule())
+            .padding(5)
+    }
+
+    private var formattedDuration: String {
+        let seconds = duration % 60
+        let minutes = duration / 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
 }
 
 extension MessageModel {
