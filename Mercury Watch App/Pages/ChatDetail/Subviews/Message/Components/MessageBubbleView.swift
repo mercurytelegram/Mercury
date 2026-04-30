@@ -46,7 +46,7 @@ struct MessageBubbleView<Content> : View where Content : View {
             switch style {
                 
             case .plain, .clearBackground:
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                     
                     if !model.isSenderHidden {
                         senderView()
@@ -62,30 +62,18 @@ struct MessageBubbleView<Content> : View where Content : View {
                     
                     content()
                     
-                    HStack {
-                        reactionsView()
-                        // Horizontal spacing for timeView
-                        if model.reactions.count <= 1 {
-                            Spacer()
-                                .frame(width: 80, height: 0)
+                    HStack(alignment: .bottom, spacing: 6) {
+                        if !model.reactions.isEmpty {
+                            reactionsView()
                         }
-                    }
-                    
-                    // Vertical spacing for timeView
-                    if model.reactions.count != 1 {
-                        Spacer()
-                            .frame(width: 0, height: 20)
+                        
+                        Spacer(minLength: 8)
+                        
+                        timeView()
                     }
                 }
-                .overlay {
-                    timeView()
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity,
-                            alignment: .bottomTrailing
-                        )
-                }
-                .padding()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
                 
             case .fullScreen(let caption):
                 VStack(alignment: .leading) {
@@ -105,14 +93,15 @@ struct MessageBubbleView<Content> : View where Content : View {
                             if let caption {
                                 Text(caption)
                             }
-                            reactionsView()
-                            
-                            if model.reactions.count != 1 {
-                                Spacer()
-                                    .frame(width: 0, height: 20)
+                            HStack(alignment: .bottom, spacing: 6) {
+                                if !model.reactions.isEmpty {
+                                    reactionsView()
+                                }
+                                Spacer(minLength: 8)
+                                timeView()
                             }
                         }
-                        .padding(.bottom)
+                        .padding(.vertical, 8)
                         .padding(.horizontal)
                     }
                     

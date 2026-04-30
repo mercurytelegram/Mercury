@@ -421,6 +421,60 @@ class StorageUsageViewModel: TDLibViewModel {
 }
 
 // MARK: - Mock
+
+@Observable
+class StorageUsageViewModelMock: StorageUsageViewModel {
+    override init() {
+        super.init()
+        totalBytes = 32_400_000
+        fileCount = 128
+        statusMessage = "Last cleaned today"
+        chats = [
+            StorageChatUsageModel(
+                id: 1,
+                title: "Design Team",
+                size: 14_600_000,
+                fileCount: 42,
+                fileTypes: [
+                    StorageFileTypeUsageModel(id: "Photos", title: "Photos", size: 9_800_000, fileCount: 24),
+                    StorageFileTypeUsageModel(id: "Videos", title: "Videos", size: 4_800_000, fileCount: 18)
+                ]
+            ),
+            StorageChatUsageModel(
+                id: 2,
+                title: "Saved Messages",
+                size: 10_200_000,
+                fileCount: 51,
+                fileTypes: [
+                    StorageFileTypeUsageModel(id: "Documents", title: "Documents", size: 7_100_000, fileCount: 11),
+                    StorageFileTypeUsageModel(id: "Voice Messages", title: "Voice Messages", size: 3_100_000, fileCount: 40)
+                ]
+            ),
+            StorageChatUsageModel(
+                id: 3,
+                title: "Tech News",
+                size: 7_600_000,
+                fileCount: 35,
+                fileTypes: [
+                    StorageFileTypeUsageModel(id: "Animations", title: "Animations", size: 4_200_000, fileCount: 14),
+                    StorageFileTypeUsageModel(id: "Photos", title: "Photos", size: 3_400_000, fileCount: 21)
+                ]
+            )
+        ]
+    }
+    
+    override func load(clearStatus: Bool = true) async {}
+    
+    override func clearAllCache() {
+        statusMessage = "Cache cleared"
+    }
+    
+    override func clearCache(for chat: StorageChatUsageModel) {
+        statusMessage = "\(chat.title) cache cleared"
+    }
+}
+
+// MARK: - Mock
 @Observable
 class SettingsViewModelMock: SettingsViewModel {
     override func getUser() {
@@ -431,5 +485,39 @@ class SettingsViewModelMock: SettingsViewModel {
             mainUserName: "@johnappleseed",
             phoneNumber: "+39 0000000000"
         )
+        self.telegramSessionStatus = "Connected"
+        self.quickReplyTemplates = [
+            "OK",
+            "Give me 5 minutes",
+            "I'll reply later",
+            "Thanks!"
+        ]
+        self.accounts = [
+            TelegramAccount(
+                id: TelegramAccount.primaryId,
+                telegramUserId: 1,
+                fullName: "John Appleseed",
+                username: "@johnappleseed",
+                phoneNumber: "+39 0000000000"
+            ),
+            TelegramAccount(
+                id: "work",
+                telegramUserId: 2,
+                fullName: "Mercury Work",
+                username: "@mercury_work",
+                phoneNumber: nil
+            )
+        ]
+        self.activeAccountId = TelegramAccount.primaryId
+    }
+    
+    override func logout() {}
+    override func addAccount() {}
+    override func switchAccount(to account: TelegramAccount) {
+        activeAccountId = account.id
+    }
+    override func editQuickReply(at index: Int) {}
+    override func resetQuickReplies() {
+        quickReplyTemplates = QuickReplyTemplatesStore.defaultTemplates
     }
 }

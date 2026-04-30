@@ -161,8 +161,7 @@ struct PhotoAlbumView: View {
                         .padding(.top, 2)
                 }
             } else {
-                // Fallback for 1 or 0
-                if let first = models.first {
+                if !models.isEmpty {
                     photoView(for: 0)
                 }
             }

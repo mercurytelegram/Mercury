@@ -77,8 +77,9 @@ class ForumTopicsViewModel {
                     newTopics.append(model)
                 }
                 
+                let topics = newTopics
                 await MainActor.run {
-                    self.topics = newTopics
+                    self.topics = topics
                     self.isLoading = false
                 }
                 
@@ -90,4 +91,72 @@ class ForumTopicsViewModel {
             }
         }
     }
+}
+
+// MARK: - Mock
+
+@Observable
+class ForumTopicsViewModelMock: ForumTopicsViewModel {
+    init() {
+        super.init(chatId: 0)
+        self.isLoading = false
+        self.error = nil
+        self.topics = [
+            .init(
+                id: 0,
+                messageThreadId: 101,
+                position: 0,
+                title: "Announcements",
+                time: "10:42",
+                avatar: AvatarModel(
+                    avatarImage: nil,
+                    letters: "A",
+                    isFullScreen: false
+                ),
+                isMuted: false,
+                isPinned: true,
+                messageStyle: .message("Marco: Release notes are ready."),
+                unreadBadgeStyle: .message(count: 2),
+                chatType: .group,
+                isForum: false
+            ),
+            .init(
+                id: 0,
+                messageThreadId: 102,
+                position: 1,
+                title: "Design Reviews",
+                time: "09:18",
+                avatar: AvatarModel(
+                    avatarImage: nil,
+                    letters: "D",
+                    isFullScreen: false
+                ),
+                isMuted: false,
+                isPinned: false,
+                messageStyle: .message("Alessandro: I added fresh mockups."),
+                unreadBadgeStyle: .mention,
+                chatType: .group,
+                isForum: false
+            ),
+            .init(
+                id: 0,
+                messageThreadId: 103,
+                position: 2,
+                title: "Support",
+                time: "Mon",
+                avatar: AvatarModel(
+                    avatarImage: nil,
+                    letters: "S",
+                    isFullScreen: false
+                ),
+                isMuted: true,
+                isPinned: false,
+                messageStyle: .action("is typing"),
+                chatType: .group,
+                isForum: false
+            )
+        ]
+    }
+    
+    override func loadTopics() {}
 }

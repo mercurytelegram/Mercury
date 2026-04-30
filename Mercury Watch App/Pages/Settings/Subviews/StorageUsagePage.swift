@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct StorageUsagePage: View {
-    @State private var vm = StorageUsageViewModel()
+    @State
+    @Mockable(mockInit: StorageUsageViewModelMock.init)
+    private var vm = StorageUsageViewModel.init
     
     var body: some View {
         Group {
@@ -22,6 +24,16 @@ struct StorageUsagePage: View {
                     }
                     
                     Section {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(vm.totalSize)
+                                .font(.title3)
+                                .fontWeight(.semibold)
+                            Text("\(vm.fileCount) cached files")
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
                         HStack {
                             Label("Media Cache", systemImage: "internaldrive")
                             Spacer()
@@ -56,8 +68,11 @@ struct StorageUsagePage: View {
                     
                     Section("Chats") {
                         if vm.chats.isEmpty {
-                            Text("No clearable chat cache")
-                                .foregroundStyle(.secondary)
+                            ContentUnavailableView(
+                                "Cache Empty",
+                                systemImage: "checkmark.circle",
+                                description: Text("No clearable chat cache.")
+                            )
                         } else {
                             ForEach(vm.chats) { chat in
                                 NavigationLink {
@@ -86,6 +101,12 @@ struct StorageUsagePage: View {
         .task {
             await vm.load()
         }
+    }
+}
+
+#Preview(traits: .mock()) {
+    NavigationStack {
+        StorageUsagePage()
     }
 }
 

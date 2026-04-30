@@ -36,3 +36,9 @@ struct QuickRepliesSettingsPage: View {
         .navigationTitle("Quick Replies")
     }
 }
+
+#Preview {
+    NavigationStack {
+        QuickRepliesSettingsPage(vm: SettingsViewModelMock())
+    }
+}

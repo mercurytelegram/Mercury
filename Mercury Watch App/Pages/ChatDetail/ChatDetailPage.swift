@@ -42,19 +42,21 @@ struct ChatDetailPage: View {
                         ProgressView()
                     } else {
                         ScrollView {
-
-                            if vm.isLoadingMoreMessages {
-                                ProgressView()
+                            loadMoreControl(proxy)
+                                .padding(.top, 4)
+                            
+                            if vm.messages.isEmpty {
+                                emptyMessagesView()
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.top, 40)
                             } else {
-                                Button("Load more") {
-                                    vm.onPressLoadMore(proxy)
+                                LazyVStack(spacing: 3) {
+                                    messageList()
                                 }
-                            }
-
-                            messageList()
                                 .onAppear { vm.onMessageListAppear(proxy) }
-                                .padding(.vertical, 2)
-
+                                .padding(.horizontal, 2)
+                                .padding(.vertical, 6)
+                            }
                         }
                         .defaultScrollAnchor(.bottom)
                         .scrollDisabled(isVideoNoteViewerPresented)
@@ -230,6 +232,38 @@ struct ChatDetailPage: View {
                 )
         }
     }
+    
+    @ViewBuilder
+    private func loadMoreControl(_ proxy: ScrollViewProxy) -> some View {
+        Group {
+            if vm.isLoadingMoreMessages {
+                ProgressView()
+                    .controlSize(.small)
+            } else if !vm.messages.isEmpty {
+                Button("Load more") {
+                    vm.onPressLoadMore(proxy)
+                }
+                .accessibilityLabel("Load earlier messages")
+            }
+        }
+        .frame(maxWidth: .infinity)
+    }
+    
+    @ViewBuilder
+    private func emptyMessagesView() -> some View {
+        VStack(spacing: 8) {
+            Image(systemName: "bubble.left.and.bubble.right")
+                .font(.system(size: 28, weight: .semibold))
+                .foregroundStyle(.secondary)
+            Text("No Messages")
+                .font(.headline)
+            Text("Start the conversation from the actions below.")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal)
+    }
 
     private func openVideoNote(_ model: VideoNoteModel, messageId: Int64) {
         activeVideoNoteId = messageId
@@ -246,18 +280,20 @@ struct ChatDetailPage: View {
         Button {
             vm.scrollToPinnedMessage(proxy)
         } label: {
-            HStack(spacing: 4) {
+            HStack(spacing: 5) {
                 Image(systemName: "pin.fill")
-                    .font(.system(size: 8, weight: .semibold))
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(.blue)
                 Text(message.content.previewText)
                     .lineLimit(1)
-                    .font(.system(size: 9, weight: .medium))
+                    .font(.caption2)
+                    .foregroundStyle(.primary)
             }
-            .frame(maxWidth: 96)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
+            .frame(maxWidth: 128)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 5)
             .background(.thinMaterial)
-            .clipShape(Capsule())
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)
     }
@@ -271,10 +307,12 @@ struct ChatDetailPage: View {
                 .font(.caption2)
                 .lineLimit(1)
             Spacer(minLength: 4)
-            Button("Cancel", systemImage: "xmark") {
+            Button {
                 vm.clearReply()
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(.secondary)
             }
-            .labelStyle(.iconOnly)
             .buttonStyle(.plain)
         }
         .padding(.horizontal, 8)
