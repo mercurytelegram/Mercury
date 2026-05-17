@@ -57,6 +57,12 @@ Contributions are welcome! Feel free to submit issues or pull requests to make *
 
 The features changelog is available [here](https://alessandro-alberti.notion.site/mercury-changelog).
 
+## Contributing
+
+Contributions are welcome! Feel free to submit issues or pull requests to make **Mercury for Telegram** even better.
+
+Before opening a pull request, read the [contributor guidelines](CONTRIBUTING.md) to follow the project structure, naming, SwiftUI patterns, mocks, and TDLib conventions already used in the app.
+
 ## Contact  
 
 Feel free to reach out to us on Telegram:  
