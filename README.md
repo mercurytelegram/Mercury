@@ -6,10 +6,22 @@
 Mercury is an open-source Telegram client designed specifically for the Apple Watch. It delivers a native and standalone experience, allowing you to send and receive Telegram messages directly from your wrist without relying on your iPhone. 
 More info available [here](https://alessandro-alberti.notion.site/mercury).
 
-
-<a href="https://testflight.apple.com/join/dCndzeB1">
-  <img src="https://github.com/user-attachments/assets/86f3a622-ed56-485e-8572-b046c56d64bf" alt="Download on TestFlight" width="180">
-</a>
+<div style="display: flex; flex-direction: row; justify-content: center; align-items: center; gap: 32px;">
+  <a href="https://apps.apple.com/it/app/mercury-messaging/id6498714256" style="text-decoration: none;">
+    <img 
+      src="https://github.com/user-attachments/assets/466c2d9e-fa05-4197-b3bc-9378dbe6b3fa" 
+      alt="Download on the App Store" 
+      width="180"
+    >
+  </a>
+  <a href="https://testflight.apple.com/join/dCndzeB1" style="text-decoration: none;">
+    <img 
+      src="https://github.com/user-attachments/assets/86f3a622-ed56-485e-8572-b046c56d64bf" 
+      alt="Download on TestFlight" 
+      width="180"
+    >
+  </a>
+</div>
 
 
 ## Main Features  
