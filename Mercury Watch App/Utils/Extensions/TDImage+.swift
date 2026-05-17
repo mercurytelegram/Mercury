@@ -59,11 +59,31 @@ extension Photo: TDImage {
     }
 }
 
+extension Animation: TDImage {
+    var lowRes: File? {
+        return thumbnail?.file
+    }
+    
+    var highRes: File? {
+        return nil
+    }
+}
+
 extension Video: TDImage {
     var lowRes: File? {
         return thumbnail?.file
     }
     
+    var highRes: File? {
+        return nil
+    }
+}
+
+extension VideoNote: TDImage {
+    var lowRes: File? {
+        return thumbnail?.file
+    }
+
     var highRes: File? {
         return nil
     }
@@ -78,5 +98,4 @@ extension ChatPhoto: TDImage {
         return nil
     }
 }
-
 

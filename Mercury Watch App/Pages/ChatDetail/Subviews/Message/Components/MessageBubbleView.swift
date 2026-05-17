@@ -12,12 +12,13 @@ struct MessageBubbleView<Content> : View where Content : View {
     
     enum BubbleStyle: Equatable {
         case plain
-        case fullScreen(caption: String? = nil)
+        case fullScreen(caption: AttributedString? = nil)
         case clearBackground
     }
     
     let model: MessageModel
     var style: BubbleStyle = .plain
+    var onReactionTap: ((ReactionModel) -> Void)? = nil
     
     @ViewBuilder var content: () -> Content
     
@@ -35,8 +36,8 @@ struct MessageBubbleView<Content> : View where Content : View {
         }
     }
     
-    func shouldShowCaptionBackgroud(_ caption: String?) -> Bool {
-        model.reactions.count > 1 || caption?.isEmpty == false
+    func shouldShowCaptionBackgroud(_ caption: AttributedString?) -> Bool {
+        model.reactions.count > 1 || caption?.characters.isEmpty == false
     }
     
     var body: some View {
@@ -45,7 +46,7 @@ struct MessageBubbleView<Content> : View where Content : View {
             switch style {
                 
             case .plain, .clearBackground:
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                     
                     if !model.isSenderHidden {
                         senderView()
@@ -55,32 +56,24 @@ struct MessageBubbleView<Content> : View where Content : View {
                         ReplyView(model: reply)
                     }
                     
+                    if let forward = model.forward {
+                        ForwardView(model: forward)
+                    }
+                    
                     content()
                     
-                    HStack {
-                        reactionsView()
-                        // Horizontal spacing for timeView
-                        if model.reactions.count <= 1 {
-                            Spacer()
-                                .frame(width: 80, height: 0)
+                    HStack(alignment: .bottom, spacing: 6) {
+                        if !model.reactions.isEmpty {
+                            reactionsView()
                         }
-                    }
-                    
-                    // Vertical spacing for timeView
-                    if model.reactions.count != 1 {
-                        Spacer()
-                            .frame(width: 0, height: 20)
+                        
+                        Spacer(minLength: 8)
+                        
+                        timeView()
                     }
                 }
-                .overlay {
-                    timeView()
-                        .frame(
-                            maxWidth: .infinity,
-                            maxHeight: .infinity,
-                            alignment: .bottomTrailing
-                        )
-                }
-                .padding()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
                 
             case .fullScreen(let caption):
                 VStack(alignment: .leading) {
@@ -94,17 +87,21 @@ struct MessageBubbleView<Content> : View where Content : View {
                     
                     if shouldShowCaptionBackgroud(caption) {
                         VStack(alignment: .leading) {
+                            if let forward = model.forward {
+                                ForwardView(model: forward)
+                            }
                             if let caption {
                                 Text(caption)
                             }
-                            reactionsView()
-                            
-                            if model.reactions.count != 1 {
-                                Spacer()
-                                    .frame(width: 0, height: 20)
+                            HStack(alignment: .bottom, spacing: 6) {
+                                if !model.reactions.isEmpty {
+                                    reactionsView()
+                                }
+                                Spacer(minLength: 8)
+                                timeView()
                             }
                         }
-                        .padding(.bottom)
+                        .padding(.vertical, 8)
                         .padding(.horizontal)
                     }
                     
@@ -187,7 +184,10 @@ struct MessageBubbleView<Content> : View where Content : View {
                 ReactionView(
                     reaction: reaction,
                     avatarMaxNumber: model.reactions.count > 1 ? 2 : 3,
-                    blurredBg: blurredBg
+                    blurredBg: blurredBg,
+                    onTap: {
+                        onReactionTap?(reaction)
+                    }
                 )
                 .transition(.opacity
                     .combined(with: .scale(0.5, anchor: .leading))
@@ -217,6 +217,28 @@ struct MessageBubbleView<Content> : View where Content : View {
         }
     }
     
+}
+
+private struct ForwardView: View {
+    let model: ForwardModel
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Image(systemName: "arrowshape.turn.up.right.fill")
+                .font(.system(size: 8, weight: .semibold))
+                .foregroundStyle(.secondary)
+            
+            Text("Forwarded from")
+                .foregroundStyle(.secondary)
+            Text(model.title)
+                .fontWeight(.semibold)
+                .foregroundStyle(model.color)
+        }
+        .font(.caption2)
+        .lineLimit(1)
+        .padding(.bottom, 1)
+        .frame(maxWidth: 150, alignment: .leading)
+    }
 }
 
 
@@ -320,4 +342,3 @@ struct MessageBubbleView<Content> : View where Content : View {
         
     }
 }
-

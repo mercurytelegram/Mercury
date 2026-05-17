@@ -24,12 +24,14 @@ class PlayerService: NSObject {
     private let logger = LoggerService(PlayerService.self)
     var elapsedTimeTimer: Timer?
     var filePath: URL
+    private var shouldRemoveAudioFile: Bool
     
     init(audioFilePath: URL, delegate: AVAudioPlayerDelegate? = nil) throws {
         
         self.isLoading = true
         self.filePath = audioFilePath
         self.audioDuration = 0
+        self.shouldRemoveAudioFile = false
         super.init()
         
         // if audio file format is oga or ogg, convert to m4a
@@ -37,11 +39,12 @@ class PlayerService: NSObject {
             let dest: URL = audioFilePath.deletingPathExtension().appendingPathExtension("m4a")
             
             // Check if file has been already converted
-            if !FileManager.default.fileExists(atPath: dest.absoluteString) {
+            if !FileManager.default.fileExists(atPath: dest.path) {
                 try OGGConverter.convertOpusOGGToM4aFile(src: audioFilePath, dest: dest)
             }
             
             self.filePath = dest
+            self.shouldRemoveAudioFile = true
         }
         
         logger.log(self.filePath.absoluteString, level: .debug)
@@ -76,6 +79,7 @@ class PlayerService: NSObject {
     }
     
     private func removeM4aAudio() {
+        guard shouldRemoveAudioFile else { return }
         do {
             try FileManager.default.removeItem(at: self.filePath)
         } catch {

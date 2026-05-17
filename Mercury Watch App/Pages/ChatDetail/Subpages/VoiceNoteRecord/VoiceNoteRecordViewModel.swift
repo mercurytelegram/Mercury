@@ -42,12 +42,16 @@ class VoiceNoteRecordViewModel: NSObject {
     
     let sendService: SendMessageService
     let action: Binding<ChatAction?>
+    let replyTo: InputMessageReplyTo?
+    let onSent: (() -> Void)?
     
     var filePath: URL
     private let logger = LoggerService(VoiceNoteRecordViewModel.self)
     
-    init(action: Binding<ChatAction?>, sendService: SendMessageService, isPresented: Binding<Bool>) {
+    init(action: Binding<ChatAction?>, sendService: SendMessageService, isPresented: Binding<Bool>, replyTo: InputMessageReplyTo? = nil, onSent: (() -> Void)? = nil) {
         self.sendService = sendService
+        self.replyTo = replyTo
+        self.onSent = onSent
         
         // Recording file path
         let recName = "\(UUID().uuidString).m4a"
@@ -111,8 +115,10 @@ class VoiceNoteRecordViewModel: NSObject {
         
         sendService.sendVoiceNote(
             filePath,
-            Int(recorder.elapsedTime)
+            Int(recorder.elapsedTime),
+            replyTo: replyTo
         ) {
+            self.onSent?()
             self.isPresented.wrappedValue = false
         }
     }

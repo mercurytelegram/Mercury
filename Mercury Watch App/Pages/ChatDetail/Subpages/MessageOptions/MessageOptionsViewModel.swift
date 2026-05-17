@@ -14,6 +14,7 @@ class MessageOptionsViewModel {
     var emojis: [String] = []
     var selectedEmoji: String? = nil
     var showReportMessageOptions: Bool = false
+    var showForwardTargetPicker: Bool = false
     
     var shouldDisplayReportButton: Bool {
         if case .chatTypeBasicGroup(_) = model.chatType { return true }
@@ -107,13 +108,75 @@ class MessageOptionsViewModel {
         
         Task {
             do {
-                try await TDLibManager.shared.client?.reportChat(chatId: chatId, messageIds: [messageId], reason: reason, text: nil)
+                _ = try await TDLibManager.shared.client?.reportChat(
+                    chatId: chatId,
+                    messageIds: [messageId],
+                    optionId: Data(reason.description.utf8),
+                    text: nil
+                )
             } catch {
                 logger.log(error)
             }
             
             await MainActor.run {
                 self.showReportMessageOptions = false
+            }
+        }
+    }
+    
+    func replyToMessage() {
+        model.onReply?()
+    }
+    
+    func deleteMessage() {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.deleteMessages(
+                    chatId: model.chatId,
+                    messageIds: [model.messageId],
+                    revoke: true
+                )
+                await MainActor.run {
+                    self.model.onDeleted?()
+                }
+            } catch {
+                logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func pinMessage() {
+        Task {
+            do {
+                try await TDLibManager.shared.client?.pinChatMessage(
+                    chatId: model.chatId,
+                    disableNotification: true,
+                    messageId: model.messageId,
+                    onlyForSelf: false
+                )
+                await MainActor.run {
+                    self.model.onPinned?()
+                }
+            } catch {
+                logger.log(error, level: .error)
+            }
+        }
+    }
+    
+    func forwardMessage(to targetChatId: Int64, asCopy: Bool) {
+        Task {
+            do {
+                _ = try await TDLibManager.shared.client?.forwardMessages(
+                    chatId: targetChatId,
+                    fromChatId: model.chatId,
+                    messageIds: [model.messageId],
+                    options: nil,
+                    removeCaption: false,
+                    sendCopy: asCopy,
+                    topicId: nil
+                )
+            } catch {
+                logger.log(error, level: .error)
             }
         }
     }
@@ -145,4 +208,8 @@ class MessageOptionsViewModelMock: MessageOptionsViewModel {
     override func reportMessage(_ reason: ReportReason) {
         self.showReportMessageOptions = false
     }
+    override func replyToMessage() {}
+    override func deleteMessage() {}
+    override func pinMessage() {}
+    override func forwardMessage(to targetChatId: Int64, asCopy: Bool) {}
 }

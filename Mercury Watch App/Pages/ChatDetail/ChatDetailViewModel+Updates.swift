@@ -187,6 +187,7 @@ extension ChatDetailViewModel {
     }
     
     func updateChatBlockList(_ list: UpdateChatBlockList) {
+        guard list.chatId == self.chatId else { return }
         self.isChatBlocked = list.blockList != nil
     }
 }

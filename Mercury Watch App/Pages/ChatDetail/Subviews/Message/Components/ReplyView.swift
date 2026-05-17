@@ -12,25 +12,25 @@ struct ReplyView: View {
     let model: ReplyModel
     
     var body: some View {
-        VStack (alignment: .leading) {
-            Text(model.title)
-                .fontWeight(.semibold)
+        HStack(spacing: 6) {
+            Capsule()
                 .foregroundStyle(model.color)
-            Text(model.text)
-                .lineLimit(2)
-        }
-        .padding()
-        .padding(.leading, 3)
-        .background {
-            HStack(spacing: 0) {
-                Rectangle()
+                .frame(width: 3)
+            
+            VStack(alignment: .leading, spacing: 1) {
+                Text(model.title)
+                    .font(.caption2)
+                    .fontWeight(.semibold)
                     .foregroundStyle(model.color)
-                    .frame(width: 5)
-                Rectangle()
-                    .foregroundStyle(model.color.opacity(0.3))
+                    .lineLimit(1)
+                Text(model.text)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             }
-            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
+        .padding(.vertical, 3)
+        .frame(maxWidth: 130, alignment: .leading)
     }
 }
 
@@ -38,6 +38,11 @@ struct ReplyModel {
     var color: Color
     var title: String
     var text: AttributedString
+}
+
+struct ForwardModel {
+    var color: Color
+    var title: String
 }
 
 #Preview {

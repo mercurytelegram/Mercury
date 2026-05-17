@@ -15,6 +15,7 @@ class ChatDetailViewModel: TDLibViewModel {
     enum InsertAt { case first, last, index(_ value: Int)}
     
     var chatId: Int64
+    var messageThreadId: Int64?
     
     var chatName: String?
     var isLoadingInitialMessages: Bool = false
@@ -30,6 +31,11 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     var showOptionsView: Bool = false
     var showChatInfoView: Bool = false
+    var showQuickRepliesView: Bool = false
+    var quickReplyTemplates: [String] { QuickReplyTemplatesStore.templates }
+    var replyToMessage: MessageModel?
+    var pinnedMessage: MessageModel?
+    var isJoiningChat: Bool = false
     
     var canSendVoiceNotes: Bool?
     var canSendText: Bool?
@@ -38,6 +44,7 @@ class ChatDetailViewModel: TDLibViewModel {
     var messages: [MessageModel] = []
     var selectedMessage: MessageModel?
     var avatar: AvatarModel?
+    var isSavedMessages: Bool = false
     
     var sendService: SendMessageService?
     var lastReadInboxMessageId: Int64?
@@ -47,9 +54,12 @@ class ChatDetailViewModel: TDLibViewModel {
     
     var chatType: ChatType?
     var isChatBlocked: Bool = false
+    var canJoinChat: Bool = false
+    var didScrollToInitialMessage = false
     
-    init(chatId: Int64) {
+    init(chatId: Int64, messageThreadId: Int64? = nil) {
         self.chatId = chatId
+        self.messageThreadId = messageThreadId
         super.init()
         
         self.chatActionTimer = Timer.scheduledTimer(
@@ -78,18 +88,42 @@ class ChatDetailViewModel: TDLibViewModel {
              
                 guard let chat = try await TDLibManager.shared.client?.getChat(chatId: self.chatId)
                 else { return }
+                let myId = try? await TDLibManager.shared.client?.getMe().id
+                let isSavedMessages: Bool
+                if case .chatTypePrivate(let data) = chat.type {
+                    isSavedMessages = data.userId == myId
+                } else {
+                    isSavedMessages = false
+                }
                 
                 await MainActor.run {
                     self.sendService = SendMessageService(chat: chat)
-                    self.chatName = chat.title
+                    self.chatName = isSavedMessages ? "Saved Messages" : chat.title
                     self.canSendVoiceNotes = chat.permissions.canSendVoiceNotes
                     self.canSendText = chat.permissions.canSendBasicMessages
                     self.canSendStickers = chat.permissions.canSendOtherMessages
                     self.lastReadInboxMessageId = chat.lastReadInboxMessageId
-                    self.avatar = chat.toAvatarModel()
+                    self.avatar = isSavedMessages ? .savedMessages() : chat.toAvatarModel()
                     self.chatType = chat.type
                     self.isChatBlocked = chat.blockList != nil
+                    self.isSavedMessages = isSavedMessages
+                    self.canJoinChat = false
                 }
+                
+                if case .chatTypeSupergroup(let data) = chat.type,
+                   let supergroup = try? await TDLibManager.shared.client?.getSupergroup(supergroupId: data.supergroupId) {
+                    let canJoin: Bool
+                    if case .chatMemberStatusLeft = supergroup.status {
+                        canJoin = true
+                    } else {
+                        canJoin = false
+                    }
+                    await MainActor.run {
+                        self.canJoinChat = canJoin
+                    }
+                }
+                
+                await self.loadPinnedMessage()
                 
                 let newMessages = await self.requestMessages(firstBatch: true)
                 await MainActor.run {
@@ -143,11 +177,15 @@ class ChatDetailViewModel: TDLibViewModel {
     fileprivate func setChatAction(_ action: ChatAction?) {
         Task.detached(priority: .background) {
             do {
+                let topicId: MessageTopic? = self.messageThreadId.map {
+                    .messageTopicForum(MessageTopicForum(forumTopicId: Int($0)))
+                }
+                
                 try await TDLibManager.shared.client?.sendChatAction(
                     action: action,
                     businessConnectionId: nil,
                     chatId: self.chatId,
-                    messageThreadId: 0
+                    topicId: topicId
                 )
             } catch {
                 self.logger.log(error, level: .error)
@@ -156,6 +194,9 @@ class ChatDetailViewModel: TDLibViewModel {
     }
     
     public func getProfileDetailPageType() -> ProfileDetailPageType? {
+        if isSavedMessages {
+            return .savedMessages
+        }
         
         switch self.chatType {
         case .chatTypePrivate(let chatTypePrivate):
@@ -172,9 +213,11 @@ class ChatDetailViewModel: TDLibViewModel {
                 groupId: superGroupId.supergroupId,
                 chatId: self.chatId
             )
+
+        case .chatTypeSecret(let chatTypeSecret):
+            return .user(userId: chatTypeSecret.userId)
             
         default:
-            // TODO: Implement all cases (missing .chatTypeSecret)
             return nil
         }
     }

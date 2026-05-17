@@ -10,6 +10,11 @@
 		4A4743F22BF796DF00264855 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4743F12BF796DF00264855 /* Color+.swift */; };
 		4AE620222C09C6CF00722512 /* FormattedText+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE620212C09C6CF00722512 /* FormattedText+.swift */; };
 		4AF90D692BEE65BA00435355 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF90D682BEE65BA00435355 /* Date+.swift */; };
+		652615042F9F1F1B000E179C /* TDLibFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 652615032F9F1F1B000E179C /* TDLibFramework */; };
+		65413AAF2F9E0B3F00625ECA /* AnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65413AAE2F9E0B3F00625ECA /* AnimationView.swift */; };
+		65413AB12F9E0BE200625ECA /* InlineMovieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65413AB02F9E0BE200625ECA /* InlineMovieView.swift */; };
+		65413AB52F9E414100625ECA /* ForumTopicsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65413AB32F9E414100625ECA /* ForumTopicsViewModel.swift */; };
+		65413AB62F9E414100625ECA /* ForumTopicsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65413AB22F9E414100625ECA /* ForumTopicsPage.swift */; };
 		9B0418F02CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0418EF2CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift */; };
 		9B0B6CB52CD64DB800BB6A94 /* Mockable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0B6CB42CD64DB800BB6A94 /* Mockable.swift */; };
 		9B0B6CB72CD64F6100BB6A94 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0B6CB62CD64F6100BB6A94 /* AppState.swift */; };
@@ -40,6 +45,7 @@
 		9BCDA5002F5DCD1500FEBAE4 /* ReportReason+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BCDA4FF2F5DCD1500FEBAE4 /* ReportReason+.swift */; };
 		9BD9F9E42CDD044900833C48 /* AsyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD9F9E32CDD044900833C48 /* AsyncView.swift */; };
 		9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF303552D3A70EB00309992 /* TextDivider.swift */; };
+		9BF900022F9FE00000CAFE01 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF900012F9FE00000CAFE01 /* AccountStore.swift */; };
 		A0054EA62BF3E12F009F2CEB /* TDLibKit in Frameworks */ = {isa = PBXBuildFile; productRef = A0054EA52BF3E12F009F2CEB /* TDLibKit */; };
 		A04ABE532CE00F1600641BC1 /* MessageOptionsSubpage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE502CE00F1600641BC1 /* MessageOptionsSubpage.swift */; };
 		A04ABE542CE00F1600641BC1 /* MessageOptionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04ABE512CE00F1600641BC1 /* MessageOptionsViewModel.swift */; };
@@ -71,6 +77,8 @@
 		A080D8A62CD64B1700920564 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8982CD64B1700920564 /* HomePage.swift */; };
 		A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89F2CD64B1700920564 /* SettingsViewModel.swift */; };
 		A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89E2CD64B1700920564 /* SettingsPage.swift */; };
+		B10000012F00000000000001 /* QuickRepliesSettingsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000032F00000000000003 /* QuickRepliesSettingsPage.swift */; };
+		B10000022F00000000000002 /* StorageUsagePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000042F00000000000004 /* StorageUsagePage.swift */; };
 		A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D89B2CD64B1700920564 /* LoginPage.swift */; };
 		A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8962CD64B1700920564 /* ChatListViewModel.swift */; };
 		A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8992CD64B1700920564 /* HomeViewModel.swift */; };
@@ -88,6 +96,7 @@
 		A080D8EE2CDE273A00920564 /* ChatDetailViewModel+Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8ED2CDE272E00920564 /* ChatDetailViewModel+Updates.swift */; };
 		A080D8F02CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8EF2CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift */; };
 		A080D8F22CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8F12CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift */; };
+		A080D8F42CEB000000920564 /* VideoNoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A080D8F32CEB000000920564 /* VideoNoteView.swift */; };
 		A081AAD32C071C82002A265C /* ChatAction+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD22C071C82002A265C /* ChatAction+.swift */; };
 		A081AAD52C0721C2002A265C /* Chat+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD42C0721C2002A265C /* Chat+.swift */; };
 		A081AAD72C072536002A265C /* MessageSender+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A081AAD62C072536002A265C /* MessageSender+.swift */; };
@@ -135,6 +144,10 @@
 		4A4743F12BF796DF00264855 /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
 		4AE620212C09C6CF00722512 /* FormattedText+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormattedText+.swift"; sourceTree = "<group>"; };
 		4AF90D682BEE65BA00435355 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
+		65413AAE2F9E0B3F00625ECA /* AnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationView.swift; sourceTree = "<group>"; };
+		65413AB02F9E0BE200625ECA /* InlineMovieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineMovieView.swift; sourceTree = "<group>"; };
+		65413AB22F9E414100625ECA /* ForumTopicsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumTopicsPage.swift; sourceTree = "<group>"; };
+		65413AB32F9E414100625ECA /* ForumTopicsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForumTopicsViewModel.swift; sourceTree = "<group>"; };
 		9B0418EF2CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatDetailViewModel+MessageContents.swift"; sourceTree = "<group>"; };
 		9B0B6CB42CD64DB800BB6A94 /* Mockable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mockable.swift; sourceTree = "<group>"; };
 		9B0B6CB62CD64F6100BB6A94 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -190,6 +203,8 @@
 		A080D89C2CD64B1700920564 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A080D89E2CD64B1700920564 /* SettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPage.swift; sourceTree = "<group>"; };
 		A080D89F2CD64B1700920564 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		B10000032F00000000000003 /* QuickRepliesSettingsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickRepliesSettingsPage.swift; sourceTree = "<group>"; };
+		B10000042F00000000000004 /* StorageUsagePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageUsagePage.swift; sourceTree = "<group>"; };
 		A080D8B72CD7842A00920564 /* ChatCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellView.swift; sourceTree = "<group>"; };
 		A080D8BE2CD78CED00920564 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		A080D8C32CD9666C00920564 /* ChatNotificationSettings+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatNotificationSettings+.swift"; sourceTree = "<group>"; };
@@ -204,6 +219,7 @@
 		A080D8ED2CDE272E00920564 /* ChatDetailViewModel+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatDetailViewModel+Updates.swift"; sourceTree = "<group>"; };
 		A080D8EF2CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatDetailViewModel+Interactions.swift"; sourceTree = "<group>"; };
 		A080D8F12CDE2AFB00920564 /* ChatDetailViewModel+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatDetailViewModel+Messages.swift"; sourceTree = "<group>"; };
+		A080D8F32CEB000000920564 /* VideoNoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoNoteView.swift; sourceTree = "<group>"; };
 		A081AAD22C071C82002A265C /* ChatAction+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChatAction+.swift"; sourceTree = "<group>"; };
 		A081AAD42C0721C2002A265C /* Chat+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Chat+.swift"; sourceTree = "<group>"; };
 		A081AAD62C072536002A265C /* MessageSender+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MessageSender+.swift"; sourceTree = "<group>"; };
@@ -216,6 +232,7 @@
 		A0CF53262BDFD78900BA394B /* TDLibManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManager.swift; sourceTree = "<group>"; };
 		A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibManagerProtocols.swift; sourceTree = "<group>"; };
 		A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDLibViewModel.swift; sourceTree = "<group>"; };
+		9BF900012F9FE00000CAFE01 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
 		A0DF84892CCB9A6F00CC101E /* FileManager+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+.swift"; sourceTree = "<group>"; };
 		A0F63BD82BD63B0500F7135E /* Mercury-Watch-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Mercury-Watch-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A9EF323F2F38D9BE00BD8A8B /* ProfileDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailPage.swift; sourceTree = "<group>"; };
@@ -229,6 +246,7 @@
 			files = (
 				A06AE85A2CCAB6EE003282B2 /* DSWaveformImage in Frameworks */,
 				A07D48E12CC93D9900DC34EF /* DSWaveformImageViews in Frameworks */,
+				652615042F9F1F1B000E179C /* TDLibFramework in Frameworks */,
 				9BAA75E42CD4F1620007B4E2 /* Gzip in Frameworks */,
 				A0524FAE2CC8EC4E0021D3FA /* DSWaveformImage in Frameworks */,
 				A0524FB02CC8EC4E0021D3FA /* DSWaveformImageViews in Frameworks */,
@@ -245,6 +263,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		65413AB42F9E414100625ECA /* ForumTopics */ = {
+			isa = PBXGroup;
+			children = (
+				65413AB22F9E414100625ECA /* ForumTopicsPage.swift */,
+				65413AB32F9E414100625ECA /* ForumTopicsViewModel.swift */,
+			);
+			path = ForumTopics;
+			sourceTree = "<group>";
+		};
 		9B0B6CBA2CD6799800BB6A94 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
@@ -451,10 +478,20 @@
 		A080D8A02CD64B1700920564 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				B10000052F00000000000005 /* Subviews */,
 				A080D89E2CD64B1700920564 /* SettingsPage.swift */,
 				A080D89F2CD64B1700920564 /* SettingsViewModel.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		B10000052F00000000000005 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				B10000032F00000000000003 /* QuickRepliesSettingsPage.swift */,
+				B10000042F00000000000004 /* StorageUsagePage.swift */,
+			);
+			path = Subviews;
 			sourceTree = "<group>";
 		};
 		A080D8A12CD64B1700920564 /* Pages */ = {
@@ -466,6 +503,7 @@
 				A080D8972CD64B1700920564 /* ChatList */,
 				A080D8942CD64B1700920564 /* ChatDetail */,
 				A9EF323E2F38D9AC00BD8A8B /* ProfileDetail */,
+				65413AB42F9E414100625ECA /* ForumTopics */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -505,6 +543,7 @@
 				9BA9A4F32CE79DB0005C717C /* Stack.swift */,
 				9B5EBE612CE5F16E00EDCCE3 /* FitStack.swift */,
 				9BA9A4F12CE798C5005C717C /* FlowLayout.swift */,
+				65413AB02F9E0BE200625ECA /* InlineMovieView.swift */,
 				A0CDF94C2CE7D6060015E20E /* AlertView.swift */,
 				9B5600FE2D59D78D005E28F1 /* ScalingButtonStyle.swift */,
 				9BB3BCB22D14373D00CAFB31 /* Keypad */,
@@ -533,8 +572,10 @@
 		A080D8CA2CDA281C00920564 /* Contents */ = {
 			isa = PBXGroup;
 			children = (
+				65413AAE2F9E0B3F00625ECA /* AnimationView.swift */,
 				A080D8DD2CDC051300920564 /* LocationView.swift */,
 				A080D8DF2CDC08FF00920564 /* PillView.swift */,
+				A080D8F32CEB000000920564 /* VideoNoteView.swift */,
 				A080D8E12CDC0B1800920564 /* VoiceNoteView.swift */,
 			);
 			path = Contents;
@@ -556,6 +597,7 @@
 			isa = PBXGroup;
 			children = (
 				A0CF53262BDFD78900BA394B /* TDLibManager.swift */,
+				9BF900012F9FE00000CAFE01 /* AccountStore.swift */,
 				A0CF53282BDFD79400BA394B /* TDLibManagerProtocols.swift */,
 				A0CF532A2BDFD79D00BA394B /* TDLibViewModel.swift */,
 			);
@@ -617,6 +659,7 @@
 				A06AE85E2CCAB812003282B2 /* SDWebImageWebPCoder */,
 				9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */,
 				9BAA75E32CD4F1620007B4E2 /* Gzip */,
+				652615032F9F1F1B000E179C /* TDLibFramework */,
 			);
 			productName = "Mercury Watch App";
 			productReference = A07438EC2BD10D2D00945CB5 /* Mercury Watch App.app */;
@@ -657,6 +700,7 @@
 				A06AE85D2CCAB812003282B2 /* XCRemoteSwiftPackageReference "SDWebImageWebPCoder" */,
 				9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */,
 				9BAA75E22CD4F1620007B4E2 /* XCRemoteSwiftPackageReference "GzipSwift" */,
+				652615022F9F1F1B000E179C /* XCRemoteSwiftPackageReference "TDLibFramework" */,
 			);
 			productRefGroup = A07438E72BD10D2D00945CB5 /* Products */;
 			projectDirPath = "";
@@ -696,7 +740,10 @@
 			files = (
 				9B0B6CBC2CD679A600BB6A94 /* StepView.swift in Sources */,
 				A080D8E22CDC0B1800920564 /* VoiceNoteView.swift in Sources */,
+				A080D8F42CEB000000920564 /* VideoNoteView.swift in Sources */,
 				A04ABE5A2CE015F800641BC1 /* VoiceNoteRecordSubpage.swift in Sources */,
+				65413AB52F9E414100625ECA /* ForumTopicsViewModel.swift in Sources */,
+				65413AB62F9E414100625ECA /* ForumTopicsPage.swift in Sources */,
 				A04ABE5B2CE015F800641BC1 /* VoiceNoteRecordViewModel.swift in Sources */,
 				9B5EBE622CE5F16F00EDCCE3 /* FitStack.swift in Sources */,
 				A04ABE8C2CE0BA1D00641BC1 /* ChatListViewModel+Chats.swift in Sources */,
@@ -724,6 +771,7 @@
 				A081AAD32C071C82002A265C /* ChatAction+.swift in Sources */,
 				A080D88F2CD64A7C00920564 /* SecretService-sample.swift in Sources */,
 				9BF303562D3A70EB00309992 /* TextDivider.swift in Sources */,
+				9BF900022F9FE00000CAFE01 /* AccountStore.swift in Sources */,
 				A080D8902CD64A7C00920564 /* SecretService.swift in Sources */,
 				9B0B6CB52CD64DB800BB6A94 /* Mockable.swift in Sources */,
 				A080D8F02CDE27AE00920564 /* ChatDetailViewModel+Interactions.swift in Sources */,
@@ -752,6 +800,8 @@
 				A080D8A62CD64B1700920564 /* HomePage.swift in Sources */,
 				A080D8A72CD64B1700920564 /* SettingsViewModel.swift in Sources */,
 				A080D8A82CD64B1700920564 /* SettingsPage.swift in Sources */,
+				B10000012F00000000000001 /* QuickRepliesSettingsPage.swift in Sources */,
+				B10000022F00000000000002 /* StorageUsagePage.swift in Sources */,
 				A080D8A92CD64B1700920564 /* LoginPage.swift in Sources */,
 				A080D8AA2CD64B1700920564 /* ChatListViewModel.swift in Sources */,
 				A080D8AB2CD64B1700920564 /* HomeViewModel.swift in Sources */,
@@ -771,7 +821,9 @@
 				9B0418F02CE10DF700DFFA3F /* ChatDetailViewModel+MessageContents.swift in Sources */,
 				9BB3BCB82D14379F00CAFB31 /* PhoneKeypadView.swift in Sources */,
 				9B4451FA2C45C63D00A6EBC2 /* User+.swift in Sources */,
+				65413AB12F9E0BE200625ECA /* InlineMovieView.swift in Sources */,
 				A06AEA132D6B854E00EF8377 /* LoadableModifier.swift in Sources */,
+				65413AAF2F9E0B3F00625ECA /* AnimationView.swift in Sources */,
 				9BB3BCB42D14376700CAFB31 /* CodeKeypadView.swift in Sources */,
 				A0CF53292BDFD79400BA394B /* TDLibManagerProtocols.swift in Sources */,
 				A081AAD52C0721C2002A265C /* Chat+.swift in Sources */,
@@ -915,7 +967,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Mercury Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 6MWN6EWBL2;
+				DEVELOPMENT_TEAM = H98XPPX9UM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mercury-Watch-App-Info.plist";
@@ -928,7 +980,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dmytrom.mercury.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -947,7 +999,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"Mercury Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = 6MWN6EWBL2;
+				DEVELOPMENT_TEAM = H98XPPX9UM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Mercury-Watch-App-Info.plist";
@@ -960,7 +1012,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dmytrom.mercury.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -978,11 +1030,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
-				DEVELOPMENT_TEAM = 6MWN6EWBL2;
+				DEVELOPMENT_TEAM = H98XPPX9UM;
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dmytrom.mercury;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -995,11 +1047,11 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 15;
-				DEVELOPMENT_TEAM = 6MWN6EWBL2;
+				DEVELOPMENT_TEAM = H98XPPX9UM;
 				INFOPLIST_KEY_CFBundleDisplayName = Mercury;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.alessandroalberti.mercury;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dmytrom.mercury;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1040,6 +1092,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		652615022F9F1F1B000E179C /* XCRemoteSwiftPackageReference "TDLibFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swiftgram/TDLibFramework";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageLottieCoder?tab=readme-ov-file";
@@ -1060,8 +1120,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swiftgram/TDLibKit";
 			requirement = {
-				kind = revision;
-				revision = 9aa7ba777c6c21fd4bf0710c47c2f6f3beb9c8c9;
+				branch = main;
+				kind = branch;
 			};
 		};
 		A06AE8582CCAB6EE003282B2 /* XCRemoteSwiftPackageReference "DSWaveformImage" */ = {
@@ -1099,6 +1159,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		652615032F9F1F1B000E179C /* TDLibFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 652615022F9F1F1B000E179C /* XCRemoteSwiftPackageReference "TDLibFramework" */;
+			productName = TDLibFramework;
+		};
 		9BAA75DC2CD4EE370007B4E2 /* SDWebImageLottieCoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9BAA75DB2CD4EE370007B4E2 /* XCRemoteSwiftPackageReference "SDWebImageLottieCoder" */;

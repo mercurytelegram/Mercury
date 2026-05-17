@@ -16,6 +16,10 @@ extension User {
         guard let name = usernames?.activeUsernames.first else { return nil }
         return  "@" + name
     }
+    var formattedPhoneNumber: String? {
+        guard !phoneNumber.isEmpty else { return nil }
+        return "+" + phoneNumber
+    }
     
     func toAvatarModel(isFullScreen: Bool = false) -> AvatarModel {
         let firstLetter = self.firstName.prefix(1)
@@ -36,9 +40,8 @@ extension User {
     }
     
     private func getAvatar(highRes: Bool = false) -> AsyncImageModel {
-        let thumbnail = getThumbnail() ?? UIImage()
         return AsyncImageModel(
-            thumbnail: thumbnail,
+            thumbnail: getThumbnail(),
             getImage: {
                 guard let photo = highRes ? self.profilePhoto?.big : self.profilePhoto?.lowRes
                 else { return nil }
@@ -72,6 +75,19 @@ extension User {
         case .userStatusLastMonth(_):
             return "last seen last month"
         }
+    }
+    var isDeleted: Bool {
+        if case .userTypeDeleted = self.type {
+            return true
+        }
+        return false
+    }
+    
+    var isBot: Bool {
+        if case .userTypeBot(_) = self.type {
+            return true
+        }
+        return false
     }
 }
 

@@ -16,24 +16,108 @@ extension ChatDetailViewModel {
         
         do {
             
-            let result = try await TDLibManager.shared.client?.getChatHistory(
-                chatId: self.chatId,
-                fromMessageId: fromId,
-                limit: limit,
-                offset: 0,
-                onlyLocal: false
-            )
+            let result: Messages?
+            if let threadId = self.messageThreadId {
+                let threadHistory = try? await TDLibManager.shared.client?.getMessageThreadHistory(
+                    chatId: self.chatId,
+                    fromMessageId: fromId ?? 0,
+                    limit: limit,
+                    messageId: threadId,
+                    offset: 0
+                )
+                if let threadHistory {
+                    result = threadHistory
+                } else {
+                    result = try await TDLibManager.shared.client?.getChatHistory(
+                        chatId: self.chatId,
+                        fromMessageId: fromId,
+                        limit: limit,
+                        offset: 0,
+                        onlyLocal: false
+                    )
+                }
+            } else {
+                result = try await TDLibManager.shared.client?.getChatHistory(
+                    chatId: self.chatId,
+                    fromMessageId: fromId,
+                    limit: limit,
+                    offset: 0,
+                    onlyLocal: false
+                )
+            }
             
             let data: [Message] = result?.messages ?? []
             
-            var newMessages: [MessageModel] = []
-            for msg in data {
-                newMessages.append(await self.messageModelFrom(msg))
+            var newMessages: [MessageModel] = await withTaskGroup(of: (Int, MessageModel).self) { group in
+                for (index, msg) in data.enumerated() {
+                    group.addTask {
+                        let model = await self.messageModelFrom(msg)
+                        return (index, model)
+                    }
+                }
+                
+                var results: [(Int, MessageModel)] = []
+                for await result in group {
+                    results.append(result)
+                }
+                
+                return results.sorted(by: { $0.0 < $1.0 }).map { $1 }
             }
             
             if newMessages.count == 1 && firstBatch {
                 newMessages += await self.requestMessages(fromId: newMessages.first?.id)
             }
+            
+            // Group messages by mediaAlbumId
+            var groupedMessages: [MessageModel] = []
+            var currentAlbumId: String? = nil
+            var currentAlbumSender: String? = nil
+            var currentAlbumModels: [AsyncImageModel] = []
+            var currentAlbumCaption: AttributedString? = nil
+            var currentAlbumFirstMessage: MessageModel? = nil
+            
+            let finishCurrentAlbum: () -> Void = {
+                if let firstMsg = currentAlbumFirstMessage {
+                    var groupedMsg = firstMsg
+                    if currentAlbumModels.count > 1 {
+                        groupedMsg.content = .photoAlbum(models: currentAlbumModels, caption: currentAlbumCaption)
+                    } else if currentAlbumModels.count == 1 {
+                        groupedMsg.content = .photo(model: currentAlbumModels[0], caption: currentAlbumCaption)
+                    }
+                    groupedMessages.append(groupedMsg)
+                    currentAlbumId = nil
+                    currentAlbumSender = nil
+                    currentAlbumFirstMessage = nil
+                    currentAlbumModels = []
+                    currentAlbumCaption = nil
+                }
+            }
+            
+            for msg in newMessages {
+                let albumIdStr = msg.mediaAlbumId != nil ? String(describing: msg.mediaAlbumId!) : "0"
+                let senderKey = "\(msg.senderId ?? 0)-\(msg.isOutgoing)"
+                
+                if albumIdStr != "0", case .photo(let model, let caption) = msg.content {
+                    if currentAlbumId == albumIdStr && currentAlbumSender == senderKey {
+                        currentAlbumModels.append(model)
+                        if currentAlbumCaption == nil || currentAlbumCaption?.characters.isEmpty == true {
+                            currentAlbumCaption = caption
+                        }
+                    } else {
+                        finishCurrentAlbum()
+                        currentAlbumId = albumIdStr
+                        currentAlbumSender = senderKey
+                        currentAlbumFirstMessage = msg
+                        currentAlbumModels.append(model)
+                        currentAlbumCaption = caption
+                    }
+                } else {
+                    finishCurrentAlbum()
+                    groupedMessages.append(msg)
+                }
+            }
+            finishCurrentAlbum()
+            newMessages = groupedMessages
             
             // Add date pill between messages
             for (index, msg) in newMessages.enumerated() {
@@ -69,18 +153,22 @@ extension ChatDetailViewModel {
         let reactionsData = message.interactionInfo?.reactions?.reactions ?? []
         let reactions = reactionsModelFrom(reactionsData)
         let reply = await replyModelFrom(message.replyTo, isOutgoing: message.isOutgoing)
+        let forward = await forwardModelFrom(message.forwardInfo, isOutgoing: message.isOutgoing)
         let stateStyle = await stateStyleFrom(message)
         let content = await messageContentFrom(message)
         
         return MessageModel(
             id: message.id,
             sender: sender.name,
+            senderId: message.senderID,
             senderColor: senderColor,
             isSenderHidden: sender.isHidden,
             date: date,
             isOutgoing: message.isOutgoing,
             reactions: reactions,
             reply: reply,
+            forward: forward,
+            mediaAlbumId: message.mediaAlbumId,
             stateStyle: stateStyle,
             content: content
         )
@@ -205,6 +293,52 @@ extension ChatDetailViewModel {
         return nil
     }
     
+    func forwardModelFrom(_ forwardInfo: MessageForwardInfo?, isOutgoing: Bool) async -> ForwardModel? {
+        guard let forwardInfo else { return nil }
+        
+        let title: String?
+        let color: Color
+        
+        switch forwardInfo.origin {
+        case .messageOriginUser(let origin):
+            let user = try? await TDLibManager.shared.client?.getUser(userId: origin.senderUserId)
+            title = user?.fullName
+            color = Color(fromUserId: origin.senderUserId)
+            
+        case .messageOriginHiddenUser(let origin):
+            title = origin.senderName
+            color = isOutgoing ? .white : .blue
+            
+        case .messageOriginChat(let origin):
+            let chat = try? await TDLibManager.shared.client?.getChat(chatId: origin.senderChatId)
+            let signature = origin.authorSignature.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let chatTitle = chat?.title, !signature.isEmpty {
+                title = "\(chatTitle) (\(signature))"
+            } else {
+                title = chat?.title.isEmpty == false ? chat?.title : signature
+            }
+            color = Color(fromUserId: origin.senderChatId)
+            
+        case .messageOriginChannel(let origin):
+            let chat = try? await TDLibManager.shared.client?.getChat(chatId: origin.chatId)
+            let signature = origin.authorSignature.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let chatTitle = chat?.title, !signature.isEmpty {
+                title = "\(chatTitle) (\(signature))"
+            } else {
+                title = chat?.title.isEmpty == false ? chat?.title : signature
+            }
+            color = Color(fromUserId: origin.chatId)
+        }
+        
+        guard let title, !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        else { return nil }
+        
+        return ForwardModel(
+            color: isOutgoing ? .white : color,
+            title: title
+        )
+    }
+
     func setMessageAsOpened(_ messageId: Int64) {
         Task.detached(priority: .background) {
             do {
